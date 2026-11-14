@@ -1,0 +1,73 @@
+---
+// Chapitre 2 — Drop : flash, la scène en pleine couleur, puis les sets à écouter.
+import { Picture } from "astro:assets";
+import Marquee from "../Marquee.astro";
+import SetCard from "../SetCard.astro";
+import { copy, photo, sets, site } from "../../lib/content";
+const d = copy.drop;
+---
+
+<section id="drop" class="drop" data-chapter>
+  <div class="drop__flash" aria-hidden="true"></div>
+  <Marquee class="t-mega drop__marquee" items={d.words} seconds={16} />
+
+  <div class="wrap drop__scene">
+    <figure class="drop__shot">
+      <div class="shot">
+        <Picture src={photo("drop-scene")} formats={["avif", "webp"]} widths={[480, 720, 1060]} sizes="(min-width: 64rem) 46vw, 92vw" alt={d.photoAlt} loading="lazy" />
+      </div>
+    </figure>
+    <div class="drop__pitch">
+      <p class="t-label text-acid">{copy.chapters[2]?.label}</p>
+      <h2 class="t-h1 mt-3"><span class="glitch" data-text={d.title} data-motion="klaak">{d.title}</span></h2>
+      <p class="t-lead mt-6">{d.lead}</p>
+      <a class="btn mt-8" href={site.links.soundcloud} rel="noopener">{d.all}</a>
+    </div>
+  </div>
+
+  <ul class="wrap drop__sets">
+    {sets.map((set, i) => <li><SetCard set={set} index={i + 1} /></li>)}
+  </ul>
+</section>
+
+<style>
+  .drop {
+    position: relative;
+    padding-block: var(--section);
+    overflow: hidden;
+  }
+  .drop__flash {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: var(--color-acid);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .drop :global(.drop__marquee) {
+    color: var(--color-acid);
+  }
+  .drop__scene {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: center;
+    margin-top: var(--section);
+  }
+  .drop__shot {
+    padding-inline: 0.75rem;
+  }
+  .drop__sets {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(3rem, 8vw, 6rem);
+  }
+  @media (min-width: 64rem) {
+    .drop__scene {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    }
+    .drop__sets {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>
