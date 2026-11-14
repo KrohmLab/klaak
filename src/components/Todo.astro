@@ -1,0 +1,9 @@
+---
+// Placeholder visible pour une information manquante. Ne jamais la deviner.
+interface Props {
+  what?: string;
+}
+const { what } = Astro.props;
+---
+
+<span class="todo">[À COMPLÉTER{what ? ` : ${what}` : ""}]</span>

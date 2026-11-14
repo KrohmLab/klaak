@@ -1,0 +1,12 @@
+---
+// Logo Klaak (tag au pinceau), en masque CSS. Par défaut : glitch chromatique ; `plain` = aplat.
+interface Props {
+  plain?: boolean;
+  class?: string;
+}
+const { plain = false, class: cls = "" } = Astro.props;
+---
+
+<span class:list={["logo", plain && "logo--plain", cls]} role="img" aria-label="Klaak">
+  <i class="c"></i><i class="m"></i><i></i><i class="s1"></i><i class="s2"></i>
+</span>

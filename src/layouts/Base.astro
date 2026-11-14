@@ -1,8 +1,8 @@
 ---
-import "@fontsource/unbounded/900.css";
-import "@fontsource/jetbrains-mono/500.css";
+import "@fontsource-variable/unbounded";
+import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
-import site from "../data/site.json";
+import { site } from "../lib/content";
 
 interface Props {
   title?: string;
@@ -15,13 +15,19 @@ const { title = `${site.name} — ${site.tagline}`, description = `${site.name},
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#07060d" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <!-- Site en construction : à retirer à la mise en production (étape 5). -->
     <meta name="robots" content="noindex" />
   </head>
-  <body class="min-h-dvh font-mono antialiased">
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
     <slot />
+    <script>
+      import { initMotion } from "../scripts/motion";
+      initMotion();
+    </script>
   </body>
 </html>

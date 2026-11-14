@@ -27,18 +27,30 @@ Le brief complet et toutes les sources sont dans `brief/` (ne pas chercher de co
 - Travail sur branches, commits atomiques, messages en français. `main` = production.
 - Commandes : `npm run dev`, `npm run build` (astro check + build), `npm run preview` (build + wrangler dev).
 
+## Design system (étape 3)
+
+- Tokens et classes dans `src/styles/global.css` (`@theme` Tailwind + classes `.t-*`, `.btn`, `.tag`, `.todo`,
+  `.card`, `.glitch`, `.logo`, `.duo`, `.hud`, `.marquee`, `.field`). Référence vivante : `/styleguide`.
+- Motion : `src/scripts/motion.ts` (patterns `klaak`, `rise`, `split`, `glitch`, attributs `data-motion` /
+  `data-replay`, `--shift` piloté par la vitesse du scroll). Tout y gère `prefers-reduced-motion`.
+- Données : `src/data/*.json`, lues via `src/lib/content.ts`. `null` = manquant → composant `Todo`.
+- Images : sources dans `src/assets/photos|posters`, rendues avec `<Picture>` (AVIF/WebP). Logo vectorisé :
+  `public/logo.svg`, utilisé en masque CSS.
+- URL : production https://klaak.krohmlab.workers.dev, previews `<branche>-klaak.krohmlab.workers.dev`.
+- Secrets de production : au 14/11/2026, `/api/booking` répondait encore `config` (secrets absents).
+
 ## Avancement
 
 - [x] 1. Recherche, concept, stack (direction A validée)
 - [x] 2. Initialisation (Astro, wrangler.jsonc, Worker /api/booking testé en local)
-- [ ] 3. Design system + page `/styleguide`
+- [x] 3. Design system + page `/styleguide` (branche `design-system`, en attente de validation)
 - [ ] 4. Construction chapitre par chapitre
 - [ ] 5. Recette (retirer le `noindex` de `src/layouts/Base.astro`)
 
 ## En attente de Kevin
 
 - Clé de site Turnstile, nom de domaine final (`src/data/site.json`).
-- URL exactes des sets SoundCloud (Nexen 2025, Psychedelic Christmas, Esoteros).
+- Titre du set Esoteros (`src/data/sets.json`, `title: null`).
 - Champs `[À COMPLÉTER]` de `brief/dates.md` ; accord pour reprendre les infos lisibles sur les affiches.
 - Écarts à trancher : « Halloween Nights » (pluriel sur les affiches), Esoteros 12-13 sept., affiche
   « Nexen Teaser Party 01/03/2025 » sans ligne dans le tableau, affiche Psychedelic Christmas manquante.

@@ -1,0 +1,46 @@
+---
+import { Picture } from "astro:assets";
+import Todo from "./Todo.astro";
+import { poster, setById, type KDate } from "../lib/content";
+
+interface Props {
+  date: KDate;
+}
+const { date } = Astro.props;
+const img = poster(date.poster);
+const set = setById(date.set);
+---
+
+<article class="card date-card">
+  {
+    img ? (
+      <div class="date-card__poster">
+        <Picture src={img} formats={["avif", "webp"]} widths={[400, 640, 960]} sizes="(min-width: 48rem) 420px, 90vw" alt={`Affiche : ${date.event}`} loading="lazy" />
+      </div>
+    ) : (
+      <div class="date-card__poster date-card__poster--missing">
+        <Todo what="affiche" />
+      </div>
+    )
+  }
+  <div class="date-card__body">
+    <div class="flex flex-wrap items-center gap-2">
+      <time class="t-label text-acid" datetime={date.start}>{date.when}</time>
+      {date.badges.map((b) => <span class="tag tag--solid">{b}</span>)}
+    </div>
+    <h3 class="t-h3">{date.event}</h3>
+    <p class="text-sm leading-relaxed text-mute">
+      {date.venue ?? <Todo what="lieu" />} · {date.city ?? <Todo what="ville" />}
+      <br />
+      Orga : {date.organizer ?? <Todo />}
+    </p>
+    {
+      (set || date.link) && (
+        <p class="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+          {set && <a class="link" href={set.url} rel="noopener">Écouter le set</a>}
+          {date.link && <a class="link" href={date.link} rel="noopener">Événement</a>}
+        </p>
+      )
+    }
+  </div>
+</article>

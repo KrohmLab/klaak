@@ -1,0 +1,28 @@
+---
+// HUD : tête de lecture du site. `fixed` = collé en bas de l'écran (site) ; sinon en ligne (styleguide).
+import { wave } from "../lib/wave";
+
+interface Props {
+  chapters: { id: string; label: string }[];
+  current?: number;
+  progress?: number; // 0 → 1
+  fixed?: boolean;
+}
+const { chapters, current = 0, progress = 0, fixed = false } = Astro.props;
+const bars = wave("klaak", 72);
+const pct = (n: number) => String(Math.round(n * 100)).padStart(3, "0");
+---
+
+<nav class:list={["hud", fixed && "fixed inset-x-0 bottom-0 z-50"]} aria-label="Chapitres" data-hud>
+  <p class="hud__chapter t-label">
+    <span class="text-mute" data-hud-index>{String(current + 1).padStart(2, "0")}/{String(chapters.length).padStart(2, "0")}</span>
+    <b class="truncate" data-hud-label>{chapters[current]?.label}</b>
+  </p>
+  <div class="hud__wave">
+    {bars.map((h, i) => <i style={`--h:${h}`} class:list={[i / bars.length < progress && "on"]} aria-hidden="true" />)}
+    <div class="hud__marks">
+      {chapters.map((c) => <a href={`#${c.id}`} aria-label={c.label} />)}
+    </div>
+  </div>
+  <p class="t-label text-mute" aria-hidden="true"><span data-hud-pct>{pct(progress)}</span>%</p>
+</nav>

@@ -1,0 +1,362 @@
+---
+// Styleguide vivant : tokens, motion et composants du design system, avec les vraies données.
+import { Picture } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import DateCard from "../components/DateCard.astro";
+import Hud from "../components/Hud.astro";
+import Logo from "../components/Logo.astro";
+import Marquee from "../components/Marquee.astro";
+import SetCard from "../components/SetCard.astro";
+import Todo from "../components/Todo.astro";
+import { dates, photo, sets } from "../lib/content";
+
+const colors = [
+  { name: "void", hex: "#07060D", role: "Fond", dark: true },
+  { name: "void-2", hex: "#100E1A", role: "Surfaces", dark: true },
+  { name: "void-3", hex: "#2A2644", role: "Filets", dark: true },
+  { name: "bone", hex: "#F4F2FF", role: "Texte" },
+  { name: "mute", hex: "#A9A4C4", role: "Texte secondaire" },
+  { name: "acid", hex: "#C6FF1A", role: "Accent, actions" },
+  { name: "magenta", hex: "#FF2BD6", role: "Canal droit, alertes" },
+  { name: "cyan", hex: "#19E3FF", role: "Canal gauche, focus" },
+  { name: "orange", hex: "#FF8A00", role: "Chaud, placeholders" },
+];
+const durations = [
+  { token: "--dur-snap", value: "120 ms", use: "Retours d'interaction, secousse glitch" },
+  { token: "--dur-klaak", value: "320 ms", use: "La claque" },
+  { token: "--dur-move", value: "600 ms", use: "Entrées, révélations de texte" },
+  { token: "--dur-slow", value: "1200 ms", use: "Montées, breakdown" },
+];
+const easings = [
+  { token: "--ease-klaak", value: "0.16, 1, 0.3, 1", use: "Part fort, se pose net" },
+  { token: "--ease-rise", value: "0.7, 0, 0.84, 0", use: "Accélère jusqu'au bout" },
+  { token: "--ease-groove", value: "0.34, 1.56, 0.64, 1", use: "Rebond groovy" },
+];
+const chapters = [
+  { id: "intro", label: "Intro" },
+  { id: "montee", label: "Montée" },
+  { id: "drop", label: "Drop" },
+  { id: "breakdown", label: "Breakdown" },
+  { id: "montee-finale", label: "Montée finale" },
+  { id: "booking", label: "Dernier drop" },
+];
+const toc = [
+  ["couleurs", "Couleurs"],
+  ["typo", "Typographie"],
+  ["grille", "Espacements et grille"],
+  ["glows", "Glows et textures"],
+  ["motion", "Motion"],
+  ["composants", "Composants"],
+];
+const sampleDates = [dates[3], dates[2], dates[6]].filter((d) => d !== undefined);
+---
+
+<Base title="Styleguide — Klaak">
+  <header class="wrap flex flex-wrap items-center justify-between gap-6 py-8">
+    <a href="/" class="block w-28" aria-label="Klaak, accueil"><Logo /></a>
+    <nav aria-label="Sections du styleguide">
+      <ul class="t-label flex flex-wrap gap-x-5 gap-y-2">
+        {toc.map(([id, label]) => <li><a class="hover:text-acid" href={`#${id}`}>{label}</a></li>)}
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenu">
+    <section class="wrap pt-10 pb-20">
+      <p class="t-label text-acid">Design system · direction A</p>
+      <h1 class="mt-4">
+        <span class="t-mega block"><span class="glitch" data-text="Glitch" data-motion="klaak" id="sg-title">Glitch</span></span>
+        <span class="t-h1 mt-2 block text-acid">chromatique</span>
+      </h1>
+      <p class="t-lead mt-8 max-w-3xl text-mute">
+        Le tag au pinceau percuté par le numérique : fond presque noir, dédoublement cyan et magenta, tranches vert acide. Le décalage chromatique réagit à la vitesse du scroll : faites défiler
+        la page.
+      </p>
+    </section>
+
+    <!-- ============================== COULEURS ============================== -->
+    <section id="couleurs" class="wrap section border-t border-void-3">
+      <p class="t-label text-acid">01</p>
+      <h2 class="t-h1 mt-2">Couleurs</h2>
+      <ul class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        {
+          colors.map((c) => (
+            <li class="card">
+              <div class="h-28" style={`background:${c.hex}`} />
+              <div class="grid gap-1 p-4">
+                <p class="t-label">{c.name}</p>
+                <p class="text-sm text-mute">{c.hex}</p>
+                <p class="text-sm text-mute">{c.role}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mt-10 grid gap-4 md:grid-cols-3">
+        <p class="card p-5 text-acid">Vert acide sur fond : titres, liens, actions.</p>
+        <p class="card p-5 text-mute">Texte secondaire sur fond : légendes et métadonnées.</p>
+        <p class="p-5 font-bold text-void" style="background:var(--color-acid)">Fond sombre sur vert acide : boutons.</p>
+      </div>
+      <p class="t-body mt-6 text-mute">Toutes les combinaisons texte/fond utilisées passent le contraste AA. Le magenta et le cyan ne portent jamais seuls une information.</p>
+    </section>
+
+    <!-- ============================== TYPO ============================== -->
+    <section id="typo" class="wrap section border-t border-void-3">
+      <p class="t-label text-acid">02</p>
+      <h2 class="t-h1 mt-2">Typographie</h2>
+      <div class="mt-12 grid gap-10">
+        <div>
+          <p class="t-label text-mute">t-mega · Unbounded 900 · 52 → 288 px</p>
+          <p class="t-mega mt-3 text-acid">Klaak</p>
+        </div>
+        <div>
+          <p class="t-label text-mute">t-h1 · Unbounded 900</p>
+          <p class="t-h1 mt-3">Une révélation : la Hitech</p>
+        </div>
+        <div>
+          <p class="t-label text-mute">t-h2 · Unbounded 800</p>
+          <p class="t-h2 mt-3">Groovy, happy et survitaminée</p>
+        </div>
+        <div>
+          <p class="t-label text-mute">t-h3 · Unbounded 700</p>
+          <p class="t-h3 mt-3">Outrance Lab — Tempus</p>
+        </div>
+        <div>
+          <p class="t-label text-mute">t-lead · JetBrains Mono 400</p>
+          <p class="t-lead mt-3 max-w-4xl">Un style à la fois explosif, euphorisant et chargé d’énergie positive, qui lui a donné l’envie de passer de l’orga à la scène.</p>
+        </div>
+        <div>
+          <p class="t-label text-mute">t-body · JetBrains Mono 400 · 62 caractères max par ligne</p>
+          <p class="t-body mt-3">
+            Co-fondateur du collectif Outrance, acteur incontournable de la psytrance à Lyon, il a œuvré pendant des années à faire vibrer les dancefloors tout en écumant les festivals à travers
+            la France et l’Europe.
+          </p>
+        </div>
+        <div>
+          <p class="t-label text-mute">t-label · JetBrains Mono 600 · capitales espacées</p>
+          <p class="t-label mt-3">DJ set — Hitech · Outrance · Lyon</p>
+        </div>
+        <div>
+          <p class="t-label text-mute">glitch · texte dédoublé</p>
+          <p class="t-h1 mt-3"><span class="glitch" data-text="Survitaminée">Survitaminée</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== GRILLE ============================== -->
+    <section id="grille" class="wrap section border-t border-void-3">
+      <p class="t-label text-acid">03</p>
+      <h2 class="t-h1 mt-2">Espacements et grille</h2>
+      <p class="t-body mt-8 text-mute">4 colonnes sur mobile, 12 à partir de 768 px. La gouttière et les marges suivent la largeur de l'écran (16 → 48 px). Largeur maximale : 1440 px.</p>
+      <div class="grid-k mt-8" aria-hidden="true">
+        {Array.from({ length: 12 }, (_, i) => <div class:list={["h-24 bg-void-2 border border-void-3 grid place-items-center text-xs text-mute", i > 3 && "hidden md:grid"]}>{i + 1}</div>)}
+      </div>
+      <div class="mt-12 grid gap-3">
+        {
+          [
+            ["Échelle de base", "4 px (Tailwind) : 4, 8, 12, 16, 24, 32, 48, 64"],
+            ["--gutter", "clamp(16px, 4vw, 48px) : marges et gouttières"],
+            ["--section", "clamp(80px, 14vw, 176px) : respiration entre chapitres"],
+            ["Cible tactile", "48 px minimum pour tout ce qui se touche"],
+          ].map(([k, v]) => (
+            <p class="grid gap-1 border-b border-void-3 py-3 md:grid-cols-[16rem_1fr]">
+              <span class="t-label">{k}</span>
+              <span class="text-sm text-mute">{v}</span>
+            </p>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ============================== GLOWS ============================== -->
+    <section id="glows" class="wrap section border-t border-void-3">
+      <p class="t-label text-acid">04</p>
+      <h2 class="t-h1 mt-2">Glows et textures</h2>
+      <div class="mt-12 grid gap-10 sm:grid-cols-3">
+        <div class="grid h-36 place-items-center border border-acid" style="box-shadow:var(--glow-acid)"><span class="t-label">--glow-acid</span></div>
+        <div class="grid h-36 place-items-center border border-magenta" style="box-shadow:var(--glow-magenta)"><span class="t-label">--glow-magenta</span></div>
+        <div class="grid h-36 place-items-center border border-cyan" style="box-shadow:var(--glow-cyan)"><span class="t-label">--glow-cyan</span></div>
+      </div>
+      <p class="t-body mt-8 text-mute">Les glows sont réservés aux temps forts (drop, booking). Partout ailleurs, la couleur est en aplat net.</p>
+
+      <h3 class="t-h2 mt-16">Photo en duotone</h3>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          [
+            ["", "acid", "drop-poing"],
+            ["duo--magenta", "magenta", "breakdown-profil-bleu"],
+            ["duo--cyan", "cyan", "montee-casque"],
+            ["duo--orange", "orange", "montee-sourire"],
+          ].map(([cls, name, file]) => (
+            <figure>
+              <div class:list={["duo scanlines grain aspect-[4/5]", cls]}>
+                <Picture src={photo(file!)} formats={["avif", "webp"]} widths={[400, 700]} sizes="(min-width: 64rem) 22vw, (min-width: 40rem) 45vw, 92vw" alt="Klaak derrière les platines" loading="lazy" />
+              </div>
+              <figcaption class="t-label mt-3 text-mute">duo · {name}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+      <p class="t-body mt-6 text-mute">Chaque photo est passée en niveaux de gris puis recolorée, avec lignes de balayage et grain. Crédit photo : <Todo what="nom du photographe" /></p>
+    </section>
+
+    <!-- ============================== MOTION ============================== -->
+    <section id="motion" class="wrap section border-t border-void-3">
+      <p class="t-label text-acid">05</p>
+      <h2 class="t-h1 mt-2">Motion</h2>
+      <p class="t-body mt-8 text-mute">
+        Trois règles. Le scroll est la tête de lecture : ce qui bouge suit le pouce. Une seule claque par écran. Avec « réduire les animations », plus rien n'est épinglé ni secoué : il reste
+        des fondus courts.
+      </p>
+
+      <div class="mt-12 grid gap-10 lg:grid-cols-2">
+        <div>
+          <h3 class="t-h3">Durées</h3>
+          {
+            durations.map((d) => (
+              <p class="grid grid-cols-[9rem_5rem_1fr] gap-3 border-b border-void-3 py-3 text-sm">
+                <span class="text-acid">{d.token}</span>
+                <span>{d.value}</span>
+                <span class="text-mute">{d.use}</span>
+              </p>
+            ))
+          }
+        </div>
+        <div>
+          <h3 class="t-h3">Courbes</h3>
+          {
+            easings.map((e) => (
+              <p class="grid grid-cols-[9rem_1fr] gap-3 border-b border-void-3 py-3 text-sm">
+                <span class="text-acid">{e.token}</span>
+                <span>
+                  {e.value}
+                  <span class="block text-mute">{e.use}</span>
+                </span>
+              </p>
+            ))
+          }
+        </div>
+      </div>
+
+      <h3 class="t-h2 mt-16">Patterns</h3>
+      <div class="mt-8 grid gap-4 lg:grid-cols-2">
+        <article class="card grid gap-6 p-6">
+          <div class="flex items-center justify-between gap-4">
+            <p class="t-label">Klaak · la claque</p>
+            <button class="btn btn--ghost" type="button" data-replay="#m-klaak">Rejouer</button>
+          </div>
+          <div class="grid min-h-48 place-items-center overflow-hidden">
+            <p class="t-h1 text-acid"><span id="m-klaak" class="glitch" data-text="Drop" data-motion="klaak">Drop</span></p>
+          </div>
+          <p class="text-sm text-mute">Arrive trop gros, décalé, surexposé, et se pose net en 320 ms. Marque chaque changement de chapitre.</p>
+        </article>
+
+        <article class="card grid gap-6 p-6">
+          <div class="flex items-center justify-between gap-4">
+            <p class="t-label">Rise · la montée</p>
+            <button class="btn btn--ghost" type="button" data-replay="#m-rise">Rejouer</button>
+          </div>
+          <div class="grid min-h-48 place-items-center overflow-hidden">
+            <p class="t-h1"><span id="m-rise" class="glitch" data-text="Hitech" data-motion="rise">Hitech</span></p>
+          </div>
+          <p class="text-sm text-mute">Grossit et se resserre en accélérant, puis finit sur une claque. Sur le site, cette montée est pilotée par le scroll.</p>
+        </article>
+
+        <article class="card grid gap-6 p-6">
+          <div class="flex items-center justify-between gap-4">
+            <p class="t-label">Split · révélation de texte</p>
+            <button class="btn btn--ghost" type="button" data-replay="#m-split">Rejouer</button>
+          </div>
+          <div class="grid min-h-48 place-items-center">
+            <p id="m-split" class="t-h2" data-motion="split">De l’orga à la scène</p>
+          </div>
+          <p class="text-sm text-mute">Les mots montent ligne par ligne derrière un masque, avec 35 ms d'écart.</p>
+        </article>
+
+        <article class="card grid gap-6 p-6">
+          <div class="flex items-center justify-between gap-4">
+            <p class="t-label">Glitch · secousse</p>
+            <button class="btn btn--ghost" type="button" data-replay="#m-glitch">Rejouer</button>
+          </div>
+          <div class="grid min-h-48 place-items-center">
+            <div id="m-glitch" class="w-56" data-motion="glitch"><Logo /></div>
+          </div>
+          <p class="text-sm text-mute">Cinq tranches décalées en 320 ms, sans interpolation. Réservée aux retours d'interaction.</p>
+        </article>
+      </div>
+
+      <h3 class="t-h2 mt-16">Bandeau</h3>
+      <Marquee class="t-h1 mt-8" items={["Groovy", "Happy", "Survitaminée", "Hitech"]} />
+    </section>
+
+    <!-- ============================== COMPOSANTS ============================== -->
+    <section id="composants" class="wrap section border-t border-void-3">
+      <p class="t-label text-acid">06</p>
+      <h2 class="t-h1 mt-2">Composants</h2>
+
+      <h3 class="t-h2 mt-14">Logo</h3>
+      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        <div class="card grid place-items-center p-8"><Logo class="w-full max-w-64" /></div>
+        <div class="card grid place-items-center p-8"><Logo plain class="w-full max-w-64" /></div>
+        <div class="grid place-items-center p-8 text-void" style="background:var(--color-acid)"><Logo plain class="w-full max-w-64" /></div>
+      </div>
+
+      <h3 class="t-h2 mt-16">Boutons</h3>
+      <div class="mt-8 flex flex-wrap items-center gap-5">
+        <a class="btn btn--big" href="#composants">Booker Klaak</a>
+        <a class="btn" href="#composants">Écouter</a>
+        <a class="btn btn--ghost" href="#composants">Voir les dates</a>
+        <button class="btn" type="button" disabled>Envoi…</button>
+      </div>
+
+      <h3 class="t-h2 mt-16">Étiquettes et placeholders</h3>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <span class="tag tag--solid">Sold out</span>
+        <span class="tag tag--acid">Closing</span>
+        <span class="tag tag--magenta">Festival</span>
+        <span class="tag tag--cyan">Outrance</span>
+        <span class="tag">Hitech</span>
+        <Todo />
+        <Todo what="lieu" />
+      </div>
+
+      <h3 class="t-h2 mt-16">Carte de set</h3>
+      <p class="t-body mt-4 text-mute">Le lecteur SoundCloud officiel n'est chargé qu'au clic.</p>
+      <div class="mt-8 grid gap-4 lg:grid-cols-3">
+        {sets.map((s, i) => <SetCard set={s} index={i + 1} />)}
+      </div>
+
+      <h3 class="t-h2 mt-16">Carte de date</h3>
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        {sampleDates.map((d) => <DateCard date={d} />)}
+      </div>
+
+      <h3 class="t-h2 mt-16">Champs de formulaire</h3>
+      <div class="mt-8 grid max-w-3xl gap-8 md:grid-cols-2">
+        <div class="field">
+          <label class="t-label" for="sg-name">Nom</label>
+          <input id="sg-name" type="text" autocomplete="name" />
+        </div>
+        <div class="field">
+          <label class="t-label" for="sg-email">E-mail</label>
+          <input id="sg-email" type="email" value="adresse-invalide" aria-invalid="true" aria-describedby="sg-email-err" />
+          <p class="field__error" id="sg-email-err">Cette adresse e-mail n'est pas valide.</p>
+        </div>
+        <div class="field md:col-span-2">
+          <label class="t-label" for="sg-msg">Message</label>
+          <textarea id="sg-msg" placeholder="Votre événement, le line-up, l'horaire envisagé…"></textarea>
+        </div>
+      </div>
+
+      <h3 class="t-h2 mt-16">HUD</h3>
+      <p class="t-body mt-4 text-mute">Fixé en bas de l'écran sur le site, sous le pouce. Il indique le chapitre, l'avancement, et chaque segment de l'onde mène à un chapitre.</p>
+      <div class="mt-8 border border-void-3">
+        <Hud chapters={chapters} current={2} progress={0.42} />
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap border-t border-void-3 py-10">
+    <p class="t-label text-mute">Klaak · styleguide · page interne, non indexée</p>
+  </footer>
+</Base>

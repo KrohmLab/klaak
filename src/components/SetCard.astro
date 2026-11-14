@@ -1,0 +1,56 @@
+---
+// Façade légère : le lecteur officiel SoundCloud (iframe) n'est chargé qu'au clic.
+import Todo from "./Todo.astro";
+import { wave } from "../lib/wave";
+import type { KSet } from "../lib/content";
+
+interface Props {
+  set: KSet;
+  index?: number;
+}
+const { set, index } = Astro.props;
+const label = set.title ?? "set sans titre";
+---
+
+<article class="card set-card" data-set-card data-url={set.url} data-title={label}>
+  <button class="set-card__play" type="button" aria-label={`Lire ${label} (charge le lecteur SoundCloud)`}>
+    <span class="set-card__icon" aria-hidden="true">
+      <svg width="18" height="20" viewBox="0 0 18 20" fill="currentColor"><path d="M0 0l18 10L0 20z"></path></svg>
+    </span>
+    <span class="grid gap-1">
+      {index !== undefined && <span class="t-label text-mute">Set {String(index).padStart(2, "0")}</span>}
+      <span class="t-h3">{set.title ?? <Todo what="titre du set" />}</span>
+    </span>
+  </button>
+  <div class="set-card__wave" aria-hidden="true">
+    {wave(set.id, 56).map((h) => <i style={`--h:${h}`} />)}
+  </div>
+  <p class="set-card__foot text-sm">
+    <a class="link" href={set.url} rel="noopener">Ouvrir sur SoundCloud</a>
+  </p>
+</article>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-set-card]").forEach((card) => {
+    const button = card.querySelector<HTMLButtonElement>(".set-card__play");
+    button?.addEventListener("click", () => {
+      const src = new URL("https://w.soundcloud.com/player/");
+      src.search = new URLSearchParams({
+        url: card.dataset.url ?? "",
+        color: "#c6ff1a",
+        auto_play: "true",
+        hide_related: "true",
+        show_comments: "false",
+        show_reposts: "false",
+        show_teaser: "false",
+      }).toString();
+      const frame = document.createElement("iframe");
+      frame.src = src.toString();
+      frame.title = `Lecteur SoundCloud : ${card.dataset.title}`;
+      frame.allow = "autoplay";
+      card.querySelector(".set-card__wave")?.remove();
+      button.replaceWith(frame);
+      frame.focus();
+    });
+  });
+</script>
