@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Klaak 03 — Glitch chromatique</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.klaak{-webkit-mask-image:url(/_blob/631d594e40d2434505393731fb8d1f41);mask-image:url(/_blob/631d594e40d2434505393731fb8d1f41);-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+</style>
+</helmet>
+<div style="width: 800px; height: 800px; position: relative; overflow: hidden; background: #000000; font-family: 'JetBrains Mono', ui-monospace, monospace">
+<div class="klaak" style="position: absolute; left: 100px; top: 190px; width: 600px; height: 418px; background: #00E5FF; mix-blend-mode: screen; transform: translate(-{{shift}}px, 3px)"></div>
+<div class="klaak" style="position: absolute; left: 100px; top: 190px; width: 600px; height: 418px; background: #FF1FCE; mix-blend-mode: screen; transform: translate({{shift}}px, -3px)"></div>
+<div class="klaak" style="position: absolute; left: 100px; top: 190px; width: 600px; height: 418px; background: #FFFFFF; mix-blend-mode: screen; opacity: 0.9"></div>
+<div class="klaak" style="position: absolute; left: 100px; top: 190px; width: 600px; height: 418px; background: #FFFFFF; clip-path: inset(41% 0 52% 0); transform: translateX(26px)"></div>
+<div class="klaak" style="position: absolute; left: 100px; top: 190px; width: 600px; height: 418px; background: #C6FF1A; clip-path: inset(66% 0 31% 0); transform: translateX(-18px)"></div>
+<div style="position: absolute; left: 70px; top: 352px; width: 660px; height: 3px; background: #000000"></div>
+<div style="position: absolute; left: 70px; top: 470px; width: 660px; height: 2px; background: #000000"></div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"shift":{"editor":"range","default":9,"min":0,"max":24,"step":1,"unit":"px"},"$preview":{"width":800,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return { shift: this.props.shift ?? 9 };
+}
+}
+</script>
+</body>
+</html>

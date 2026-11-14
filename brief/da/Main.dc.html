@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Klaak 01 — Brush originel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+.klaak{-webkit-mask-image:url(/_blob/631d594e40d2434505393731fb8d1f41);mask-image:url(/_blob/631d594e40d2434505393731fb8d1f41);-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+</style>
+</helmet>
+<div style="width: 800px; height: 800px; position: relative; overflow: hidden; background: {{bg}}">
+<svg width="800" height="800" viewBox="0 0 800 800" style="position: absolute; left: 0; top: 0" aria-hidden="true">
+<defs>
+<linearGradient id="ring01" x1="0.15" y1="0.9" x2="0.85" y2="0.1">
+<stop offset="0" stop-color="{{ink}}" stop-opacity="0"></stop>
+<stop offset="0.35" stop-color="{{ink}}" stop-opacity="0.35"></stop>
+<stop offset="1" stop-color="{{ink}}" stop-opacity="1"></stop>
+</linearGradient>
+</defs>
+<ellipse cx="470" cy="380" rx="290" ry="235" transform="rotate(-14 470 380)" fill="none" stroke="url(#ring01)" stroke-width="7"></ellipse>
+</svg>
+<div class="klaak" style="position: absolute; left: 70px; top: 200px; width: 600px; height: 418px; background: {{ink}}"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"bg":{"editor":"color","default":"#07060D","options":["#07060D","#FFFFFF","#12052A"]},"ink":{"editor":"color","default":"#FFFFFF","options":["#FFFFFF","#07060D","#C6FF1A"]},"$preview":{"width":800,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return { bg: this.props.bg ?? '#07060D', ink: this.props.ink ?? '#FFFFFF' };
+}
+}
+</script>
+</body>
+</html>

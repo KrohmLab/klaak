@@ -1,0 +1,19 @@
+# build
+dist/
+.astro/
+.wrangler/
+
+# dépendances
+node_modules/
+
+# secrets locaux (jamais commités)
+.dev.vars
+.dev.vars.*
+.env
+.env.*
+
+# divers
+npm-debug.log*
+.DS_Store
+.idea/
+!.dev.vars.example

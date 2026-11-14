@@ -1,0 +1,33 @@
+{
+  "name": "klaak",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "npm run build && wrangler dev",
+    "typecheck": "astro check",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/unbounded": "^5.3.0",
+    "astro": "^7.4.12",
+    "gsap": "^3.15.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@tailwindcss/vite": "^4.3.5",
+    "tailwindcss": "^4.3.5",
+    "typescript": "~6.0.3",
+    "wrangler": "^4.162.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "workerd@1.20261113.1": true
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "klaak",
+  "compatibility_date": "2026-10-01",
+  // Adresse *.workers.dev et URL de preview par branche (Workers Builds).
+  "workers_dev": true,
+  "preview_urls": true,
+  "previews": {},
+  // Site statique généré par Astro. Le script Worker ne traite que /api/* (demande de booking) ;
+  // toutes les autres requêtes sont servies directement en assets, sans exécuter de code.
+  "main": "./worker/index.ts",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"],
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "observability": { "enabled": true }
+}

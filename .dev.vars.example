@@ -1,0 +1,3 @@
+# Copier ce fichier en .dev.vars (ignoré par git) et renseigner les valeurs.
+TURNSTILE_SECRET_KEY=
+RESEND_API_KEY=

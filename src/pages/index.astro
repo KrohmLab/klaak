@@ -1,0 +1,14 @@
+---
+import Base from "../layouts/Base.astro";
+import site from "../data/site.json";
+---
+
+<Base>
+  <main class="grid min-h-dvh place-items-center p-6 text-center">
+    <div>
+      <h1 class="font-display text-[clamp(3rem,18vw,12rem)] leading-none font-black text-acid">KLAAK</h1>
+      <p class="mt-6 text-sm tracking-[0.3em] uppercase">{site.tagline} · {site.collective} · {site.city}</p>
+      <p class="mt-10 text-xs tracking-widest text-white/70 uppercase">Site en construction</p>
+    </div>
+  </main>
+</Base>
