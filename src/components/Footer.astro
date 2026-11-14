@@ -1,0 +1,98 @@
+---
+import Logo from "./Logo.astro";
+import Todo from "./Todo.astro";
+import { copy, site } from "../lib/content";
+const links = [
+  ["SoundCloud", site.links.soundcloud],
+  ["Instagram", site.links.instagram],
+  ["Facebook", site.links.facebook],
+  ["Shotgun", site.links.shotgun],
+] as const;
+---
+
+<footer class="footer wrap">
+  <a class="footer__logo" href="#intro" aria-label="Klaak, retour en haut"><Logo plain /></a>
+  <ul class="footer__links t-label">
+    {links.map(([label, href]) => <li><a href={href} rel="noopener me">{label}</a></li>)}
+  </ul>
+  <div class="footer__meta">
+    <p>{site.tagline} · {site.collective} · {site.city}</p>
+    <p>Photos : {site.photoCredit ?? <Todo what="crédit photo" />}</p>
+    <button type="button" class="footer__calm" data-calm-toggle data-on={copy.footer.calmOn} data-off={copy.footer.calmOff}>{copy.footer.calmOn}</button>
+  </div>
+</footer>
+
+<script>
+  // Mode calme choisi par le visiteur : mémorisé, puis appliqué au chargement (script en tête de page).
+  const button = document.querySelector<HTMLButtonElement>("[data-calm-toggle]");
+  if (button) {
+    const chosen = () => {
+      try {
+        return localStorage.getItem("calme") === "1";
+      } catch {
+        return false;
+      }
+    };
+    button.textContent = (chosen() ? button.dataset.off : button.dataset.on) ?? "";
+    button.addEventListener("click", () => {
+      try {
+        if (chosen()) localStorage.removeItem("calme");
+        else localStorage.setItem("calme", "1");
+      } catch {
+        return;
+      }
+      window.scrollTo(0, 0);
+      window.location.reload();
+    });
+  }
+</script>
+
+<style>
+  .footer {
+    display: grid;
+    gap: 2rem;
+    padding-block: 3rem;
+    border-top: 1px solid var(--color-void-3);
+  }
+  .footer__logo {
+    display: block;
+    width: 7rem;
+    color: var(--color-bone);
+  }
+  .footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+  }
+  .footer__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+  .footer__links a:hover {
+    color: var(--color-acid);
+  }
+  .footer__meta {
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--color-mute);
+  }
+  .footer__calm {
+    justify-self: start;
+    min-height: 2.75rem;
+    color: var(--color-bone);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    cursor: pointer;
+  }
+  @media (min-width: 48rem) {
+    .footer {
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+    }
+    .footer__links {
+      justify-content: center;
+    }
+  }
+</style>
