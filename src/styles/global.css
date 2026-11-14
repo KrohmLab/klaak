@@ -618,28 +618,77 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   Reduced motion : version calme. Plus de boucle ni de secousse ; le JS coupe
-   de son côté les scènes pilotées par le scroll (voir src/scripts/motion.ts).
+   Mode calme : `html[data-calm]` est posé dans <head> si le système demande de
+   réduire les animations ou si le visiteur l'a choisi (pied de page). Plus de
+   boucle ni de secousse ; le JS ne crée aucune scène pilotée par le scroll.
+   Le bloc @media double la règle pour le cas sans JavaScript.
    -------------------------------------------------------------------------- */
+html[data-calm] *,
+html[data-calm] *::before,
+html[data-calm] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+html[data-calm] .marquee {
+  flex-wrap: wrap;
+  white-space: normal;
+}
+html[data-calm] .marquee__track {
+  animation: none;
+  flex-wrap: wrap;
+  flex-shrink: 1;
+}
+html[data-calm] .marquee__track[aria-hidden="true"] {
+  display: none;
+}
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .marquee {
-    overflow-x: auto;
-  }
+  .marquee,
   .marquee__track {
+    flex-wrap: wrap;
+    white-space: normal;
     animation: none;
+    flex-shrink: 1;
   }
   .marquee__track[aria-hidden="true"] {
     display: none;
   }
-  .btn,
-  .date-card__poster img {
-    transition: none;
+}
+
+/* Photo pleine couleur, cadre dédoublé : réservée aux images qui doivent garder leurs couleurs */
+.shot {
+  position: relative;
+  font-size: 1rem;
+  box-shadow:
+    calc(var(--shift) * -16) 0.5rem 0 var(--color-cyan),
+    calc(var(--shift) * 16) -0.5rem 0 var(--color-magenta);
+}
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* HUD du site : bouton Booking toujours sous le pouce */
+.hud .btn {
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+@media (max-width: 47.99rem) {
+  .hud__pct {
+    display: none;
   }
+}
+.has-hud {
+  padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
 }

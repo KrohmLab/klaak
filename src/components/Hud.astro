@@ -1,28 +1,33 @@
 ---
-// HUD : tête de lecture du site. `fixed` = collé en bas de l'écran (site) ; sinon en ligne (styleguide).
+// HUD : tête de lecture du site. `live` = collé en bas de l'écran et mis à jour au scroll (src/scripts/hud.ts) ;
+// sinon rendu figé, en ligne (styleguide).
 import { wave } from "../lib/wave";
 
 interface Props {
   chapters: { id: string; label: string }[];
   current?: number;
   progress?: number; // 0 → 1
-  fixed?: boolean;
+  live?: boolean;
+  cta?: { href: string; label: string };
 }
-const { chapters, current = 0, progress = 0, fixed = false } = Astro.props;
+const { chapters, current = 0, progress = 0, live = false, cta } = Astro.props;
 const bars = wave("klaak", 72);
-const pct = (n: number) => String(Math.round(n * 100)).padStart(3, "0");
+const pad = (n: number, len = 2) => String(n).padStart(len, "0");
 ---
 
-<nav class:list={["hud", fixed && "fixed inset-x-0 bottom-0 z-50"]} aria-label="Chapitres" data-hud>
+<nav class:list={["hud", live && "fixed inset-x-0 bottom-0 z-50"]} aria-label="Chapitres" data-hud={live ? "live" : "static"}>
   <p class="hud__chapter t-label">
-    <span class="text-mute" data-hud-index>{String(current + 1).padStart(2, "0")}/{String(chapters.length).padStart(2, "0")}</span>
+    <span class="text-mute"><span data-hud-index>{pad(current + 1)}</span>/{pad(chapters.length)}</span>
     <b class="truncate" data-hud-label>{chapters[current]?.label}</b>
   </p>
   <div class="hud__wave">
     {bars.map((h, i) => <i style={`--h:${h}`} class:list={[i / bars.length < progress && "on"]} aria-hidden="true" />)}
     <div class="hud__marks">
-      {chapters.map((c) => <a href={`#${c.id}`} aria-label={c.label} />)}
+      {chapters.map((c) => <a href={`#${c.id}`} aria-label={c.label} data-label={c.label} />)}
     </div>
   </div>
-  <p class="t-label text-mute" aria-hidden="true"><span data-hud-pct>{pct(progress)}</span>%</p>
+  <div class="flex items-center gap-4">
+    <p class="hud__pct t-label text-mute" aria-hidden="true"><span data-hud-pct>{pad(Math.round(progress * 100), 3)}</span>%</p>
+    {cta && <a class="btn" href={cta.href}>{cta.label}</a>}
+  </div>
 </nav>

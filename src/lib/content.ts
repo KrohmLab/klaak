@@ -3,6 +3,7 @@ import type { ImageMetadata } from "astro";
 import datesJson from "../data/dates.json";
 import setsJson from "../data/sets.json";
 import site from "../data/site.json";
+import copy from "../data/copy.json";
 
 /** `null` dans les données = information manquante → affichée comme placeholder [À COMPLÉTER]. */
 export type KDate = {
@@ -23,7 +24,10 @@ export type KSet = { id: string; title: string | null; url: string };
 
 export const dates: KDate[] = datesJson;
 export const sets: KSet[] = setsJson;
-export { site };
+export { site, copy };
+
+const bios = import.meta.glob<string>("../data/bio.*.md", { query: "?raw", import: "default", eager: true });
+export const bio = { fr: (bios["../data/bio.fr.md"] ?? "").trim(), en: (bios["../data/bio.en.md"] ?? "").trim() };
 
 const posters = import.meta.glob<{ default: ImageMetadata }>("../assets/posters/*", { eager: true });
 const photos = import.meta.glob<{ default: ImageMetadata }>("../assets/photos/*", { eager: true });

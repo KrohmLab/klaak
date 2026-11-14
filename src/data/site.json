@@ -3,9 +3,11 @@
   "tagline": "DJ set — Hitech",
   "collective": "Outrance",
   "city": "Lyon",
-  "url": "[À COMPLÉTER]",
+  "url": "https://klaak.krohmlab.workers.dev",
+  "indexable": false,
   "bookingEmail": "kevin@outrance.org",
-  "turnstileSiteKey": "[À COMPLÉTER]",
+  "turnstileSiteKey": "",
+  "photoCredit": null,
   "links": {
     "soundcloud": "https://soundcloud.com/klaak",
     "instagram": "https://www.instagram.com/kevin.klaak/",

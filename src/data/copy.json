@@ -1,0 +1,66 @@
+{
+  "chapters": [
+    { "id": "intro", "label": "Intro" },
+    { "id": "montee", "label": "Montée" },
+    { "id": "drop", "label": "Drop" },
+    { "id": "breakdown", "label": "Breakdown" },
+    { "id": "dates", "label": "Montée finale" },
+    { "id": "booking", "label": "Dernier drop" }
+  ],
+  "intro": {
+    "cue": "Scrollez pour lancer le set"
+  },
+  "montee": {
+    "years": ["Plus de 12 ans", "de psytrance"],
+    "reveal": "Une révélation :",
+    "hitech": "La Hitech",
+    "words": ["Explosif", "Euphorisant", "Énergie positive"]
+  },
+  "drop": {
+    "words": ["Groovy", "Happy", "Survitaminée", "Hitech"],
+    "title": "Les sets",
+    "lead": "Une hitech groovy, happy et survitaminée.",
+    "all": "Tout écouter sur SoundCloud",
+    "photoAlt": "Klaak aux platines sur une scène de festival en forêt, sous une arche décorée, entre deux sculptures d'extraterrestres"
+  },
+  "breakdown": {
+    "title": "De l’orga à la scène",
+    "portraitAlt": "Portrait de Klaak, casque autour du cou, éclairé par un faisceau de lumière",
+    "facts": [
+      { "label": "Format", "value": "DJ set — Hitech" },
+      { "label": "Collectif", "value": "Outrance (co-fondateur)" },
+      { "label": "Base", "value": "Lyon" }
+    ]
+  },
+  "dates": {
+    "title": "Les dates",
+    "nextLabel": "Prochaine date",
+    "nextTitle": "La vôtre ?",
+    "nextCta": "Booker Klaak"
+  },
+  "booking": {
+    "title": ["Bookez", "Klaak"],
+    "lead": "Parlez-moi de votre événement.",
+    "fields": {
+      "name": "Nom",
+      "email": "E-mail",
+      "structure": "Structure / événement",
+      "date": "Date",
+      "place": "Lieu",
+      "duration": "Durée de set",
+      "message": "Message"
+    },
+    "submit": "Envoyer la demande",
+    "sending": "Envoi…",
+    "success": "Demande envoyée. Merci !",
+    "error": "L'envoi a échoué. Réessayez, ou écrivez-moi directement par e-mail.",
+    "required": "Ce champ est obligatoire.",
+    "emailInvalid": "Cette adresse e-mail n'est pas valide.",
+    "captcha": "La vérification anti-robots n'a pas abouti. Réessayez.",
+    "mailto": "Ou directement par e-mail"
+  },
+  "footer": {
+    "calmOn": "Activer le mode calme",
+    "calmOff": "Réactiver les animations"
+  }
+}

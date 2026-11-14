@@ -6,6 +6,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger, SplitText);
+// La barre d'adresse mobile qui se replie ne doit pas recalculer les scènes épinglées.
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 // Mêmes courbes que les tokens CSS (--ease-*).
 CustomEase.create("klaak", "0.16, 1, 0.3, 1");
@@ -15,7 +17,8 @@ CustomEase.create("groove", "0.34, 1.56, 0.64, 1");
 export const DUR = { snap: 0.12, klaak: 0.32, move: 0.6, slow: 1.2 } as const;
 const REST_SHIFT = "0.035em";
 
-export const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+/** Mode calme : réglage système « réduire les animations » ou choix du visiteur (posé dans <head>, voir Base.astro). */
+export const reduced = () => "calm" in document.documentElement.dataset;
 
 /** La claque : l'élément arrive trop gros, trop décalé, surexposé, et se pose net. */
 export function klaak(el: Element) {
