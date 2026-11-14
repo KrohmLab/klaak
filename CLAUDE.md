@@ -39,18 +39,38 @@ Le brief complet et toutes les sources sont dans `brief/` (ne pas chercher de co
 - URL : production https://klaak.krohmlab.workers.dev, previews `<branche>-klaak.krohmlab.workers.dev`.
 - Secrets de production : au 14/11/2026, `/api/booking` répondait encore `config` (secrets absents).
 
+## Construction (étape 4)
+
+- Page : `src/pages/index.astro` assemble `src/components/chapters/*` (Intro, Montee, Drop, Breakdown, Dates,
+  Booking), `Footer` et le `Hud` vivant.
+- Scènes au scroll : `src/scripts/scenes/*.ts`, lancées dans l'ordre par `src/scripts/story.ts`. Sans JS ou en
+  mode calme (`html[data-calm]`, posé dans `<head>`), aucune scène : sections empilées, tout le contenu visible.
+- Mode « scène » : classes `is-story` (Montée épinglée) et `is-pinned-dates` (frise horizontale, ≥ 1024 px).
+  Sous 1024 px, les dates sont un carrousel natif à cran.
+- HUD (`src/scripts/hud.ts`) : indépendant de GSAP. Mobile : bouton « chapitre suivant » + Booking ; les
+  segments cliquables de l'onde n'existent qu'à partir de 768 px (cibles tactiles trop petites sinon).
+- Booking : `src/scripts/booking.ts`. Sans `turnstileSiteKey`, formulaire désactivé avec placeholder visible.
+  Test local sans secret réel : clés de test publiques Turnstile (`1x00000000000000000000AA` côté site,
+  `wrangler dev --var TURNSTILE_SECRET_KEY:1x0000000000000000000000000000000AA`).
+- SEO : `src/lib/seo.ts` (MusicGroup + MusicEvent pour les dates complètes), `robots.txt` et `sitemap.xml`
+  générés, `site.indexable` pilote le `noindex`. Visuels de marque : `npm run brand`.
+- Photo de scène (forêt, arche, extraterrestres) fournie le 14/11/2026 : seule image en pleine couleur
+  (`.shot`), au cœur du Drop.
+- Lighthouse mobile sur la preview (14/11/2026) : performance 100, LCP 1,5–1,8 s. Une première mesure à 69
+  était un aléa de démarrage du navigateur (non reproduit sur 3 passes ni en local).
+
 ## Avancement
 
 - [x] 1. Recherche, concept, stack (direction A validée)
 - [x] 2. Initialisation (Astro, wrangler.jsonc, Worker /api/booking testé en local)
 - [x] 3. Design system + page `/styleguide` (branche `design-system`, en attente de validation)
-- [ ] 4. Construction chapitre par chapitre
-- [ ] 5. Recette (retirer le `noindex` de `src/layouts/Base.astro`)
+- [x] 4. Construction chapitre par chapitre (branche `construction`, à fusionner dans `main` après validation)
+- [ ] 5. Recette : faite sauf envoi réel d'une demande de booking (attend clé Turnstile + secrets) et passage
+      de `site.indexable` à `true`
 
 ## En attente de Kevin
 
 - Clé de site Turnstile, nom de domaine final (`src/data/site.json`).
-- Titre du set Esoteros (`src/data/sets.json`, `title: null`).
 - Champs `[À COMPLÉTER]` de `brief/dates.md` ; accord pour reprendre les infos lisibles sur les affiches.
 - Écarts à trancher : « Halloween Nights » (pluriel sur les affiches), Esoteros 12-13 sept., affiche
   « Nexen Teaser Party 01/03/2025 » sans ligne dans le tableau, affiche Psychedelic Christmas manquante.

@@ -87,6 +87,9 @@ body {
   padding: 0.75rem 1rem;
   font-weight: 700;
 }
+[data-chapter]:focus {
+  outline: none; /* focus posé par la navigation entre chapitres, pas par l'utilisateur */
+}
 .skip-link:focus {
   top: 1rem;
 }
@@ -690,9 +693,15 @@ html[data-calm] .marquee__track[aria-hidden="true"] {
   padding: 0.5rem 1rem;
   font-size: 0.75rem;
 }
+button.hud__chapter {
+  min-height: 2.75rem;
+  cursor: pointer;
+  text-align: left;
+}
 @media (max-width: 47.99rem) {
-  .hud__pct {
-    display: none;
+  .hud__pct,
+  .hud__marks {
+    display: none; /* trop étroit pour six cibles tactiles : on navigue avec « chapitre suivant » */
   }
 }
 .has-hud {

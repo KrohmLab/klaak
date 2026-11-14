@@ -34,6 +34,23 @@ export function initHud() {
       marks.forEach((mark, i) => (i === now ? mark.setAttribute("aria-current", "true") : mark.removeAttribute("aria-current")));
     }
   };
+  // Aller à un chapitre : une section épinglée vit dans un « pin-spacer », c'est lui qui donne sa vraie position.
+  const goTo = (section: HTMLElement | undefined) => {
+    if (!section) return;
+    const anchor = section.parentElement?.classList.contains("pin-spacer") ? section.parentElement : section;
+    window.scrollTo({ top: Math.max(0, anchor.getBoundingClientRect().top + window.scrollY) + 2 });
+    section.setAttribute("tabindex", "-1");
+    section.focus({ preventScroll: true });
+  };
+  hud.querySelector("[data-hud-next]")?.addEventListener("click", () => goTo(sections[(current + 1) % sections.length]));
+  document.addEventListener("click", (event) => {
+    const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
+    const section = link && sections.find((s) => `#${s.id}` === link.getAttribute("href"));
+    if (!section) return;
+    event.preventDefault();
+    goTo(section);
+  });
+
   const request = () => {
     if (queued) return;
     queued = true;

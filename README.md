@@ -108,7 +108,6 @@ l'image Open Graph, le favicon et l'icône iOS.
 - [ ] `src/data/site.json` → `url` : nom de domaine final (sert aux URL canoniques, à l'Open Graph, au sitemap).
 - [ ] `src/data/site.json` → `indexable` : passer à `true` pour ouvrir le site aux moteurs de recherche.
 - [ ] `src/data/site.json` → `photoCredit` : crédit du ou des photographes.
-- [ ] `src/data/sets.json` → titre du set Esoteros 2026.
 - [ ] `src/data/dates.json` → lieux, villes et organisateurs à `null` (Nexen 2025 et 2026, Halloween Night 2025
       et 2026, Esoteros 2026) ; affiche de Psychedelic Christmas.
 
