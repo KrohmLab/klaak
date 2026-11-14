@@ -1,14 +1,28 @@
 ---
 import Base from "../layouts/Base.astro";
-import site from "../data/site.json";
+import Footer from "../components/Footer.astro";
+import Hud from "../components/Hud.astro";
+import Booking from "../components/chapters/Booking.astro";
+import Breakdown from "../components/chapters/Breakdown.astro";
+import Dates from "../components/chapters/Dates.astro";
+import Drop from "../components/chapters/Drop.astro";
+import Intro from "../components/chapters/Intro.astro";
+import Montee from "../components/chapters/Montee.astro";
+import { copy } from "../lib/content";
+import { structuredData } from "../lib/seo";
 ---
 
-<Base>
-  <main class="grid min-h-dvh place-items-center p-6 text-center">
-    <div>
-      <h1 class="font-display text-[clamp(3rem,18vw,12rem)] leading-none font-black text-acid">KLAAK</h1>
-      <p class="mt-6 text-sm tracking-[0.3em] uppercase">{site.tagline} · {site.collective} · {site.city}</p>
-      <p class="mt-10 text-xs tracking-widest text-white/70 uppercase">Site en construction</p>
-    </div>
+<Base story jsonLd={structuredData()}>
+  <main id="contenu">
+    <Intro />
+    <Montee />
+    <Drop />
+    <Breakdown />
+    <Dates />
+    <Booking />
   </main>
+  <div class="has-hud">
+    <Footer />
+  </div>
+  <Hud live chapters={copy.chapters} cta={{ href: "#booking", label: "Booking" }} />
 </Base>

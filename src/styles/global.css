@@ -613,8 +613,10 @@ body {
   }
 }
 .outline-text {
-  color: transparent;
-  -webkit-text-stroke: 2px var(--color-bone);
+  /* Remplissage de la couleur du fond, peint par-dessus le contour : masque les tracés internes de la police */
+  color: var(--color-void);
+  -webkit-text-stroke: 3px var(--color-bone);
+  paint-order: stroke fill;
 }
 
 /* --------------------------------------------------------------------------
@@ -634,6 +636,7 @@ html[data-calm] *::after {
 html[data-calm] .marquee {
   flex-wrap: wrap;
   white-space: normal;
+  font-size: clamp(2rem, 11vw, 9rem); /* chaque mot doit tenir dans la largeur */
 }
 html[data-calm] .marquee__track {
   animation: none;
@@ -651,6 +654,9 @@ html[data-calm] .marquee__track[aria-hidden="true"] {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .marquee {
+    font-size: clamp(2rem, 11vw, 9rem);
   }
   .marquee,
   .marquee__track {

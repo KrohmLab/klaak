@@ -2,13 +2,21 @@
 import "@fontsource-variable/unbounded";
 import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
-import { site } from "../lib/content";
+import { bio, site } from "../lib/content";
 
 interface Props {
   title?: string;
   description?: string;
+  /** Page d'accueil : lance la narration au scroll. Les autres pages n'ont que les patterns de base. */
+  story?: boolean;
+  jsonLd?: object;
+  /** Pages internes (styleguide, 404) : jamais indexées. */
+  noindex?: boolean;
 }
-const { title = `${site.name} — ${site.tagline}`, description = `${site.name}, ${site.tagline}. Co-fondateur du collectif ${site.collective}, ${site.city}.` } = Astro.props;
+const sentence = bio.fr.split(". ").slice(0, 1).join("") + ".";
+const { title = `${site.name} — ${site.tagline} · ${site.collective}, ${site.city}`, description = sentence, story = false, jsonLd, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const og = new URL("/og.png", site.url).href;
 ---
 
 <!doctype html>
@@ -19,15 +27,38 @@ const { title = `${site.name} — ${site.tagline}`, description = `${site.name},
     <meta name="theme-color" content="#07060d" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <!-- Site en construction : à retirer à la mise en production (étape 5). -->
-    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={canonical} />
+    {(noindex || !site.indexable) && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Logo Klaak en glitch chromatique" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <!-- Mode calme, posé avant le premier rendu : réglage système ou choix du visiteur (pied de page). -->
+    <script is:inline>
+      try {
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches || localStorage.getItem("calme") === "1") document.documentElement.dataset.calm = "";
+      } catch (e) {}
+    </script>
   </head>
-  <body>
+  <body data-story={story ? "" : undefined}>
     <a class="skip-link" href="#contenu">Aller au contenu</a>
     <slot />
     <script>
+      // Page d'accueil : narration complète au scroll. Autres pages : patterns de base seulement.
       import { initMotion } from "../scripts/motion";
-      initMotion();
+      import { initStory } from "../scripts/story";
+      if (document.body.dataset.story !== undefined) initStory();
+      else initMotion();
     </script>
   </body>
 </html>
