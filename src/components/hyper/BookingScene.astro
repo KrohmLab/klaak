@@ -7,7 +7,7 @@ const t = hyper.booking;
 ---
 
 <section id="booking" class="hx-scene hx-bookscene" data-hx-scene data-hx-s0="0.52" aria-labelledby="booking-title">
-  <HyperPhoto scene="booking" />
+  <HyperPhoto scene="booking" scrim={false} />
   <div class="hx-bookscene__in" data-hx-text>
     <p class="hx-mono" style="color:var(--wc)">{t.kicker}</p>
     <h2 id="booking-title" class="hx-mega hx-bookscene__title">{t.title.map((line) => <span>{line}</span>)}</h2>

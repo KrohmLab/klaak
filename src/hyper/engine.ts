@@ -8,7 +8,7 @@
 // la fréquence d'affichage (écrans 120 Hz).
 
 import { baseBox, facePoint, frameImg, type Focal } from "./framing";
-import { holeRadius, isMobile, layout, PORTAL, type Frame } from "./portal";
+import { holeRadius, isNarrow, layout, PORTAL, type Frame } from "./portal";
 import { nextStop, prevStop, snapStep, SNAP } from "./snap";
 import { Stars } from "./stars";
 import { sceneAt, type Timeline } from "./timeline";
@@ -152,7 +152,7 @@ export class Engine {
     cv.width = Math.round(this.w * dpr);
     cv.height = Math.round(this.h * dpr);
     this.o.root.style.setProperty("--hole", `${holeRadius({ w: this.w, h: this.h }).toFixed(1)}px`);
-    this.o.root.style.setProperty("--pcy", isMobile(this.w) ? `${PORTAL.centerYMobile * 100}%` : "50%");
+    this.o.root.style.setProperty("--pcy", isNarrow(this.w, this.h) ? `${PORTAL.centerYNarrow * 100}%` : "50%");
     this.o.photos?.forEach((p) => {
       if (!p) return;
       const { bw, bh } = baseBox(p.focal.ar, this.w, this.h);

@@ -217,13 +217,21 @@ const links = [
   .hx-social__calm:hover {
     color: var(--wc);
   }
-  @media (max-width: 760px) {
+  @media (max-width: 760px), (max-aspect-ratio: 9/10) {
     html.hx-on .hx-where {
       display: none;
     }
     /* Téléphone : pas de place en haut ; les réseaux restent accessibles dans la scène Booking. */
     html.hx-on .hx-social {
       display: none;
+    }
+  }
+  @media (max-height: 520px) and (min-aspect-ratio: 9/10) {
+    html.hx-on .hx-where {
+      display: none;
+    }
+    html.hx-on .hx-social {
+      top: 6px;
     }
   }
 </style>

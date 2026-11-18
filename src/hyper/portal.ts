@@ -46,19 +46,22 @@ export type Frame = {
 
 export type Viewport = { w: number; h: number };
 
-/** Téléphone : en dessous de cette largeur (incluse), mise en page mobile (même seuil que le CSS). */
-export const MOBILE_MAX = 760;
-export const isMobile = (w: number) => w <= MOBILE_MAX;
+/**
+ * Mise en page « étroite » (téléphone, tablette debout) : largeur ≤ 760 px OU écran en portrait.
+ * Même condition que le CSS : @media (max-width: 760px), (max-aspect-ratio: 9/10).
+ */
+export const NARROW_MAX = 760;
+export const isNarrow = (w: number, h: number) => w <= NARROW_MAX || w / Math.max(h, 1) <= 0.9;
 
 export const PORTAL = {
   /** Profondeur de plongée de la scène qui sort (réglable, 2,5 à 7 dans le prototype). */
   zoom: 4,
-  /** Rayon du portail au repos, en fraction de la hauteur (19 vh ; 11 vh sur téléphone, sinon il occupe
-   *  80 % de la largeur et ne laisse aucune place au visage ni au texte). */
+  /** Rayon du portail au repos, en fraction de la hauteur : 19 vh ; 9 vh en mise en page étroite (sinon il
+   *  occupe 80 % de la largeur d'un téléphone et ne laisse de place ni au visage ni au texte). */
   hole: 0.19,
-  holeMobile: 0.11,
-  /** Hauteur du centre des portails sur téléphone (fraction de l'écran) : visage en haut, texte en bas. */
-  centerYMobile: 0.38,
+  holeNarrow: 0.09,
+  /** Hauteur du centre des portails en mise en page étroite : logo puis visage au-dessus, texte en dessous. */
+  centerYNarrow: 0.46,
   /** Durée (en unités) de l'éclosion du portail suivant à l'arrivée sur une scène. */
   bloom: 0.45,
   /** Marge au-delà du coin le plus éloigné pour le rayon final. */
@@ -71,13 +74,13 @@ const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 const smoothstep = (x: number) => x * x * (3 - 2 * x);
 
 /** Rayon du portail au repos. */
-export const holeRadius = (vp: Viewport) => vp.h * (isMobile(vp.w) ? PORTAL.holeMobile : PORTAL.hole);
+export const holeRadius = (vp: Viewport) => vp.h * (isNarrow(vp.w, vp.h) ? PORTAL.holeNarrow : PORTAL.hole);
 
 /** Centre du portail qui révèle la scène i. */
 export function portalCenter(tl: Timeline, i: number, vp: Viewport): Vec {
   const spec = tl.scenes[i];
   if (spec?.portal) return spec.portal(vp.w, vp.h);
-  return [vp.w / 2, vp.h * (isMobile(vp.w) ? PORTAL.centerYMobile : 0.5)];
+  return [vp.w / 2, vp.h * (isNarrow(vp.w, vp.h) ? PORTAL.centerYNarrow : 0.5)];
 }
 
 /** Rayon nécessaire pour qu'un cercle centré en c couvre tout l'écran. */

@@ -4,13 +4,13 @@ import { Engine, type EngineOptions, type PhotoBinding } from "../hyper/engine";
 import { createChrome } from "../hyper/ui/chrome";
 import { initDates } from "../hyper/ui/dates";
 import { initSets } from "../hyper/ui/sets";
-import { isMobile } from "../hyper/portal";
+import { isNarrow } from "../hyper/portal";
 import { buildTimeline, type SceneSpec } from "../hyper/timeline";
 
-/** Positions de portail nommées. `intro` : décalé à droite (74 %, 46 %), sous le logo sur mobile (50 %, 64 %). */
+/** Positions de portail nommées. `intro` : décalé à droite (74 %, 46 %), sous le logo en écran étroit (50 %, 64 %). */
 const PORTALS: Record<string, SceneSpec["portal"]> = {
   center: undefined,
-  intro: (w, h) => (isMobile(w) ? [w * 0.5, h * 0.64] : [w * 0.74, h * 0.46]),
+  intro: (w, h) => (isNarrow(w, h) ? [w * 0.5, h * 0.64] : [w * 0.74, h * 0.46]),
 };
 
 const num = (v: string | undefined, fallback: number) => (v === undefined || v === "" || Number.isNaN(Number(v)) ? fallback : Number(v));

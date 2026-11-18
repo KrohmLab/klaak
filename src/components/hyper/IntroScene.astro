@@ -187,7 +187,7 @@ const t = hyper.intro;
       top: 34px;
     }
   }
-  @media (max-width: 760px) {
+  @media (max-width: 760px), (max-aspect-ratio: 9/10) {
     .hx-introtag {
       bottom: 16vh;
     }
@@ -197,6 +197,9 @@ const t = hyper.intro;
     }
     .hx-arc--2 {
       display: none;
+    }
+    .hx-introtag {
+      bottom: 10vh;
     }
     .hx-arc--3,
     .hx-arc--4,

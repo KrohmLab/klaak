@@ -129,26 +129,76 @@ const credit = hyper.photos[id].credit;
     align-items: flex-end;
   }
 
-  @media (max-width: 760px) {
+  /* Écran étroit (téléphone, tablette debout) : logo centré en haut, visage dessous, portail au milieu
+     (46 %), texte centré en bas sur le dégradé de lisibilité (HyperPhoto), au-dessus de la place du player. */
+  @media (max-width: 760px), (max-aspect-ratio: 9/10) {
     html.hx-on .hx-side,
     html.hx-on .hx-side--l,
     html.hx-on .hx-side--r {
-      left: 6vw;
-      right: 6vw;
+      left: 50%;
+      right: auto;
       top: auto;
-      /* Au-dessus du player (étape 4) ; le visage est en haut, le portail au milieu. */
-      bottom: 120px;
-      gap: 12px;
-      width: auto;
-      transform: none;
+      bottom: 112px;
+      gap: 10px;
+      width: min(88vw, 560px);
+      transform: translateX(-50%);
       text-align: center;
       align-items: center;
     }
+    .hx-h2 {
+      font-size: clamp(22px, 6.4vw, 36px);
+    }
+    .hx-mega--md {
+      font-size: clamp(40px, 12vw, 72px);
+    }
+    .hx-mega--lg {
+      font-size: clamp(48px, 15vw, 88px);
+    }
     .hx-body {
-      font-size: 13px;
+      font-size: clamp(13px, 3.5vw, 15px);
+      line-height: 1.55;
     }
     html.hx-on .hx-credit {
-      bottom: 150px;
+      top: 104px;
+      bottom: auto;
+      right: 6px;
+      transform: none;
+      writing-mode: vertical-lr;
+    }
+  }
+  /* Téléphone couché (paysage bas) : mise en page ordinateur, typographie compacte, voile sombre derrière le
+     texte (la photo occupe tout l'écran, le texte n'a pas la place de s'en écarter). */
+  @media (max-height: 520px) and (min-aspect-ratio: 9/10) {
+    html.hx-on .hx-side::before {
+      content: "";
+      position: absolute;
+      inset: -40px -70px;
+      z-index: -1;
+      background: radial-gradient(closest-side, rgb(7 6 13 / 0.82), rgb(7 6 13 / 0.6) 60%, transparent);
+    }
+    html.hx-on .hx-side {
+      top: calc(50% + 30px);
+      gap: 8px;
+      width: min(36vw, 420px);
+    }
+    .hx-mono {
+      font-size: 11px;
+    }
+    .hx-h2 {
+      font-size: clamp(18px, 2.6vw, 26px);
+    }
+    .hx-mega--md {
+      font-size: clamp(30px, 5vw, 48px);
+    }
+    .hx-mega--lg {
+      font-size: clamp(36px, 6.4vw, 60px);
+    }
+    .hx-body {
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .hx-bpm__n {
+      font-size: 26px !important;
     }
   }
 </style>

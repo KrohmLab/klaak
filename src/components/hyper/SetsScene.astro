@@ -106,8 +106,10 @@ const arts = sets.map((s) => {
     height: 100%;
     object-fit: cover;
   }
+  /* Photo cadrée sur un point (zoom 2) : plus large que la lentille, donc sans le max-width: 100 % de base. */
   .hx-art--fit img {
     inset: auto;
+    max-width: none;
     object-fit: fill;
   }
   .hx-portal,
@@ -225,7 +227,8 @@ const arts = sets.map((s) => {
     min-width: 280px;
     transform: translateY(-50%);
   }
-  .hx-np__title {
+  /* Double classe : passe devant la taille générique de .hx-h2. */
+  .hx-np .hx-np__title {
     font-size: clamp(20px, 2.2vw, 34px);
   }
   .hx-np__sub {
@@ -271,21 +274,21 @@ const arts = sets.map((s) => {
     width: auto;
   }
 
-  /* Mobile : la lentille reste au centre (continuité avec le portail) ; la tracklist, compacte, passe dessous. */
-  @media (max-width: 760px) {
+  /* Écran étroit : la lentille reste au centre des portails (continuité) ; titre et tracklist compacts dessous. */
+  @media (max-width: 760px), (max-aspect-ratio: 9/10) {
     html.hx-on .hx-tl {
-      left: 4vw;
-      right: 4vw;
+      left: 50%;
+      right: auto;
       top: auto;
       bottom: 3vh;
       gap: 6px;
-      width: auto;
+      width: min(92vw, 560px);
       min-width: 0;
-      transform: none;
+      transform: translateX(-50%);
     }
-    html.hx-on .hx-tl > .hx-mono,
     html.hx-on .hx-tl__title {
-      display: none;
+      font-size: clamp(26px, 8vw, 44px);
+      margin-bottom: 4px;
     }
     html.hx-on .hx-trk {
       min-height: 52px;
@@ -298,6 +301,33 @@ const arts = sets.map((s) => {
       width: 76px;
       height: 76px;
       margin: -38px 0 0 -38px;
+    }
+  }
+  /* Téléphone couché : tracklist et panneau resserrés de part et d'autre de la lentille. */
+  @media (max-height: 520px) and (min-aspect-ratio: 9/10) {
+    html.hx-on .hx-tl {
+      top: calc(50% + 24px);
+      gap: 6px;
+    }
+    html.hx-on .hx-tl__title {
+      font-size: 26px;
+      margin-bottom: 0;
+    }
+    html.hx-on .hx-trk {
+      min-height: 44px;
+      padding: 4px 12px;
+    }
+    html.hx-on .hx-np {
+      top: calc(50% + 24px);
+      gap: 8px;
+    }
+    .hx-np__wave {
+      height: 40px;
+    }
+    .hx-pbig {
+      width: 64px;
+      height: 64px;
+      margin: -32px 0 0 -32px;
     }
   }
 </style>

@@ -11,8 +11,10 @@ interface Props {
   scene: PhotoKey;
   /** La photo de la première scène est visible dès l'arrivée (dans le portail) : chargement prioritaire. */
   eager?: boolean;
+  /** Dégradé sombre en bas en écran étroit, sous le texte (inutile quand le texte est centré : Booking). */
+  scrim?: boolean;
 }
-const { scene, eager = false } = Astro.props;
+const { scene, eager = false, scrim = true } = Astro.props;
 const p = hyper.photos[scene] as (typeof hyper.photos)[PhotoKey] & { tintOpacity?: number; veil?: boolean; fx?: number; fy?: number; kf?: number; kp?: number; mobile?: { x: number; y: number; k?: number }; face?: number[] };
 const img = photo(p.photo);
 const focal = { hx: p.hx, hy: p.hy, fx: p.fx, fy: p.fy, tx: p.tx, ty: p.ty, kf: p.kf, kp: p.kp, mobile: p.mobile, face: p.face, ar: img.width / img.height };
@@ -34,6 +36,7 @@ const focal = { hx: p.hx, hy: p.hy, fx: p.fx, fy: p.fy, tx: p.tx, ty: p.ty, kf: 
   <div class="hx-photo__tint" style={`background:${p.tint};opacity:${p.tintOpacity ?? 1}`}></div>
   <div class="hx-photo__vig"></div>
   {p.veil && <div class="hx-photo__veil"></div>}
+  {scrim && <div class="hx-photo__scrim"></div>}
 </div>
 
 <style is:global>
@@ -85,5 +88,17 @@ const focal = { hx: p.hx, hy: p.hy, fx: p.fx, fy: p.fy, tx: p.tx, ty: p.ty, kf: 
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse at 50% 40%, rgb(7 6 13 / 0.55) 0, rgb(7 6 13 / 0.25) 60%, rgb(7 6 13 / 0.6) 100%);
+  }
+  /* Dégradé de lisibilité sous le texte, en écran étroit seulement (le texte y est posé en bas de la photo). */
+  .hx-photo__scrim {
+    display: none;
+  }
+  @media (max-width: 760px), (max-aspect-ratio: 9/10) {
+    html.hx-on .hx-photo__scrim {
+      position: absolute;
+      inset: 0;
+      display: block;
+      background: linear-gradient(to top, rgb(7 6 13 / 0.96) 0%, rgb(7 6 13 / 0.88) 30%, rgb(7 6 13 / 0.45) 46%, transparent 58%);
+    }
   }
 </style>

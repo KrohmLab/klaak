@@ -21,11 +21,12 @@ export type Focal = {
   ar: number;
   /** Centre réel du visage (contrôle uniquement : ?debug). */
   face?: [number, number];
-  /** Téléphone : le CENTRE DU VISAGE (`face`) est amené en (x, y), zoom k. Sans valeur : comme sur ordinateur. */
+  /** Mise en page étroite (téléphone, tablette debout) : le CENTRE DU VISAGE (`face`) est amené en (x, y),
+   *  zoom k. Sans valeur : comme sur ordinateur. */
   mobile?: { x: number; y: number; k?: number };
 };
 
-import { isMobile } from "./portal";
+import { isNarrow } from "./portal";
 
 export type FrameContext = {
   /** Avancée de l'ouverture (0 → 1), 1 au repos. */
@@ -45,7 +46,7 @@ export const baseBox = (ar: number, W: number, H: number) => ({ bw: Math.max(W, 
 
 export function frameImg(P: Focal, W: number, H: number, c: FrameContext): ImageFrame {
   const { bw, bh } = baseBox(P.ar, W, H);
-  const m = isMobile(W) && P.mobile && P.face ? P.mobile : null;
+  const m = isNarrow(W, H) && P.mobile && P.face ? P.mobile : null;
   // Point d'ancrage plein écran : haut de la tête (valeurs du prototype) ou, sur téléphone, centre du visage.
   const hx = m ? P.face![0] : P.hx;
   const hy = m ? P.face![1] : P.hy;

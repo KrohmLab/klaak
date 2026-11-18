@@ -94,16 +94,26 @@ Le brief complet et toutes les sources sont dans `brief/` (ne pas chercher de co
   est relevé dans `face` (contrôle `?debug` + `__hx.inspect()`). Écarts au prototype, voulus : Dates
   (tx 0,94 / ty 0,27 : le visage tombait sous la fiche de la date) et Booking (kf 1,6 / tx 0,4 / ty 0,62 : le DJ
   était sous le titre).
-- Téléphone (≤ 760 px) : le prototype ne tenait pas (portail de 19 vh = 80 % de la largeur, texte dessus).
-  Adapté : portail 11 vh centré à 38 % (`--pcy`), visage en haut (`photos.*.mobile`, centré sur `face`), texte en
-  bas à 120 px (place du player), logo envolé à 62 %, réseaux masqués (présents dans la scène Booking), orbite des
-  dates SOUS la lentille (pas 34°).
+- Trois familles d'écran (retour de Kevin le 18/11/2026 : « responsive totalement à revoir », logo centré sur
+  mobile). Même condition en JS (`isNarrow` dans `src/hyper/portal.ts`) et en CSS :
+  - **Étroit** = largeur ≤ 760 px OU portrait (`@media (max-width: 760px), (max-aspect-ratio: 9/10)`) :
+    logo CENTRÉ en haut (55 à 80 % selon la largeur), visage centré dessous (`photos.*.mobile`, centré sur
+    `face`, y ≈ 0,24), portail 9 vh centré à 46 % (`--pcy`), texte centré en bas à 112 px (place du player)
+    sur un dégradé sombre (`.hx-photo__scrim`, sauf Booking), crédit vertical en haut à droite, réseaux
+    masqués (présents dans Booking), dates en rangée arquée SOUS la lentille et fiche placée sous la rangée.
+  - **Paysage bas** = hauteur ≤ 520 px en paysage : mise en page ordinateur, typographie compacte, voile
+    radial derrière les textes, logo à 60 %, chapitre masqué, rangée des dates sous la lentille, fiche à droite.
+  - **Ordinateur** : inchangé (prototype).
+- Piège CSS : `.hx-h2` et `.hx-mega` fixent une taille ; un titre qui a sa propre taille utilise une double
+  classe (`.hx-dinfo .hx-dinfo__event`, `.hx-np .hx-np__title`), sinon l'ordre de chargement décide.
+- Piège CSS : Tailwind (preflight) met `max-width: 100%` sur les images ; une photo cadrée plus large que son
+  cadre (lentille) doit avoir `max-width: none`.
 - Scènes hors champ : opacité 0 + `data-hx-off` (clics coupés), PAS `visibility: hidden`, pour rester dans
   l'ordre de tabulation (le focus fait voyager). Scène et stage en `overflow: clip`.
 - Garde-fou CSS : `src/hyper/__tests__/css.test.ts` interdit une classe `.hx-*` définie dans deux composants
   (bug rencontré : `.hx-orb` de l'intro et des dates). Variable d'angle de l'orbite : `--ang` (jamais `--t`,
   réservé à l'opacité des textes posée par le moteur).
-- Étape 3 livrée le 18/11/2026, en attente de validation.
+- Étape 3 livrée le 18/11/2026 ; reprise du responsive le même jour, en attente de validation.
 
 ## Avancement
 

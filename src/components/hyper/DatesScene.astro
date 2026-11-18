@@ -264,6 +264,7 @@ const stops = Array.from({ length: n }, (_, k) => ((k + 1) * STEP).toFixed(2)).j
   }
   .hx-dl.hx-art--fit img {
     inset: auto;
+    max-width: none;
     object-fit: fill;
   }
   .hx-portal--orange {
@@ -276,7 +277,7 @@ const stops = Array.from({ length: n }, (_, k) => ((k + 1) * STEP).toFixed(2)).j
     left: 50%;
     bottom: 17vh;
     z-index: 2;
-    width: min(600px, 90vw);
+    width: min(720px, 90vw);
     transform: translateX(-50%);
   }
   .hx-dinfo__item {
@@ -289,7 +290,7 @@ const stops = Array.from({ length: n }, (_, k) => ((k + 1) * STEP).toFixed(2)).j
   .hx-dinfo__item[hidden] {
     display: none;
   }
-  .hx-dinfo__event {
+  .hx-dinfo .hx-dinfo__event {
     font-size: clamp(20px, 2.2vw, 32px);
   }
   .hx-dinfo__place {
@@ -367,28 +368,86 @@ const stops = Array.from({ length: n }, (_, k) => ((k + 1) * STEP).toFixed(2)).j
     opacity: 1;
   }
 
-  /* Téléphone : l'orbite s'ouvre SOUS la lentille (le haut de l'écran est pris par le logo et le portail). */
-  @media (max-width: 760px) {
+  /* Écran étroit : les affiches défilent en rangée légèrement arquée SOUS la lentille, la fiche juste dessous
+     (placée depuis le haut pour ne jamais chevaucher la rangée, quelle que soit la hauteur de l'écran). */
+  @media (max-width: 760px), (max-aspect-ratio: 9/10) {
     .hx-dates {
-      --orbit-step: 34deg;
-      --orbit-rx: 48vw;
-      --orbit-ry: 21vh;
+      --orbit-step: 30deg;
+      --orbit-rx: min(58vw, 420px);
+      --orbit-ry: calc(var(--hole) + 44px);
     }
-    html.hx-on .hx-dtitle {
+    html.hx-on .hx-dtitle,
+    html.hx-on .hx-ghost,
+    .hx-dcard__cap {
       display: none;
     }
-    .hx-ghost {
-      font-size: 22vh;
-    }
     .hx-dcard {
-      width: 150px;
+      width: 104px;
     }
     .hx-dcard__th {
-      width: 150px;
-      height: 84px;
+      width: 104px;
+      height: 58px;
+    }
+    .hx-dcard__th--tx {
+      font-size: 9px;
+      padding: 4px;
+    }
+    .hx-dcard__th--slot {
+      font-size: 13px;
     }
     html.hx-on .hx-dinfo {
-      bottom: 120px;
+      top: calc(var(--pcy, 46%) + var(--hole) + 85px);
+      bottom: auto;
+    }
+    .hx-dinfo__item {
+      gap: 4px;
+    }
+    .hx-dinfo .hx-dinfo__event {
+      font-size: clamp(18px, 5.4vw, 28px);
+    }
+    .hx-dinfo__place {
+      font-size: 12px;
+    }
+  }
+  /* Petits téléphones : fiche plus compacte pour ne pas descendre sur le player. */
+  @media (max-width: 760px) and (max-height: 760px), (max-aspect-ratio: 9/10) and (max-height: 760px) {
+    .hx-dinfo .hx-dinfo__event {
+      font-size: 17px;
+    }
+  }
+  /* Téléphone couché : rangée d'affiches sous la lentille (comme en écran étroit), fiche à droite. */
+  @media (max-height: 520px) and (min-aspect-ratio: 9/10) {
+    .hx-dates {
+      --orbit-step: 30deg;
+      --orbit-rx: 22vw;
+      --orbit-ry: calc(var(--hole) + 52px);
+    }
+    html.hx-on .hx-dtitle,
+    html.hx-on .hx-ghost,
+    .hx-dcard__cap {
+      display: none;
+    }
+    .hx-dcard {
+      width: 120px;
+    }
+    .hx-dcard__th {
+      width: 120px;
+      height: 68px;
+    }
+    html.hx-on .hx-dinfo {
+      left: auto;
+      right: 4vw;
+      bottom: auto;
+      top: 50%;
+      width: 28vw;
+      transform: translateY(-50%);
+    }
+    html.hx-on .hx-dinfo__item {
+      align-items: flex-start;
+      text-align: left;
+    }
+    .hx-dinfo .hx-dinfo__event {
+      font-size: 20px;
     }
   }
 </style>
