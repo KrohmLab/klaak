@@ -4,11 +4,15 @@
 // Avec JavaScript, `html.hx-on` fige la page et le moteur (src/hyper/engine.ts) pilote tout.
 interface Props {
   label: string;
+  /** Noms des chapitres, pour l'interface fixe. */
+  names?: string[];
 }
-const { label } = Astro.props;
+const { label, names = [] } = Astro.props;
 ---
 
-<div class="hx-stage" data-hx-stage aria-label={label}>
+<div class="hx-stage" data-hx-stage aria-label={label} data-hx-names={JSON.stringify(names)}>
+  <!-- Interface fixe en premier : sans JS, le logo ouvre la page ; avec JS, elle est positionnée au-dessus. -->
+  <slot name="chrome" />
   <slot />
   <div class="hx-fx" data-hx-fx aria-hidden="true">
     <div class="hx-rays" data-hx-rays></div>
@@ -16,7 +20,6 @@ const { label } = Astro.props;
     <div class="hx-ring hx-ring--rest" data-hx-ring="rest"><i class="hx-r4"></i><i class="hx-r2"></i><i class="hx-r3"></i><i class="hx-r1"></i></div>
     <canvas class="hx-canvas" data-hx-canvas></canvas>
   </div>
-  <slot name="chrome" />
 </div>
 
 <style is:global>
@@ -41,7 +44,8 @@ const { label } = Astro.props;
   html.hx-on .hx-stage {
     position: fixed;
     inset: 0;
-    overflow: hidden;
+    /* clip et non hidden : le focus clavier ne doit jamais faire défiler la scène. */
+    overflow: clip;
     touch-action: none;
     background: var(--color-void);
     --wc: var(--color-acid);
@@ -51,9 +55,14 @@ const { label } = Astro.props;
     position: absolute;
     inset: 0;
     min-height: 0;
-    visibility: hidden;
+    overflow: clip;
+    opacity: 0;
     will-change: transform, opacity, clip-path;
     pointer-events: none;
+  }
+  /* Scène hors champ : transparente, et ses liens et boutons ne captent pas la souris. */
+  html.hx-on .hx-scene[data-hx-off] * {
+    pointer-events: none !important;
   }
   html.hx-on .hx-scene a,
   html.hx-on .hx-scene button,

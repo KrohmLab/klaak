@@ -1,0 +1,154 @@
+---
+// Scènes 01 à 04 : une photo plein cadre et une colonne de texte (gauche ou droite).
+import HyperPhoto from "./HyperPhoto.astro";
+import Todo from "../Todo.astro";
+import hyper from "../../data/hyper.json";
+
+type PhotoKey = keyof typeof hyper.photos;
+interface Props {
+  id: PhotoKey;
+  /** Numéro de scène (0 = intro). */
+  index: number;
+  side: "l" | "r";
+  kicker: string;
+  /** Couleur de l'accroche (par défaut : couleur du set en cours). */
+  accent?: string;
+  title: string;
+  /** Titre en très grand (« La Hitech », « Drop »). */
+  mega?: "md" | "lg";
+  titleAccent?: boolean;
+  body: string[];
+  portal?: "intro";
+  eager?: boolean;
+}
+const { id, index, side, kicker, accent = "var(--wc)", title, mega, titleAccent = false, body, portal, eager } = Astro.props;
+const credit = hyper.photos[id].credit;
+---
+
+<section id={id} class="hx-scene hx-story" data-hx-scene data-hx-preview data-hx-s0="0.52" data-hx-portal={portal} aria-labelledby={`${id}-title`} data-index={index}>
+  <HyperPhoto scene={id} eager={eager} />
+  <div class:list={["hx-side", `hx-side--${side}`]} data-hx-text>
+    <p class="hx-mono" style={`color:${accent}`}>{kicker}</p>
+    <h2 id={`${id}-title`} class:list={[mega ? "hx-mega" : "hx-h2", mega && `hx-mega--${mega}`]} style={titleAccent ? "color:var(--wc)" : undefined}>{title}</h2>
+    {body.map((text) => <p class="hx-body">{text}</p>)}
+    <slot />
+  </div>
+  <p class="hx-credit" data-hx-text>Photo · {credit ?? <Todo what="crédit" />}</p>
+</section>
+
+<style is:global>
+  .hx-mono {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .hx-h2,
+  .hx-mega {
+    margin: 0;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .hx-h2 {
+    font-size: clamp(26px, 3vw, 50px);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-shadow:
+      calc(-1px - var(--vel, 0) * 12px) 0 var(--color-cyan),
+      calc(1px + var(--vel, 0) * 12px) 0 var(--color-magenta);
+  }
+  .hx-mega {
+    font-weight: 900;
+    line-height: 0.86;
+    letter-spacing: -0.045em;
+    text-shadow:
+      calc(-2px - var(--vel, 0) * 26px) 0 var(--color-cyan),
+      calc(2px + var(--vel, 0) * 26px) 0 var(--color-magenta);
+  }
+  .hx-mega--md {
+    font-size: clamp(44px, 5.6vw, 96px);
+  }
+  .hx-mega--lg {
+    font-size: clamp(56px, 7.4vw, 128px);
+  }
+  .hx-body {
+    margin: 0;
+    max-width: 440px;
+    font: 400 15px/1.65 var(--font-mono);
+    color: #d8d5ea;
+    text-shadow: 0 1px 12px rgb(7 6 13 / 0.9);
+  }
+  .hx-body--hi {
+    color: var(--color-bone);
+  }
+  .hx-side {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 6vw 2rem;
+  }
+  .hx-credit {
+    position: absolute;
+    z-index: 2;
+    right: 16px;
+    bottom: 22px;
+    margin: 0;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font: 400 10px var(--font-mono);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(244 242 255 / 0.5);
+  }
+
+  /* Sans JS : la colonne s'empile sous le haut de la photo. */
+  html:not(.hx-on) .hx-side {
+    position: relative;
+    padding-top: 55svh;
+  }
+
+  html.hx-on .hx-side {
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(31vw, 460px);
+    padding: 0;
+  }
+  html.hx-on .hx-side--l {
+    left: 5vw;
+    text-align: left;
+    align-items: flex-start;
+  }
+  html.hx-on .hx-side--r {
+    right: 5vw;
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  @media (max-width: 760px) {
+    html.hx-on .hx-side,
+    html.hx-on .hx-side--l,
+    html.hx-on .hx-side--r {
+      left: 6vw;
+      right: 6vw;
+      top: auto;
+      /* Au-dessus du player (étape 4) ; le visage est en haut, le portail au milieu. */
+      bottom: 120px;
+      gap: 12px;
+      width: auto;
+      transform: none;
+      text-align: center;
+      align-items: center;
+    }
+    .hx-body {
+      font-size: 13px;
+    }
+    html.hx-on .hx-credit {
+      bottom: 150px;
+    }
+  }
+</style>

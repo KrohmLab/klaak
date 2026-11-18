@@ -1,0 +1,229 @@
+---
+// Interface fixe du voyage : logo (géant à l'intro, puis en haut à gauche), chapitre en cours + jauge de
+// profondeur, réseaux. Piloté par src/hyper/chrome.ts.
+import hyper from "../../data/hyper.json";
+import { site } from "../../lib/content";
+const links = [
+  ["SoundCloud", site.links.soundcloud],
+  ["Instagram", site.links.instagram],
+  ["Facebook", site.links.facebook],
+] as const;
+---
+
+<div class="hx-brand" data-hx-brand role="img" aria-label="Klaak">
+  <div class="hx-brand__lay">
+    <div class="hx-brand__l hx-brand__c"></div>
+    <div class="hx-brand__l hx-brand__m"></div>
+    <div class="hx-brand__l hx-brand__w"></div>
+    <div class="hx-brand__l hx-brand__g"></div>
+  </div>
+</div>
+
+<nav class="hx-where" data-hx-where aria-label="Chapitres">
+  <p class="hx-mono hx-where__now" aria-live="polite" data-hx-where-label>00 — {hyper.chapters[0]}</p>
+  <div class="hx-depth" aria-hidden="true"><i data-hx-depth></i></div>
+  <ol class="hx-where__list">
+    {
+      hyper.chapters.map((name, i) => (
+        <li>
+          <a href={`#${["intro", "festivalier", "collectif", "revelation", "drop", "sets", "dates", "booking"][i]}`}>
+            {String(i).padStart(2, "0")} — {name}
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<nav class="hx-social" aria-label="Réseaux de Klaak">
+  {links.map(([label, href]) => <a href={href} rel="noopener me">{label}</a>)}
+  <button type="button" class="hx-social__calm" data-calm-toggle data-on={hyper.calm.on} data-off={hyper.calm.off}>{hyper.calm.on}</button>
+</nav>
+
+<script>
+  // Mode calme choisi par le visiteur : mémorisé, appliqué dès le chargement (script en tête, Base.astro).
+  const button = document.querySelector<HTMLButtonElement>("[data-calm-toggle]");
+  if (button) {
+    const chosen = () => {
+      try {
+        return localStorage.getItem("calme") === "1";
+      } catch {
+        return false;
+      }
+    };
+    button.textContent = (chosen() ? button.dataset.off : button.dataset.on) ?? "";
+    button.setAttribute("aria-pressed", String(chosen()));
+    button.addEventListener("click", () => {
+      try {
+        if (chosen()) localStorage.removeItem("calme");
+        else localStorage.setItem("calme", "1");
+      } catch {
+        return;
+      }
+      location.reload();
+    });
+  }
+</script>
+
+<style is:global>
+  .hx-brand {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 30;
+    width: 200px;
+    height: 141px;
+    transform-origin: 0 0;
+    transform: translate(var(--lx, 28px), var(--ly, 18px)) scale(var(--ls, 1));
+    pointer-events: none;
+    --gl: 0;
+    --vel: 0;
+    --vs: 0;
+  }
+  html:not(.hx-on) .hx-brand {
+    position: relative;
+    width: min(84vw, 600px);
+    height: auto;
+    aspect-ratio: 200 / 141;
+    margin: 6vh 0 0 6vw;
+    transform: none;
+  }
+  .hx-brand__lay {
+    position: absolute;
+    inset: 0;
+    transform: skewX(calc(var(--vs) * -14deg));
+  }
+  .hx-brand__l {
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    -webkit-mask: url("/logo.svg") center / contain no-repeat;
+    mask: url("/logo.svg") center / contain no-repeat;
+  }
+  .hx-brand__c {
+    color: var(--color-cyan);
+    mix-blend-mode: screen;
+    transform: translateX(calc(-3px - var(--vel) * 22px - var(--gl) * 18px));
+  }
+  .hx-brand__m {
+    color: var(--color-magenta);
+    mix-blend-mode: screen;
+    transform: translateX(calc(3px + var(--vel) * 22px + var(--gl) * 18px));
+    clip-path: inset(calc(var(--gl) * 38%) 0 calc(var(--gl) * 30%) 0);
+  }
+  .hx-brand__w {
+    color: var(--color-bone);
+  }
+  .hx-brand__g {
+    color: var(--wc);
+    mix-blend-mode: screen;
+    opacity: var(--gl);
+    transform: translateX(calc(var(--gl) * -30px));
+    clip-path: inset(calc(55% - var(--gl) * 20%) 0 calc(30% - var(--gl) * 10%) 0);
+  }
+
+  .hx-where {
+    display: none;
+  }
+  html.hx-on .hx-where {
+    position: absolute;
+    left: 30px;
+    top: 166px;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    opacity: var(--ls-inv, 0);
+  }
+  .hx-where__now {
+    color: var(--wc);
+  }
+  .hx-depth {
+    position: relative;
+    width: 200px;
+    height: 2px;
+    overflow: hidden;
+    background: var(--color-void-3);
+  }
+  .hx-depth i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 100%;
+    transform-origin: 0 50%;
+    transform: scaleX(var(--depth, 0));
+    background: var(--wc);
+  }
+  /* Liste des chapitres : accessible au clavier, visible seulement quand elle a le focus. */
+  .hx-where__list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: grid;
+    gap: 2px;
+    margin: 8px 0 0;
+    padding: 8px;
+    list-style: none;
+    background: rgb(16 14 26 / 0.96);
+    border: 1px solid var(--color-void-3);
+    clip-path: inset(50%);
+    opacity: 0;
+  }
+  html.hx-on .hx-where:focus-within {
+    opacity: 1;
+  }
+  .hx-where:focus-within .hx-where__list {
+    clip-path: none;
+    opacity: 1;
+  }
+  .hx-where__list a {
+    display: block;
+    padding: 6px 10px;
+    font: 400 12px var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-bone);
+    text-decoration: none;
+  }
+  .hx-where__list a:hover,
+  .hx-where__list a:focus-visible {
+    color: var(--wc);
+  }
+
+  .hx-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  html.hx-on .hx-social {
+    position: absolute;
+    right: 20px;
+    top: 18px;
+    z-index: 30;
+  }
+  .hx-social a,
+  .hx-social__calm {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 10px;
+    font: 400 11px var(--font-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mute);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .hx-social a:hover,
+  .hx-social__calm:hover {
+    color: var(--wc);
+  }
+  @media (max-width: 760px) {
+    html.hx-on .hx-where {
+      display: none;
+    }
+    /* Téléphone : pas de place en haut ; les réseaux restent accessibles dans la scène Booking. */
+    html.hx-on .hx-social {
+      display: none;
+    }
+  }
+</style>

@@ -20,7 +20,17 @@ export type KDate = {
   badges: string[];
   link: string | null;
 };
-export type KSet = { id: string; title: string | null; url: string };
+export type KSet = {
+  id: string;
+  title: string;
+  /** Ligne d'info sous le titre (événement, lieu, mois). */
+  sub: string;
+  url: string;
+  /** Couleur du set : elle recolore tout le site quand il est choisi. */
+  color: string;
+  /** Pochette : une affiche de src/assets/posters, ou une photo cadrée sur un point (fx, fy). */
+  art: { poster: string } | { photo: string; fx: number; fy: number };
+};
 
 export const dates: KDate[] = datesJson;
 export const sets: KSet[] = setsJson;

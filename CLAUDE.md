@@ -85,7 +85,25 @@ Le brief complet et toutes les sources sont dans `brief/` (ne pas chercher de co
   la continuité, l'aimantation, le mode calme.
 - Banc d'essai : `/moteur` (non indexé). `?u=1.4` fige une position, `?calme` force le mode calme,
   `?zoom=5` change la profondeur. Mire : cadre magenta à l'extérieur des scènes = bord d'image visible.
-- Étape 2 (moteur seul) : livrée sur la branche `v2`, en attente de validation de la fluidité.
+- Étape 2 (moteur seul) : validée le 18/11/2026.
+- Étape 3 (scènes) : `src/pages/index.astro` = v2. Composants `src/components/hyper/` (IntroScene, StoryScene
+  pour 01-04, SetsScene, DatesScene, BookingScene, BookingForm = formulaire v1 dans un `<dialog>`, Chrome = logo,
+  chapitres, réseaux), contrôleurs `src/hyper/ui/` (chrome, sets, dates). Textes et cadrages :
+  `src/data/hyper.json`. La v1 (chapitres GSAP, Footer, HUD vivant) est supprimée de l'accueil.
+- Cadrage photo : dans le prototype, `hx`/`hy` vise le HAUT DE LA TÊTE, pas le visage. Le centre réel du visage
+  est relevé dans `face` (contrôle `?debug` + `__hx.inspect()`). Écarts au prototype, voulus : Dates
+  (tx 0,94 / ty 0,27 : le visage tombait sous la fiche de la date) et Booking (kf 1,6 / tx 0,4 / ty 0,62 : le DJ
+  était sous le titre).
+- Téléphone (≤ 760 px) : le prototype ne tenait pas (portail de 19 vh = 80 % de la largeur, texte dessus).
+  Adapté : portail 11 vh centré à 38 % (`--pcy`), visage en haut (`photos.*.mobile`, centré sur `face`), texte en
+  bas à 120 px (place du player), logo envolé à 62 %, réseaux masqués (présents dans la scène Booking), orbite des
+  dates SOUS la lentille (pas 34°).
+- Scènes hors champ : opacité 0 + `data-hx-off` (clics coupés), PAS `visibility: hidden`, pour rester dans
+  l'ordre de tabulation (le focus fait voyager). Scène et stage en `overflow: clip`.
+- Garde-fou CSS : `src/hyper/__tests__/css.test.ts` interdit une classe `.hx-*` définie dans deux composants
+  (bug rencontré : `.hx-orb` de l'intro et des dates). Variable d'angle de l'orbite : `--ang` (jamais `--t`,
+  réservé à l'opacité des textes posée par le moteur).
+- Étape 3 livrée le 18/11/2026, en attente de validation.
 
 ## Avancement
 

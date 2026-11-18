@@ -1,0 +1,121 @@
+{
+  "chapters": ["Intro", "Festivalier", "Collectif", "Révélation", "Drop", "Les sets", "Les dates", "Booking"],
+  "stage": "Klaak — hyperespace. Molette, trackpad, glisser ou flèches pour plonger.",
+  "intro": {
+    "h1": "Klaak, DJ hitech du collectif Outrance, Lyon",
+    "tagline": "Hitech · Groovy · Happy · Survitaminée",
+    "sub": "Collectif Outrance · Lyon"
+  },
+  "festivalier": {
+    "kicker": "01 — Le festivalier",
+    "title": "Plus de 10 ans dans l’univers psytrance",
+    "body": ["Des années à écumer les festivals à travers la France et l’Europe, à s’imprégner de l’essence des plus grandes scènes psytrance pour nourrir son univers musical."]
+  },
+  "collectif": {
+    "kicker": "02 — Collectif",
+    "title": "Outrance",
+    "body": ["Co-fondateur du collectif Outrance, acteur incontournable de la psytrance à Lyon, il y a œuvré pendant des années à faire vibrer les dancefloors."],
+    "highlight": "Aujourd’hui, il est aussi l’un des artistes qui représentent l’association."
+  },
+  "revelation": {
+    "kicker": "03 — La révélation",
+    "title": "La Hitech",
+    "body": ["Le déclic qui lui a donné l’envie de passer de l’orga à la scène. Sa hitech à lui : explosive, groovy, happy et survitaminée."],
+    "bpm": "175 → 200",
+    "bpmUnit": "BPM",
+    "note": "Une énergie positive qui monte sans jamais redescendre."
+  },
+  "drop": {
+    "kicker": "04 — De l’orga à la scène",
+    "title": "Drop",
+    "body": ["Aujourd’hui, c’est derrière les platines qu’il insuffle son énergie."],
+    "note": "Lance un set : tout le voyage se cale sur le kick",
+    "play": "Écouter les sets"
+  },
+  "sets": {
+    "kicker": "05 — Les sets",
+    "title": "Tracklist",
+    "ready": "Prêt à décoller",
+    "playing": "En lecture",
+    "listen": "Écouter",
+    "link": "Écouter sur SoundCloud ↗"
+  },
+  "dates": {
+    "kicker": "06 — Les dates",
+    "title": "En orbite",
+    "help": "Molette pour faire tourner, clic pour viser.",
+    "slotWhen": "Bientôt",
+    "slotEvent": "Votre événement",
+    "slotTitle": "Votre date ?",
+    "slotPlace": "Festival, soirée, club : parlons-en.",
+    "slotCta": "Proposer une date"
+  },
+  "booking": {
+    "kicker": "07 — Booking",
+    "title": ["La prochaine date,", "c’est la vôtre"],
+    "cta": "Booker Klaak",
+    "dialogTitle": "Booker Klaak",
+    "close": "Fermer"
+  },
+  "calm": { "on": "Animations : réduire", "off": "Animations : rétablir" },
+  "photos": {
+    "festivalier": {
+      "photo": "fond-ecran-rond",
+      "face": [0.43, 0.37],
+      "mobile": { "x": 0.6, "y": 0.15, "k": 1.5 },
+      "alt": "Klaak aux platines, casque sur les oreilles, devant un grand écran rond projeté",
+      "tint": "#19e3ff",
+      "credit": "NVP Photographie",
+      "hx": 0.38, "hy": 0.18, "tx": 0.2, "ty": 0.34
+    },
+    "collectif": {
+      "photo": "montee-sourire",
+      "face": [0.54, 0.25],
+      "mobile": { "x": 0.6, "y": 0.15, "k": 1.3 },
+      "alt": "Klaak sourit, bras levé, casque autour du cou, en t-shirt Outrance",
+      "tint": "#ff2bd6",
+      "credit": "NVP Photographie",
+      "hx": 0.53, "hy": 0.14, "tx": 0.79, "ty": 0.32
+    },
+    "revelation": {
+      "photo": "drop-scene",
+      "face": [0.555, 0.525],
+      "mobile": { "x": 0.5, "y": 0.15, "k": 2 },
+      "alt": "Klaak aux platines sur la scène d’Esoteros 2026, en forêt, sous une arche entre deux sculptures d’extraterrestres",
+      "tint": "#ff8a00",
+      "tintOpacity": 0.35,
+      "credit": null,
+      "hx": 0.57, "hy": 0.55, "fx": 0.57, "fy": 0.58, "tx": 0.8, "ty": 0.62, "kf": 1.15, "kp": 2.5
+    },
+    "drop": {
+      "photo": "breakdown-portrait",
+      "face": [0.74, 0.43],
+      "mobile": { "x": 0.6, "y": 0.15, "k": 1.7 },
+      "alt": "Klaak aux platines, casque autour du cou, dans un faisceau de lumière",
+      "tint": "#c6ff1a",
+      "credit": "NVP Photographie",
+      "hx": 0.75, "hy": 0.17, "tx": 0.79, "ty": 0.34
+    },
+    "dates": {
+      "photo": "breakdown-profil-bleu",
+      "face": [0.48, 0.41],
+      "mobile": { "x": 0.68, "y": 0.14, "k": 1.4 },
+      "alt": "Klaak de profil, la main sur son casque, dans une lumière bleue",
+      "tint": "#19e3ff",
+      "credit": "NVP Photographie",
+      "veil": true,
+      "hx": 0.55, "hy": 0.27, "tx": 0.94, "ty": 0.27, "kf": 1.7
+    },
+    "booking": {
+      "photo": "fond-foret",
+      "face": [0.56, 0.58],
+      "mobile": { "x": 0.5, "y": 0.82, "k": 1.6 },
+      "alt": "Une scène de festival en bois au milieu de la forêt",
+      "tint": "#c6ff1a",
+      "credit": "NVP Photographie",
+      "hx": 0.5, "hy": 0.45, "tx": 0.4, "ty": 0.62, "kf": 1.6, "kp": 1.4
+    }
+  },
+  "slotPhoto": { "photo": "fond-foret", "fx": 0.5, "fy": 0.5 },
+  "noPosterPhoto": { "photo": "montee-casque", "fx": 0.47, "fy": 0.23 }
+}

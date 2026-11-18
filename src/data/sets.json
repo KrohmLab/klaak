@@ -1,17 +1,26 @@
 [
   {
-    "id": "esoteros-2026",
-    "title": "Klaak @ Esoteros 2026",
-    "url": "https://soundcloud.com/klaak/esoteros-2026"
+    "id": "nexen-festival-2025",
+    "title": "Klaak @ Nexen Festival 2025",
+    "sub": "Nexen Festival · juin 2025",
+    "url": "https://soundcloud.com/klaak/klaak-nexen-festival-2025",
+    "color": "#c6ff1a",
+    "art": { "poster": "2025-06-nexen-festival.jpg" }
   },
   {
     "id": "psychedelic-christmas",
     "title": "Klaak - Psychedelic Christmas",
-    "url": "https://soundcloud.com/klaak/klaak-psychedelic-christmas"
+    "sub": "Outrance · La Rayonne · déc. 2025",
+    "url": "https://soundcloud.com/klaak/klaak-psychedelic-christmas",
+    "color": "#ff2bd6",
+    "art": { "photo": "montee-casque", "fx": 0.47, "fy": 0.23 }
   },
   {
-    "id": "nexen-festival-2025",
-    "title": "Klaak @ Nexen Festival 2025",
-    "url": "https://soundcloud.com/klaak/klaak-nexen-festival-2025"
+    "id": "esoteros-2026",
+    "title": "Klaak @ Esoteros 2026",
+    "sub": "Esoteros · sept. 2026",
+    "url": "https://soundcloud.com/klaak/esoteros-2026",
+    "color": "#ff8a00",
+    "art": { "poster": "2026-09-esoteros.jpg" }
   }
 ]

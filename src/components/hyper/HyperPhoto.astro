@@ -1,0 +1,88 @@
+---
+// Photo plein cadre d'une scène, traitée en duotone (spec §4). Le cadrage (point focal, zoom dans le cercle et
+// plein écran) vient de src/data/hyper.json → `photos`, et le moteur le recalcule à chaque image.
+// Sans JavaScript : simple image en `object-fit: cover`, centrée sur le visage.
+import { Picture } from "astro:assets";
+import hyper from "../../data/hyper.json";
+import { photo } from "../../lib/content";
+
+type PhotoKey = keyof typeof hyper.photos;
+interface Props {
+  scene: PhotoKey;
+  /** La photo de la première scène est visible dès l'arrivée (dans le portail) : chargement prioritaire. */
+  eager?: boolean;
+}
+const { scene, eager = false } = Astro.props;
+const p = hyper.photos[scene] as (typeof hyper.photos)[PhotoKey] & { tintOpacity?: number; veil?: boolean; fx?: number; fy?: number; kf?: number; kp?: number; mobile?: { x: number; y: number; k?: number }; face?: number[] };
+const img = photo(p.photo);
+const focal = { hx: p.hx, hy: p.hy, fx: p.fx, fy: p.fy, tx: p.tx, ty: p.ty, kf: p.kf, kp: p.kp, mobile: p.mobile, face: p.face, ar: img.width / img.height };
+---
+
+<div class="hx-photo" aria-hidden="true">
+  <div class="hx-photo__img" data-hx-photo={JSON.stringify(focal)} style={`--ox:${p.hx * 100}%;--oy:${p.hy * 100}%`}>
+    <Picture
+      src={img}
+      formats={["avif", "webp"]}
+      widths={[640, 1080, 1600, 2400].filter((w) => w <= img.width * 1.25)}
+      sizes="(max-aspect-ratio: 3/2) 160vh, 110vw"
+      alt=""
+      loading={eager ? "eager" : "lazy"}
+      fetchpriority={eager ? "high" : "auto"}
+      decoding="async"
+    />
+  </div>
+  <div class="hx-photo__tint" style={`background:${p.tint};opacity:${p.tintOpacity ?? 1}`}></div>
+  <div class="hx-photo__vig"></div>
+  {p.veil && <div class="hx-photo__veil"></div>}
+</div>
+
+<style is:global>
+  .hx-photo {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .hx-photo__img {
+    position: absolute;
+    inset: 0;
+  }
+  .hx-photo__img picture {
+    display: contents;
+  }
+  .hx-photo__img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--ox) var(--oy);
+    filter: grayscale(1) contrast(1.35) brightness(0.78);
+  }
+  /* Avec le moteur : boîte de base (posée en px par le moteur) cadrée par transform. */
+  html.hx-on .hx-photo__img {
+    inset: auto;
+    left: 50%;
+    top: 50%;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  /* Chargement progressif : la photo n'existe que pour la scène visée et ses voisines. */
+  html.hx-on .hx-scene:not([data-hx-near]) .hx-photo__img {
+    display: none;
+  }
+  .hx-photo__tint {
+    position: absolute;
+    inset: 0;
+    mix-blend-mode: color;
+  }
+  .hx-photo__vig {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgb(7 6 13 / 0.15) 20%, rgb(7 6 13 / 0.88) 100%);
+  }
+  .hx-photo__veil {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgb(7 6 13 / 0.55) 0, rgb(7 6 13 / 0.25) 60%, rgb(7 6 13 / 0.6) 100%);
+  }
+</style>

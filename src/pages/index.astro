@@ -1,28 +1,69 @@
 ---
+// Page d'accueil v2 « Hyperespace » : un voyage en zoom infini, de portail en portail (brief/v2/SPEC.md).
+// Les textes et cadrages sont dans src/data/hyper.json, les dates dans dates.json, les sets dans sets.json.
 import Base from "../layouts/Base.astro";
-import Footer from "../components/Footer.astro";
-import Hud from "../components/Hud.astro";
-import Booking from "../components/chapters/Booking.astro";
-import Breakdown from "../components/chapters/Breakdown.astro";
-import Dates from "../components/chapters/Dates.astro";
-import Drop from "../components/chapters/Drop.astro";
-import Intro from "../components/chapters/Intro.astro";
-import Montee from "../components/chapters/Montee.astro";
-import { copy } from "../lib/content";
+import BookingForm from "../components/hyper/BookingForm.astro";
+import BookingScene from "../components/hyper/BookingScene.astro";
+import Chrome from "../components/hyper/Chrome.astro";
+import DatesScene from "../components/hyper/DatesScene.astro";
+import HyperStage from "../components/hyper/HyperStage.astro";
+import IntroScene from "../components/hyper/IntroScene.astro";
+import SetsScene from "../components/hyper/SetsScene.astro";
+import StoryScene from "../components/hyper/StoryScene.astro";
+import hyper from "../data/hyper.json";
 import { structuredData } from "../lib/seo";
+
+const h = hyper;
 ---
 
-<Base story jsonLd={structuredData()}>
+<Base bare jsonLd={structuredData()}>
+  <a class="skip-link" href="#formulaire">Aller au formulaire de booking</a>
   <main id="contenu">
-    <Intro />
-    <Montee />
-    <Drop />
-    <Breakdown />
-    <Dates />
-    <Booking />
+    <HyperStage label={h.stage} names={h.chapters}>
+      <IntroScene />
+      <StoryScene id="festivalier" index={1} side="r" portal="intro" accent="var(--color-cyan)" kicker={h.festivalier.kicker} title={h.festivalier.title} body={h.festivalier.body} eager />
+      <StoryScene id="collectif" index={2} side="l" accent="var(--color-magenta)" kicker={h.collectif.kicker} title={h.collectif.title} body={h.collectif.body}>
+        <p class="hx-body hx-body--hi">{h.collectif.highlight}</p>
+      </StoryScene>
+      <StoryScene id="revelation" index={3} side="l" accent="var(--color-acid)" kicker={h.revelation.kicker} title={h.revelation.title} mega="md" body={h.revelation.body}>
+        <p class="hx-bpm"><span class="hx-bpm__n">{h.revelation.bpm}</span> <span class="hx-mono" style="color:var(--color-mute)">{h.revelation.bpmUnit}</span></p>
+        <p class="hx-mono hx-note">{h.revelation.note}</p>
+      </StoryScene>
+      <StoryScene id="drop" index={4} side="l" kicker={h.drop.kicker} title={h.drop.title} mega="lg" titleAccent body={h.drop.body}>
+        <p class="hx-mono" style="color:var(--color-mute)">{h.drop.note}</p>
+      </StoryScene>
+      <SetsScene />
+      <DatesScene />
+      <BookingScene />
+      <Chrome slot="chrome" />
+    </HyperStage>
   </main>
-  <div class="has-hud">
-    <Footer />
-  </div>
-  <Hud live chapters={copy.chapters} cta={{ href: "#booking", label: "Booking" }} />
+  <BookingForm />
 </Base>
+
+<style is:global>
+  .hx-bpm {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin: 4px 0 0;
+  }
+  .hx-bpm__n {
+    font: 900 clamp(30px, 3.4vw, 54px)/1 var(--font-display);
+    letter-spacing: -0.03em;
+    color: var(--color-acid);
+  }
+  .hx-note {
+    color: var(--color-mute);
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+</style>
+
+<script>
+  import { initHyper } from "../scripts/hyper";
+  const params = new URLSearchParams(location.search);
+  // Outils de mise au point : ?u=2.5 fige une position, ?debug expose l'inspection du cadrage.
+  const engine = initHyper({ pin: params.has("u") ? Number(params.get("u")) : undefined });
+  if (params.has("debug") && engine) (window as unknown as { __hx: typeof engine }).__hx = engine;
+</script>

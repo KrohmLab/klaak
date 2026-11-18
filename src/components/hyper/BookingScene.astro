@@ -1,0 +1,57 @@
+---
+// Scène 07 — Booking : « La prochaine date, c'est la vôtre ». Le bouton ouvre le formulaire (BookingForm.astro).
+import HyperPhoto from "./HyperPhoto.astro";
+import hyper from "../../data/hyper.json";
+import { site } from "../../lib/content";
+const t = hyper.booking;
+---
+
+<section id="booking" class="hx-scene hx-bookscene" data-hx-scene data-hx-s0="0.52" aria-labelledby="booking-title">
+  <HyperPhoto scene="booking" />
+  <div class="hx-bookscene__in" data-hx-text>
+    <p class="hx-mono" style="color:var(--wc)">{t.kicker}</p>
+    <h2 id="booking-title" class="hx-mega hx-bookscene__title">{t.title.map((line) => <span>{line}</span>)}</h2>
+    <a class="hx-cta" href="#formulaire" data-booking-open>{t.cta}</a>
+    <p class="hx-bookscene__links">
+      <a href={`mailto:${site.bookingEmail}?subject=Booking%20Klaak`}>{site.bookingEmail}</a> · <a href={site.links.soundcloud} rel="noopener">SoundCloud</a> ·
+      <a href={site.links.instagram} rel="noopener">Instagram</a> · <a href={site.links.facebook} rel="noopener">Facebook</a>
+    </p>
+  </div>
+  <p class="hx-credit" data-hx-text>Photo · {hyper.photos.booking.credit}</p>
+</section>
+
+<style is:global>
+  .hx-bookscene__in {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 0 24px;
+    text-align: center;
+  }
+  html:not(.hx-on) .hx-bookscene__in {
+    position: relative;
+    min-height: 100svh;
+  }
+  .hx-bookscene__title {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(40px, 6.6vw, 112px);
+  }
+  .hx-bookscene__links {
+    margin: 0;
+    font: 400 13px var(--font-mono);
+    letter-spacing: 0.04em;
+    color: var(--color-bone);
+  }
+  .hx-bookscene__links a {
+    color: var(--color-acid);
+  }
+  .hx-bookscene__links a:hover {
+    color: var(--color-bone);
+  }
+</style>

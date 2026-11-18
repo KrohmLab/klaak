@@ -7,8 +7,6 @@ import { bio, site } from "../lib/content";
 interface Props {
   title?: string;
   description?: string;
-  /** Page d'accueil v1 : lance la narration au scroll. Les autres pages n'ont que les patterns de base. */
-  story?: boolean;
   /** La page gère elle-même son animation (v2 Hyperespace) : ni GSAP ni patterns v1. */
   bare?: boolean;
   jsonLd?: object;
@@ -16,7 +14,7 @@ interface Props {
   noindex?: boolean;
 }
 const sentence = bio.fr.split(". ").slice(0, 1).join("") + ".";
-const { title = `${site.name} — ${site.tagline} · ${site.collective}, ${site.city}`, description = sentence, story = false, bare = false, jsonLd, noindex = false } = Astro.props;
+const { title = `${site.name} — ${site.tagline} · ${site.collective}, ${site.city}`, description = sentence, bare = false, jsonLd, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const og = new URL("/og.png", site.url).href;
 ---
@@ -52,14 +50,13 @@ const og = new URL("/og.png", site.url).href;
       } catch (e) {}
     </script>
   </head>
-  <body data-motion={bare ? "none" : story ? "story" : "basic"}>
+  <body data-motion={bare ? "none" : "basic"}>
     <a class="skip-link" href="#contenu">Aller au contenu</a>
     <slot />
     <script>
       // Chargé à la demande : une page « bare » (v2) ne télécharge jamais GSAP.
       const motion = document.body.dataset.motion;
-      if (motion === "story") import("../scripts/story").then((m) => m.initStory());
-      else if (motion === "basic") import("../scripts/motion").then((m) => m.initMotion());
+      if (motion === "basic") import("../scripts/motion").then((m) => m.initMotion());
     </script>
   </body>
 </html>

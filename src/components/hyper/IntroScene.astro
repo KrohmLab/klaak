@@ -1,0 +1,212 @@
+---
+// Scène 00 — Intro : l'espace, le logo géant (interface fixe, voir Chrome.astro), l'accroche, et le portail
+// décalé à droite (74 %, 46 % ; sous le logo sur mobile) avec ses anneaux décoratifs.
+import hyper from "../../data/hyper.json";
+const t = hyper.intro;
+---
+
+<section id="intro" class="hx-scene hx-intro" data-hx-scene data-hx-s0="1" aria-labelledby="intro-title">
+  <h1 id="intro-title" class="hx-sr">{t.h1}</h1>
+  <div class="hx-introtag" data-hx-text>
+    <p class="hx-mono hx-introtag__main">{t.tagline}</p>
+    <p class="hx-mono hx-introtag__sub">{t.sub}</p>
+  </div>
+  <div class="hx-deco" aria-hidden="true" data-hx-text>
+    <div class="hx-deco__glow"></div>
+    <div class="hx-arc hx-arc--4"></div>
+    <div class="hx-arc hx-arc--3"></div>
+    <div class="hx-arc hx-arc--2"></div>
+    <div class="hx-arc hx-arc--1"></div>
+    <div class="hx-dot hx-dot--1"><b></b></div>
+    <div class="hx-dot hx-dot--2"><b></b></div>
+  </div>
+  <div class="hx-hint" aria-hidden="true" data-hx-text><span></span></div>
+</section>
+
+<style is:global>
+  .hx-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .hx-introtag {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 19vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 0 24px;
+    text-align: center;
+  }
+  .hx-introtag__main {
+    font-size: 16px;
+    color: var(--wc);
+  }
+  .hx-introtag__sub {
+    color: var(--color-mute);
+  }
+  .hx-deco {
+    position: absolute;
+    left: 74%;
+    top: 46%;
+    width: 0;
+    height: 0;
+  }
+  html:not(.hx-on) .hx-deco,
+  html:not(.hx-on) .hx-hint {
+    display: none;
+  }
+  .hx-deco > * {
+    position: absolute;
+    border-radius: 50%;
+    box-sizing: border-box;
+  }
+  .hx-deco__glow {
+    left: calc(var(--hole) * -1.9);
+    top: calc(var(--hole) * -1.9);
+    width: calc(var(--hole) * 3.8);
+    height: calc(var(--hole) * 3.8);
+    background: radial-gradient(circle, var(--wc) 0, transparent 62%);
+    opacity: 0.16;
+    mix-blend-mode: screen;
+    animation: hx-breath 4.8s ease-in-out infinite;
+  }
+  @keyframes hx-breath {
+    0%,
+    100% {
+      transform: scale(0.92);
+    }
+    50% {
+      transform: scale(1.08);
+    }
+  }
+  .hx-arc {
+    --rr: calc(var(--hole) + var(--off));
+    left: calc(var(--rr) * -1);
+    top: calc(var(--rr) * -1);
+    width: calc(var(--rr) * 2);
+    height: calc(var(--rr) * 2);
+    -webkit-mask: radial-gradient(circle, transparent calc(var(--rr) - var(--th) - 1px), #000 calc(var(--rr) - var(--th)), #000 calc(var(--rr) - 1px), transparent var(--rr));
+    mask: radial-gradient(circle, transparent calc(var(--rr) - var(--th) - 1px), #000 calc(var(--rr) - var(--th)), #000 calc(var(--rr) - 1px), transparent var(--rr));
+  }
+  /* Rotation pilotée par --spin (moteur) : elle accélère avec le scroll, comme dans le prototype. */
+  .hx-arc--1 {
+    --off: 62px;
+    --th: 3px;
+    background: conic-gradient(var(--wc) 0 16%, transparent 16% 34%, var(--wc) 34% 40%, transparent 40% 66%, var(--wc) 66% 71%, transparent 71%);
+    filter: drop-shadow(0 0 8px var(--wc));
+    transform: rotate(calc(var(--spin, 0deg) * 1.4));
+  }
+  .hx-arc--2 {
+    --off: 90px;
+    --th: 1px;
+    background: repeating-conic-gradient(var(--color-cyan) 0 2deg, transparent 2deg 7deg);
+    opacity: 0.75;
+    transform: rotate(calc(var(--spin, 0deg) * -0.9));
+  }
+  .hx-arc--3 {
+    --off: 122px;
+    --th: 10px;
+    background: repeating-conic-gradient(var(--color-magenta) 0 0.7deg, transparent 0.7deg 5deg);
+    opacity: 0.55;
+    transform: rotate(calc(var(--spin, 0deg) * 0.35));
+  }
+  .hx-arc--4 {
+    --off: 140px;
+    --th: 2px;
+    background: conic-gradient(from 200deg, transparent 0 70%, var(--color-bone) 82%, transparent 84%);
+    opacity: 0.7;
+    transform: rotate(calc(var(--spin, 0deg) * -2.2));
+  }
+  .hx-dot {
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-radius: 0;
+  }
+  .hx-dot--1 {
+    transform: rotate(calc(var(--spin, 0deg) * 3));
+  }
+  .hx-dot--2 {
+    transform: rotate(calc(var(--spin, 0deg) * -1.8 + 140deg));
+  }
+  .hx-dot b {
+    position: absolute;
+    border-radius: 50%;
+  }
+  .hx-dot--1 b {
+    left: -5px;
+    top: calc((var(--hole) + 90px) * -1 - 5px);
+    width: 10px;
+    height: 10px;
+    background: var(--color-acid);
+    box-shadow:
+      0 0 16px var(--color-acid),
+      0 0 40px var(--color-acid);
+  }
+  .hx-dot--2 b {
+    left: -4px;
+    top: calc((var(--hole) + 122px) * -1 - 4px);
+    width: 8px;
+    height: 8px;
+    background: var(--color-magenta);
+    box-shadow:
+      0 0 14px var(--color-magenta),
+      0 0 34px var(--color-magenta);
+  }
+  .hx-hint {
+    position: absolute;
+    left: 74%;
+    top: calc(46% + var(--hole) + 160px);
+    width: 2px;
+    height: 34px;
+    transform: translateX(-50%);
+    background: var(--color-void-3);
+    overflow: hidden;
+  }
+  .hx-hint span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: var(--wc);
+    animation: hx-hint 1.4s cubic-bezier(0.7, 0, 0.84, 0) infinite;
+  }
+  @keyframes hx-hint {
+    0% {
+      top: -12px;
+    }
+    100% {
+      top: 34px;
+    }
+  }
+  @media (max-width: 760px) {
+    .hx-introtag {
+      bottom: 16vh;
+    }
+    .hx-deco {
+      left: 50%;
+      top: 64%;
+    }
+    .hx-arc--2 {
+      display: none;
+    }
+    .hx-arc--3,
+    .hx-arc--4,
+    .hx-dot--2,
+    .hx-hint {
+      display: none;
+    }
+  }
+  html[data-calm] .hx-deco *,
+  html[data-calm] .hx-hint span {
+    animation: none !important;
+  }
+</style>

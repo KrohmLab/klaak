@@ -1,0 +1,394 @@
+---
+// Scène 06 — Les dates, « En orbite » : les affiches tournent au-dessus de la lentille (24° d'écart, seules les
+// 5 plus proches visibles). La molette fait défiler date par date (un arrêt d'aimantation par date), un clic sur
+// une affiche la vise, la lentille montre l'affiche visée. Dernière place : « Votre date ? » vers le booking.
+// Le moteur fournit la position continue `--f` (src/hyper/ui/dates.ts).
+import { Picture } from "astro:assets";
+import HyperPhoto from "./HyperPhoto.astro";
+import Todo from "../Todo.astro";
+import hyper from "../../data/hyper.json";
+import { dates, photo, poster } from "../../lib/content";
+
+const t = hyper.dates;
+const STEP = 0.32;
+const n = dates.length;
+const years = dates.map((d) => d.start.slice(0, 4));
+const fit = (name: string, fx: number, fy: number) => {
+  const img = photo(name);
+  const z = 2;
+  const w = 100 * (img.width / img.height) * z;
+  const h = 100 * z;
+  return { img, style: `width:${w}%;height:${h}%;left:${Math.max(100 - w, Math.min(0, 50 - fx * w)).toFixed(1)}%;top:${Math.max(100 - h, Math.min(0, 50 - fy * h)).toFixed(1)}%` };
+};
+const noPoster = fit(hyper.noPosterPhoto.photo, hyper.noPosterPhoto.fx, hyper.noPosterPhoto.fy);
+const slot = fit(hyper.slotPhoto.photo, hyper.slotPhoto.fx, hyper.slotPhoto.fy);
+const stops = Array.from({ length: n }, (_, k) => ((k + 1) * STEP).toFixed(2)).join(",");
+---
+
+<section
+  id="dates"
+  class="hx-scene hx-dates"
+  data-hx-scene
+  data-hx-s0="1"
+  data-hx-len={(1 + STEP * n).toFixed(2)}
+  data-hx-stops={stops}
+  data-dates-step={STEP}
+  data-dates-count={n}
+  data-years={JSON.stringify([...years, "?"])}
+  aria-labelledby="dates-title"
+>
+  <HyperPhoto scene="dates" />
+  <div class="hx-ghost" aria-hidden="true" data-hx-text data-dates-year>{years[0]}</div>
+
+  <div class="hx-dtitle" data-hx-text>
+    <p class="hx-mono" style="color:var(--color-orange)">{t.kicker}</p>
+    <h2 id="dates-title" class="hx-mega hx-dtitle__h">{t.title}</h2>
+    <p class="hx-dtitle__meta">{n} dates · {years[0]} → {years[n - 1]}<br />{t.help}</p>
+  </div>
+
+  <ol class="hx-orbit" data-hx-text>
+    {
+      dates.map((d, k) => {
+        const img = poster(d.poster);
+        return (
+          <li class="hx-dcard" style={`--k:${k}`}>
+            <button type="button" class:list={["hx-dcard__btn", k === 0 && "is-on"]} data-date-go={k} aria-label={`${d.when} — ${d.event}`}>
+              {img ? (
+                <span class="hx-dcard__th">
+                  <Picture src={img} formats={["avif", "webp"]} widths={[320, 500]} sizes="250px" alt="" loading="lazy" />
+                </span>
+              ) : (
+                <span class="hx-dcard__th hx-dcard__th--tx">{d.event}</span>
+              )}
+              <span class="hx-dcard__cap">
+                <span style="color:var(--color-orange)">{d.when}</span> · {d.event}
+              </span>
+            </button>
+          </li>
+        );
+      })
+    }
+    <li class="hx-dcard" style={`--k:${n}`}>
+      <button type="button" class="hx-dcard__btn" data-date-go={n} aria-label={t.slotCta}>
+        <span class="hx-dcard__th hx-dcard__th--slot">{t.slotTitle}</span>
+        <span class="hx-dcard__cap">
+          <span style="color:var(--color-orange)">{t.slotWhen}</span> · {t.slotEvent}
+        </span>
+      </button>
+    </li>
+  </ol>
+
+  <div class="hx-lens" aria-hidden="true">
+    <div class="hx-lens__in">
+      {
+        dates.map((d, k) => {
+          const img = poster(d.poster);
+          return (
+            <div class:list={["hx-dl", !img && "hx-art--fit"]} style={`--k:${k}`}>
+              {img ? (
+                <Picture src={img} formats={["avif", "webp"]} widths={[480, 800]} sizes="40vh" alt="" loading="lazy" />
+              ) : (
+                <Picture src={noPoster.img} formats={["avif", "webp"]} widths={[720, 1080]} sizes="80vh" alt="" loading="lazy" style={noPoster.style} />
+              )}
+            </div>
+          );
+        })
+      }
+      <div class="hx-dl hx-art--fit" style={`--k:${n}`}>
+        <Picture src={slot.img} formats={["avif", "webp"]} widths={[720, 1080]} sizes="80vh" alt="" loading="lazy" style={slot.style} />
+      </div>
+    </div>
+  </div>
+  <div class="hx-portal hx-portal--orange" aria-hidden="true"></div>
+  <div class="hx-portal2" aria-hidden="true"></div>
+
+  <div class="hx-dinfo" data-hx-text aria-live="polite">
+    {
+      dates.map((d, k) => (
+        <div class="hx-dinfo__item" data-date-info={k} hidden={k !== 0}>
+          <p class="hx-mono" style="color:var(--color-orange);font-size:14px">
+            <time datetime={d.start}>{d.when}</time>
+          </p>
+          <h3 class="hx-h2 hx-dinfo__event">{d.event}</h3>
+          <p class="hx-dinfo__place">
+            {d.venue ? `${d.venue}, ${d.city ?? ""}` : d.organizer ? <>{d.organizer} · <Todo what="lieu" /></> : <Todo what="lieu" />}
+          </p>
+          {d.badges.map((b) => <span class="hx-badge">{b}</span>)}
+          {d.link && <a class="hx-mono hx-dinfo__link" href={d.link} rel="noopener">Événement ↗</a>}
+        </div>
+      ))
+    }
+    <div class="hx-dinfo__item" data-date-info={n} hidden>
+      <p class="hx-mono" style="color:var(--color-orange);font-size:14px">{t.slotWhen}</p>
+      <h3 class="hx-h2 hx-dinfo__event">{t.slotTitle}</h3>
+      <p class="hx-dinfo__place">{t.slotPlace}</p>
+      <a class="hx-cta hx-cta--sm" href="#formulaire" data-booking-open>{t.slotCta}</a>
+    </div>
+  </div>
+  <p class="hx-credit" data-hx-text>Photo · {hyper.photos.dates.credit}</p>
+</section>
+
+<style is:global>
+  .hx-dates {
+    --f: 0;
+  }
+  .hx-ghost {
+    position: absolute;
+    right: -2vw;
+    bottom: -6vh;
+    font: 900 34vh/0.8 var(--font-display);
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 2px rgb(255 138 0 / 0.28);
+    pointer-events: none;
+  }
+  .hx-dtitle {
+    position: absolute;
+    left: 5vw;
+    bottom: 19vh;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 22vw;
+  }
+  .hx-dtitle__h {
+    font-size: clamp(32px, 3.8vw, 64px);
+  }
+  .hx-dtitle__meta {
+    margin: 0;
+    font: 400 13px/1.6 var(--font-mono);
+    letter-spacing: 0.04em;
+    color: var(--color-mute);
+  }
+  .hx-orbit {
+    position: absolute;
+    left: 50%;
+    top: var(--pcy, 50%);
+    z-index: 2;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hx-dcard {
+    --ang: calc((var(--k) - var(--f)) * var(--orbit-step, 24deg));
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 250px;
+    transform: translate(-50%, -50%) translate(calc(sin(var(--ang)) * var(--orbit-rx, 36vw)), calc(cos(var(--ang)) * var(--orbit-ry, -34vh))) scale(calc(0.45 + 0.55 * cos(var(--ang))));
+    opacity: clamp(0, calc(cos(var(--ang)) * 2.6 - 0.9), 1);
+    will-change: transform, opacity;
+  }
+  /* Cartes éloignées de la date visée : ni peintes ni cliquables (posé par src/hyper/ui/dates.ts). */
+  .hx-dcard[data-far] {
+    visibility: hidden;
+  }
+  .hx-dcard__btn {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-bone);
+    text-align: left;
+    cursor: pointer;
+  }
+  .hx-dcard__th {
+    position: relative;
+    display: block;
+    width: 250px;
+    height: 141px;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px var(--color-void-3);
+  }
+  .hx-dcard__th picture {
+    display: contents;
+  }
+  .hx-dcard__th img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hx-dcard__btn.is-on .hx-dcard__th {
+    box-shadow:
+      0 0 0 3px var(--color-orange),
+      0 0 50px rgb(255 138 0 / 0.5);
+  }
+  .hx-dcard__th--tx {
+    display: grid;
+    place-items: center;
+    padding: 10px;
+    background: var(--color-void-2);
+    border: 2px dashed var(--color-magenta);
+    box-sizing: border-box;
+    font: 800 14px/1.1 var(--font-display);
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--color-magenta);
+  }
+  .hx-dcard__th--slot {
+    display: grid;
+    place-items: center;
+    padding: 10px;
+    background: var(--wc);
+    color: var(--color-void);
+    font: 900 20px/1 var(--font-display);
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .hx-dcard__cap {
+    font: 400 11px var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .hx-dl {
+    position: absolute;
+    inset: 0;
+    opacity: clamp(0, calc(1 - max(var(--k) - var(--f), var(--f) - var(--k)) * 1.7), 1);
+  }
+  .hx-dl picture {
+    display: contents;
+  }
+  .hx-dl img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hx-dl.hx-art--fit img {
+    inset: auto;
+    object-fit: fill;
+  }
+  .hx-portal--orange {
+    border-color: var(--color-orange);
+    border-top-color: transparent;
+    box-shadow: 0 0 20px var(--color-orange);
+  }
+  .hx-dinfo {
+    position: absolute;
+    left: 50%;
+    bottom: 17vh;
+    z-index: 2;
+    width: min(600px, 90vw);
+    transform: translateX(-50%);
+  }
+  .hx-dinfo__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+  }
+  .hx-dinfo__item[hidden] {
+    display: none;
+  }
+  .hx-dinfo__event {
+    font-size: clamp(20px, 2.2vw, 32px);
+  }
+  .hx-dinfo__place {
+    margin: 0;
+    font: 400 13px var(--font-mono);
+    letter-spacing: 0.04em;
+    color: var(--color-mute);
+  }
+  .hx-dinfo__link {
+    color: var(--color-acid);
+    font-size: 11px;
+  }
+  .hx-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--color-orange);
+    color: var(--color-void);
+    font: 700 11px var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .hx-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    padding: 0 28px;
+    background: var(--wc);
+    color: var(--color-void);
+    font: 800 18px var(--font-display);
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+  }
+  .hx-cta:hover {
+    background: var(--color-bone);
+  }
+  .hx-cta--sm {
+    min-height: 44px;
+    padding: 0 20px;
+    font-size: 14px;
+  }
+
+  /* Sans JS : liste lisible */
+  html:not(.hx-on) .hx-dates {
+    padding: 4rem 6vw;
+  }
+  html:not(.hx-on) .hx-ghost,
+  html:not(.hx-on) .hx-dates .hx-lens,
+  html:not(.hx-on) .hx-dates .hx-portal,
+  html:not(.hx-on) .hx-dates .hx-portal2,
+  html:not(.hx-on) .hx-dinfo {
+    display: none;
+  }
+  html:not(.hx-on) .hx-dtitle,
+  html:not(.hx-on) .hx-orbit {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+    max-width: none;
+  }
+  html:not(.hx-on) .hx-orbit {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  html:not(.hx-on) .hx-dcard {
+    position: static;
+    transform: none;
+    opacity: 1;
+  }
+
+  /* Téléphone : l'orbite s'ouvre SOUS la lentille (le haut de l'écran est pris par le logo et le portail). */
+  @media (max-width: 760px) {
+    .hx-dates {
+      --orbit-step: 34deg;
+      --orbit-rx: 48vw;
+      --orbit-ry: 21vh;
+    }
+    html.hx-on .hx-dtitle {
+      display: none;
+    }
+    .hx-ghost {
+      font-size: 22vh;
+    }
+    .hx-dcard {
+      width: 150px;
+    }
+    .hx-dcard__th {
+      width: 150px;
+      height: 84px;
+    }
+    html.hx-on .hx-dinfo {
+      bottom: 120px;
+    }
+  }
+</style>

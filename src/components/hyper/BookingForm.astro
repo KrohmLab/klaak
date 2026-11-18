@@ -1,0 +1,172 @@
+---
+// Formulaire de booking (v1, inchangé) : envoi vers /api/booking (worker/index.ts), logique dans
+// src/scripts/booking.ts. Affiché dans une fenêtre (<dialog>) par-dessus la scène 07 ; sans JavaScript, la
+// fenêtre est affichée en ligne à la fin de la page.
+import Todo from "../Todo.astro";
+import { copy, site } from "../../lib/content";
+import hyper from "../../data/hyper.json";
+const b = copy.booking;
+const f = b.fields;
+const ready = site.turnstileSiteKey.trim() !== "";
+---
+
+<dialog id="formulaire" class="hx-dialog" aria-labelledby="formulaire-title">
+  <div class="hx-dialog__head">
+    <h2 id="formulaire-title" class="hx-h2">{hyper.booking.dialogTitle}</h2>
+    <form method="dialog"><button class="hx-dialog__close" type="submit" aria-label={hyper.booking.close}>×</button></form>
+  </div>
+  <p class="hx-dialog__lead">{b.lead}</p>
+  <form class="booking__form" novalidate data-booking data-sitekey={site.turnstileSiteKey} data-msg-required={b.required} data-msg-email={b.emailInvalid} data-msg-captcha={b.captcha} data-msg-error={b.error} data-msg-success={b.success} data-msg-sending={b.sending}>
+    <div class="field">
+      <label class="t-label" for="bk-name">{f.name} *</label>
+      <input id="bk-name" name="name" type="text" autocomplete="name" required maxlength="120" />
+    </div>
+    <div class="field">
+      <label class="t-label" for="bk-email">{f.email} *</label>
+      <input id="bk-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" />
+    </div>
+    <div class="field booking__wide">
+      <label class="t-label" for="bk-structure">{f.structure} *</label>
+      <input id="bk-structure" name="structure" type="text" autocomplete="organization" required maxlength="200" />
+    </div>
+    <div class="field">
+      <label class="t-label" for="bk-date">{f.date} *</label>
+      <input id="bk-date" name="date" type="text" required maxlength="80" />
+    </div>
+    <div class="field">
+      <label class="t-label" for="bk-place">{f.place} *</label>
+      <input id="bk-place" name="place" type="text" required maxlength="200" />
+    </div>
+    <div class="field booking__wide">
+      <label class="t-label" for="bk-duration">{f.duration}</label>
+      <input id="bk-duration" name="duration" type="text" maxlength="80" />
+    </div>
+    <div class="field booking__wide">
+      <label class="t-label" for="bk-message">{f.message}</label>
+      <textarea id="bk-message" name="message" maxlength="4000"></textarea>
+    </div>
+    <div class="hp" aria-hidden="true">
+      <label for="bk-website">Ne pas remplir</label>
+      <input id="bk-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="booking__wide booking__send">
+      <div data-turnstile></div>
+      {
+        !ready && (
+          <p class="text-sm">
+            Formulaire inactif : <Todo what="clé de site Turnstile" />
+          </p>
+        )
+      }
+      <button class="btn btn--big" type="submit" disabled={!ready}>{b.submit}</button>
+      <p class="booking__status" role="status" aria-live="polite" data-status></p>
+    </div>
+  </form>
+  <p class="hx-dialog__mail">{b.mailto} : <a href={`mailto:${site.bookingEmail}?subject=Booking%20Klaak`}>{site.bookingEmail}</a></p>
+</dialog>
+
+<script>
+  import { initBooking } from "../../scripts/booking";
+  initBooking();
+  // Les liens « Booker » ouvrent la fenêtre ; sans JS, ils mènent au formulaire affiché en ligne.
+  const dialog = document.querySelector<HTMLDialogElement>("#formulaire");
+  document.addEventListener("click", (e) => {
+    const open = (e.target as Element | null)?.closest?.("[data-booking-open]");
+    if (!open || !dialog) return;
+    e.preventDefault();
+    dialog.showModal();
+    dialog.querySelector<HTMLInputElement>("input:not([type=hidden]):not([tabindex='-1'])")?.focus();
+  });
+  // Clic sur le fond : fermeture.
+  dialog?.addEventListener("click", (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+</script>
+
+<style is:global>
+  .hx-dialog {
+    width: min(760px, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    overflow: auto;
+    color: var(--color-bone);
+    background: var(--color-void-2);
+    border: 1px solid var(--color-void-3);
+    box-shadow: 0 30px 90px rgb(0 0 0 / 0.7), -6px 5px 0 var(--color-cyan), 6px -5px 0 var(--color-magenta);
+    overscroll-behavior: contain;
+  }
+  .hx-dialog::backdrop {
+    background: rgb(7 6 13 / 0.75);
+    backdrop-filter: blur(6px);
+  }
+  /* Sans JavaScript : formulaire affiché en ligne. */
+  html:not(.hx-on) .hx-dialog {
+    position: static;
+    display: block;
+    margin: 4rem auto;
+  }
+  html:not(.hx-on) .hx-dialog__close {
+    display: none;
+  }
+  .hx-dialog__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .hx-dialog__close {
+    width: 44px;
+    height: 44px;
+    flex: none;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--color-bone);
+    background: none;
+    border: 1px solid var(--color-void-3);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .hx-dialog__close:hover {
+    border-color: var(--color-acid);
+    color: var(--color-acid);
+  }
+  .hx-dialog__lead {
+    margin: 0.75rem 0 2rem;
+    color: var(--color-mute);
+  }
+  .hx-dialog__mail {
+    margin: 2rem 0 0;
+    font-size: 0.875rem;
+    color: var(--color-mute);
+  }
+  .hx-dialog__mail a {
+    color: var(--color-acid);
+  }
+  .booking__form {
+    display: grid;
+    gap: 2rem 1.5rem;
+  }
+  .booking__send {
+    display: grid;
+    justify-items: start;
+    gap: 1.25rem;
+  }
+  .booking__status:empty {
+    display: none;
+  }
+  .booking__status[data-kind="error"] {
+    color: var(--color-magenta);
+  }
+  .booking__status[data-kind="success"] {
+    color: var(--color-acid);
+  }
+  @media (min-width: 40rem) {
+    .booking__form {
+      grid-template-columns: 1fr 1fr;
+    }
+    .booking__wide {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
