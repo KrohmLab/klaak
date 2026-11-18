@@ -66,8 +66,9 @@ const focal = { hx: p.hx, hy: p.hy, fx: p.fx, fy: p.fy, tx: p.tx, ty: p.ty, kf: 
     transform-origin: 50% 50%;
     will-change: transform;
   }
-  /* Chargement progressif : la photo n'existe que pour la scène visée et ses voisines. */
-  html.hx-on .hx-scene:not([data-hx-near]) .hx-photo__img {
+  /* Chargement progressif : photos et affiches n'existent que pour la scène visée et ses voisines. */
+  html.hx-on .hx-scene:not([data-hx-near]) .hx-photo__img,
+  html.hx-on .hx-scene:not([data-hx-near]) picture {
     display: none;
   }
   .hx-photo__tint {
