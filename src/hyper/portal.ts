@@ -25,7 +25,7 @@ export type SceneState = {
   /** Pour une scène qui entre : progression de l'ouverture (0 → 1), sinon null. */
   enter: number | null;
   /** Pour une scène qui entre : données utiles au cadrage photo (framing.ts). */
-  entering: { pan: number; center: Vec; lens: Vec; rLocal: number } | null;
+  entering: { pan: number; center: Vec; lens: Vec; rLocal: number; sc: number; tx: number; ty: number; s0: number } | null;
 };
 
 export type RingState = {
@@ -46,11 +46,19 @@ export type Frame = {
 
 export type Viewport = { w: number; h: number };
 
+/** Téléphone : en dessous de cette largeur (incluse), mise en page mobile (même seuil que le CSS). */
+export const MOBILE_MAX = 760;
+export const isMobile = (w: number) => w <= MOBILE_MAX;
+
 export const PORTAL = {
   /** Profondeur de plongée de la scène qui sort (réglable, 2,5 à 7 dans le prototype). */
   zoom: 4,
-  /** Rayon du portail au repos, en fraction de la hauteur. */
+  /** Rayon du portail au repos, en fraction de la hauteur (19 vh ; 11 vh sur téléphone, sinon il occupe
+   *  80 % de la largeur et ne laisse aucune place au visage ni au texte). */
   hole: 0.19,
+  holeMobile: 0.11,
+  /** Hauteur du centre des portails sur téléphone (fraction de l'écran) : visage en haut, texte en bas. */
+  centerYMobile: 0.38,
   /** Durée (en unités) de l'éclosion du portail suivant à l'arrivée sur une scène. */
   bloom: 0.45,
   /** Marge au-delà du coin le plus éloigné pour le rayon final. */
@@ -62,11 +70,14 @@ export const PORTAL = {
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 const smoothstep = (x: number) => x * x * (3 - 2 * x);
 
+/** Rayon du portail au repos. */
+export const holeRadius = (vp: Viewport) => vp.h * (isMobile(vp.w) ? PORTAL.holeMobile : PORTAL.hole);
+
 /** Centre du portail qui révèle la scène i. */
 export function portalCenter(tl: Timeline, i: number, vp: Viewport): Vec {
   const spec = tl.scenes[i];
   if (spec?.portal) return spec.portal(vp.w, vp.h);
-  return [vp.w / 2, vp.h / 2];
+  return [vp.w / 2, vp.h * (isMobile(vp.w) ? PORTAL.centerYMobile : 0.5)];
 }
 
 /** Rayon nécessaire pour qu'un cercle centré en c couvre tout l'écran. */
@@ -87,7 +98,7 @@ export function layout(tl: Timeline, u: number, vp: Viewport, opts: { zoom?: num
   const Z = opts.zoom ?? PORTAL.zoom;
   const reduced = !!opts.reduced;
   const { w: W, h: H } = vp;
-  const hole = H * PORTAL.hole;
+  const hole = holeRadius(vp);
   const last = tl.scenes.length - 1;
   const scenes: SceneState[] = [];
   const rings: RingState = {
@@ -163,7 +174,7 @@ export function layout(tl: Timeline, u: number, vp: Viewport, opts: { zoom?: num
         const lx = c[0] + ox * (1 - pe);
         const ly = c[1] + oy * (1 - pe);
         st.clip = { r: R / sc, x: lx, y: ly };
-        st.entering = { pan: pe, center: c, lens: [lx, ly], rLocal: R / Math.max(sc, 0.01) };
+        st.entering = { pan: pe, center: c, lens: [lx, ly], rLocal: R / Math.max(sc, 0.01), sc, tx: st.tx, ty: st.ty, s0 };
         st.text = clamp01((e - 0.74) / 0.26);
 
         if (st.visible && e > 0.0005 && !rings.shock.on) {

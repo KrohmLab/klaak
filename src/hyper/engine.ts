@@ -7,10 +7,11 @@
 // Les constantes reprennent celles du prototype, exprimées « par image à 60 i/s » puis rendues indépendantes de
 // la fréquence d'affichage (écrans 120 Hz).
 
-import { layout, PORTAL, type Frame } from "./portal";
+import { baseBox, facePoint, frameImg, type Focal } from "./framing";
+import { holeRadius, isMobile, layout, PORTAL, type Frame } from "./portal";
 import { nextStop, prevStop, snapStep, SNAP } from "./snap";
 import { Stars } from "./stars";
-import type { Timeline } from "./timeline";
+import { sceneAt, type Timeline } from "./timeline";
 
 export const INPUT = {
   /** Molette : unités par pixel de delta (delta borné à ±120 par évènement). */
@@ -41,7 +42,13 @@ export type EngineState = {
   reduced: boolean;
   /** Durée de la dernière image (ms). */
   frameMs: number;
+  w: number;
+  h: number;
+  /** Horodatage de l'image (performance.now). */
+  now: number;
 };
+
+export type PhotoBinding = { el: HTMLElement; focal: Focal };
 
 export type EngineOptions = {
   root: HTMLElement;
@@ -56,6 +63,8 @@ export type EngineOptions = {
   canvas: HTMLCanvasElement;
   zoom?: number;
   reduced: boolean;
+  /** Photo de chaque scène (même ordre que `scenes`), cadrée par framing.ts. */
+  photos?: (PhotoBinding | null)[];
   /** Fige la position (outil de mise au point : `?u=1.4`). Les entrées sont alors ignorées. */
   pin?: number;
   onFrame?: (frame: Frame, state: EngineState) => void;
@@ -63,7 +72,8 @@ export type EngineOptions = {
 };
 
 // Éléments qui gardent leur propre défilement ou leurs propres touches (menus, formulaires, sliders…).
-const OWN_INPUT = "input, textarea, select, [contenteditable], [role=slider], [role=dialog], [data-hx-own-input]";
+const OWN_INPUT = "input, textarea, select, dialog, [contenteditable], [role=slider], [role=dialog], [data-hx-own-input]";
+const dialogOpen = () => !!document.querySelector("dialog[open]");
 
 export class Engine {
   private o: EngineOptions;
@@ -119,6 +129,16 @@ export class Engine {
     this.T = Math.max(0, Math.min(this.o.timeline.umax, t));
     this.lastInput = performance.now() - 1000; // aimantation immédiate
   }
+  /** Couleur du set en cours (étoiles). */
+  setColor(rgb: [number, number, number]) {
+    this.color = rgb;
+  }
+  get timeline() {
+    return this.o.timeline;
+  }
+  get currentChapter() {
+    return this.chapter;
+  }
   goToScene(i: number) {
     const s = this.o.timeline.start[i];
     if (s !== undefined) this.goTo(s);
@@ -131,18 +151,25 @@ export class Engine {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     cv.width = Math.round(this.w * dpr);
     cv.height = Math.round(this.h * dpr);
-    this.o.root.style.setProperty("--hole", `${(this.h * PORTAL.hole).toFixed(1)}px`);
+    this.o.root.style.setProperty("--hole", `${holeRadius({ w: this.w, h: this.h }).toFixed(1)}px`);
+    this.o.root.style.setProperty("--pcy", isMobile(this.w) ? `${PORTAL.centerYMobile * 100}%` : "50%");
+    this.o.photos?.forEach((p) => {
+      if (!p) return;
+      const { bw, bh } = baseBox(p.focal.ar, this.w, this.h);
+      p.el.style.width = `${bw.toFixed(1)}px`;
+      p.el.style.height = `${bh.toFixed(1)}px`;
+    });
   }
 
   private nudge(delta: number) {
-    if (!delta || this.o.pin !== undefined) return;
+    if (!delta || this.o.pin !== undefined || dialogOpen()) return;
     this.dir = Math.sign(delta);
     this.lastInput = performance.now();
     this.T = Math.max(0, Math.min(this.o.timeline.umax, this.T + delta));
   }
 
   private onWheel = (e: WheelEvent) => {
-    if ((e.target as Element | null)?.closest?.(OWN_INPUT)) return;
+    if ((e.target as Element | null)?.closest?.(OWN_INPUT) || dialogOpen()) return;
     e.preventDefault();
     let d = e.deltaY;
     if (e.deltaMode === 1) d *= 32;
@@ -169,7 +196,7 @@ export class Engine {
   };
 
   private onKey = (e: KeyboardEvent) => {
-    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || dialogOpen()) return;
     if ((e.target as Element | null)?.closest?.(OWN_INPUT)) return;
     const stops = this.o.timeline.stops;
     let t: number | undefined;
@@ -212,6 +239,8 @@ export class Engine {
     this.spin = reduced ? this.spin : this.spin + dt * 6 + dc * 30;
 
     const frame = layout(tl, this.C, { w: this.w, h: this.h }, { zoom: this.o.zoom, reduced });
+    this.last$ = frame;
+    this.markNear(sceneAt(tl, this.T));
     this.render(frame);
     this.drawCanvas(frame, dt);
 
@@ -229,6 +258,9 @@ export class Engine {
       chapter: this.chapter,
       reduced,
       frameMs: this.frameMs,
+      w: this.w,
+      h: this.h,
+      now,
     });
   };
 
@@ -238,7 +270,8 @@ export class Engine {
     if (!c) this.cache.set(el, (c = {}));
     if (c[prop] === value) return;
     c[prop] = value;
-    if (prop.startsWith("--")) el.style.setProperty(prop, value);
+    if (prop === "data-off") el.toggleAttribute("data-hx-off", value === "1");
+    else if (prop.startsWith("--")) el.style.setProperty(prop, value);
     else (el.style as unknown as Record<string, string>)[prop] = value;
   }
 
@@ -247,13 +280,23 @@ export class Engine {
       const el = this.o.scenes[i];
       if (!el) return;
       const shown = s.visible && s.opacity > 0.001;
-      this.set(el, "visibility", shown ? "visible" : "hidden");
+      // Une scène hors champ reste dans l'ordre de tabulation (le focus qui y entre fait voyager jusqu'à elle) :
+      // on la rend transparente et inerte à la souris plutôt que `visibility: hidden`. Rien n'est peint.
+      this.set(el, "opacity", shown ? s.opacity.toFixed(3) : "0");
+      this.set(el, "data-off", shown ? "" : "1");
       if (!shown) return;
-      this.set(el, "opacity", s.opacity.toFixed(3));
       this.set(el, "transformOrigin", `${s.origin[0].toFixed(1)}px ${s.origin[1].toFixed(1)}px`);
       this.set(el, "transform", `translate(${s.tx.toFixed(2)}px, ${s.ty.toFixed(2)}px) scale(${s.scale.toFixed(4)})`);
       this.set(el, "clipPath", s.clip ? `circle(${s.clip.r.toFixed(2)}px at ${s.clip.x.toFixed(2)}px ${s.clip.y.toFixed(2)}px)` : "none");
       this.set(el, "--t", s.text.toFixed(3));
+      // Variables lues par les textes (séparation chromatique) et décors de la scène.
+      this.set(el, "--vel", this.vel.toFixed(3));
+      this.set(el, "--spin", `${(this.spin % 360).toFixed(2)}deg`);
+      const photo = this.o.photos?.[i];
+      if (photo) {
+        const fr = this.frameFor(i, s);
+        this.set(photo.el, "transform", `translate(-50%, -50%) translate(${fr.sx.toFixed(1)}px, ${fr.sy.toFixed(1)}px) scale(${fr.k.toFixed(4)})`);
+      }
     });
 
     const { fx, shockRing, restRing, rays } = this.o;
@@ -291,6 +334,45 @@ export class Engine {
   }
 
   private energy = 0;
+  private color: [number, number, number] = [198, 255, 26];
+  private last$: Frame | null = null;
+  private near = new Set<number>();
+
+  /** Les photos ne se chargent que pour la scène visée et ses voisines (CSS : [data-hx-near]). */
+  private markNear(target: number) {
+    for (let i = Math.max(0, target - 1); i <= Math.min(this.o.scenes.length - 1, target + 2); i++) {
+      if (this.near.has(i)) continue;
+      this.near.add(i);
+      this.o.scenes[i]?.setAttribute("data-hx-near", "");
+    }
+  }
+
+  /** Outil de mise au point : position à l'écran du visage de chaque photo visible. */
+  inspect() {
+    const f = this.last$;
+    if (!f) return [];
+    return f.scenes.map((s, i) => {
+      const p = this.o.photos?.[i];
+      if (!p || !s.visible) return { scene: i, visible: s.visible };
+      const fr = this.frameFor(i, s);
+      const [lx, ly] = facePoint(p.focal, fr, this.w, this.h);
+      const x = s.origin[0] + s.scale * (lx - s.origin[0]) + s.tx;
+      const y = s.origin[1] + s.scale * (ly - s.origin[1]) + s.ty;
+      return { scene: i, visible: true, face: [Math.round(x), Math.round(y)], clip: s.clip ? Math.round(s.clip.r * s.scale) : null, k: fr.k };
+    });
+  }
+
+  private frameFor(i: number, s: Frame["scenes"][number]) {
+    const p = this.o.photos![i]!;
+    const e = s.entering && !this.o.reduced ? s.entering : null;
+    return frameImg(p.focal, this.w, this.h, {
+      pan: e ? e.pan : 1,
+      lx: e ? e.lens[0] : this.w / 2,
+      ly: e ? e.lens[1] : this.h / 2,
+      rl: e ? e.rLocal : 1e5,
+      ent: e ? { sc: e.sc, g: e.center, tx: e.tx, ty: e.ty, s0: e.s0 } : null,
+    });
+  }
   private emitter: [number, number] = [0, 0];
 
   private drawCanvas(f: Frame, dt: number) {
@@ -303,6 +385,6 @@ export class Engine {
     if (this.o.reduced) return;
     void f;
     const speed = 0.1 + this.vs * 2.2 + this.energy * (this.vs < 0 ? -0.6 : 0.9);
-    this.stars.draw(ctx, this.w, this.h, dt, speed, this.vel, 0, [198, 255, 26], this.emitter);
+    this.stars.draw(ctx, this.w, this.h, dt, speed, this.vel, 0, this.color, this.emitter);
   }
 }
