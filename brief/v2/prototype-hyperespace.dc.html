@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Klaak — V3 Hyperespace</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#07060d}
+a{color:#c6ff1a}a:hover{color:#f4f2ff}
+.k{position:relative;width:100%;height:100vh;min-height:640px;overflow:hidden;background:#07060d;color:#f4f2ff;font-family:"JetBrains Mono",ui-monospace,monospace;outline:none;touch-action:none;user-select:none;--vel:0;--vs:0;--kick:0;--hov:-1;--wc:#c6ff1a;--sp:0;--spin:0deg;--hole:19vh;--f:0;--gl:0;--lx:28px;--ly:18px;--ls:1;--pill:1;--depth:0;
+--pr:0px;--po:0;--pe:0;--z0:1;--o0:1;--v0:visible;--c0:none;--t0:1;--z1:1;--o1:0;--v1:hidden;--c1:none;--t1:0;--z2:1;--o2:0;--v2:hidden;--c2:none;--t2:0;--z3:1;--o3:0;--v3:hidden;--c3:none;--t3:0;--z4:1;--o4:0;--v4:hidden;--c4:none;--t4:0;--z5:1;--o5:0;--v5:hidden;--c5:none;--t5:0;--z6:1;--o6:0;--v6:hidden;--c6:none;--t6:0;--z7:1;--o7:0;--v7:hidden;--c7:none;--t7:0;--z8:1;--o8:0;--v8:hidden;--c8:none;--t8:0;--z9:1;--o9:0;--v9:hidden;--c9:none;--t9:0;}
+.k:focus-visible{box-shadow:inset 0 0 0 2px #19e3ff}
+.sc{position:absolute;inset:0;transform-origin:50% 50%;will-change:transform,opacity,clip-path;background:#07060d;pointer-events:none;overflow:hidden}
+.gring{position:absolute;left:var(--cx,50%);top:var(--cy,50%);width:0;height:0;opacity:var(--po);z-index:15;pointer-events:none}
+.gring i{position:absolute;left:calc(var(--pr) * -1);top:calc(var(--pr) * -1);width:calc(var(--pr) * 2);height:calc(var(--pr) * 2);border-radius:50%;box-sizing:border-box;display:block}
+.gring .r1{border:3px solid var(--wc);border-top-color:transparent;border-left-color:transparent;transform:rotate(var(--spin)) scale(calc(1 + var(--kick) * .03));box-shadow:0 0 calc(18px + var(--kick) * 50px + var(--pe) * 40px) var(--wc)}
+.gring .r2{border:2px solid #19e3ff;transform:translateX(calc(-2px - var(--vel) * 16px - var(--pe) * 10px));mix-blend-mode:screen}
+.gring .r3{border:2px solid #ff2bd6;transform:translateX(calc(2px + var(--vel) * 16px + var(--pe) * 10px));mix-blend-mode:screen}
+.gring .r4{left:calc(var(--pr) * -1 - 18px);top:calc(var(--pr) * -1 - 18px);width:calc(var(--pr) * 2 + 36px);height:calc(var(--pr) * 2 + 36px);border:1px dashed rgba(244,242,255,.5);transform:rotate(calc(var(--spin) * -1.6))}
+.rays{position:absolute;inset:0;z-index:14;pointer-events:none;mix-blend-mode:screen;background:repeating-conic-gradient(from var(--spin) at var(--cx,50%) var(--cy,50%),rgba(244,242,255,0) 0deg 4deg,rgba(244,242,255,.7) 4.3deg 4.6deg,rgba(244,242,255,0) 5deg 9deg);-webkit-mask:radial-gradient(circle at var(--cx,50%) var(--cy,50%),transparent calc(var(--pr) - 2px),#000 calc(var(--pr) + 4px),transparent calc(var(--pr) + 42vh));mask:radial-gradient(circle at var(--cx,50%) var(--cy,50%),transparent calc(var(--pr) - 2px),#000 calc(var(--pr) + 4px),transparent calc(var(--pr) + 42vh));opacity:calc(var(--pe) * .85)}
+.sc a,.sc button,.sc .wave{pointer-events:auto}
+.duo{position:absolute;inset:0;overflow:hidden}
+.duo .img{position:absolute;left:50%;top:50%;width:max(100%,150vh);height:max(100%,66.667vw);transform:translate(-50%,-50%) scale(calc(1.04 + var(--kick) * .015));filter:grayscale(1) contrast(1.35) brightness(.78)}
+.duo .tint{position:absolute;inset:0;mix-blend-mode:color}
+.duo .vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(7,6,13,.15) 20%,rgba(7,6,13,.88) 100%)}
+.ph{background-image:url(/_blob/bd9f1cd13f7e9a13efcbdec9e83a5502);background-size:300% 200%}
+.ph0{background-position:0 0}.ph1{background-position:50% 0}.ph2{background-position:100% 0}.ph3{background-position:0 100%}.ph4{background-position:50% 100%}.ph5{background-position:100% 100%}
+.po{background-image:url(/_blob/8a0de08a1e0728cb29d0e7952b71cb8a);background-size:400% 200%}
+.po0{background-position:0 0}.po1{background-position:33.333% 0}.po2{background-position:66.667% 0}.po3{background-position:100% 0}.po4{background-position:0 100%}.po5{background-position:33.333% 100%}.po6{background-position:66.667% 100%}.po7{background-position:100% 100%}
+.logo{-webkit-mask:url(/_blob/8efcdae2de0f2273fd6f7e5c3c1d5a8b) center/contain no-repeat;mask:url(/_blob/8efcdae2de0f2273fd6f7e5c3c1d5a8b) center/contain no-repeat;background:currentColor}
+.lens{position:absolute;left:50%;top:50%;width:calc(var(--hole) * 2);height:calc(var(--hole) * 2);margin:calc(var(--hole) * -1) 0 0 calc(var(--hole) * -1);border-radius:50%;overflow:hidden;background:#07060d;isolation:isolate}
+.lin{position:absolute;inset:0;transform:scale(calc(1.1 - var(--kick) * .05))}
+.a32{position:absolute;top:0;height:100%;width:150%;left:-25%}
+.a169{position:absolute;top:0;height:100%;width:177.78%;left:-38.89%}
+.lin.duot .a32,.lin.duot .a169{filter:grayscale(1) contrast(1.3) brightness(.85)}
+.ltint{position:absolute;inset:0;mix-blend-mode:color}
+.portal{position:absolute;left:50%;top:50%;width:calc(var(--hole) * 2 + 10px);height:calc(var(--hole) * 2 + 10px);transform:translate(-50%,-50%) scale(calc(1 + var(--kick) * .05)) rotate(var(--spin));border-radius:50%;border:3px solid var(--wc);border-top-color:transparent;box-shadow:0 0 calc(20px + var(--kick) * 60px) var(--wc);box-sizing:border-box;pointer-events:none}
+.portal2{position:absolute;left:50%;top:50%;width:calc(var(--hole) * 2 + 34px);height:calc(var(--hole) * 2 + 34px);transform:translate(-50%,-50%) rotate(calc(var(--spin) * -1.6));border-radius:50%;border:1px dashed rgba(244,242,255,.45);box-sizing:border-box;pointer-events:none}
+.mega{font-family:Unbounded,system-ui,sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:-.045em;line-height:.86;margin:0;text-shadow:calc(-2px - var(--vel) * 26px) 0 #19e3ff,calc(2px + var(--vel) * 26px) 0 #ff2bd6}
+.h2{font-family:Unbounded,system-ui,sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:1.02;margin:0;text-shadow:calc(-1px - var(--vel) * 12px) 0 #19e3ff,calc(1px + var(--vel) * 12px) 0 #ff2bd6}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.14em;font-size:13px;margin:0}
+.top{position:absolute;left:0;right:0;top:10vh;display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 240px;text-align:center}
+.bot{position:absolute;left:0;right:0;bottom:19vh;display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 24px;text-align:center}
+.big{position:absolute;left:50%;top:50%;width:0;height:0;transform:rotate(var(--spin))}
+.gbar{position:absolute;left:-4px;bottom:calc(var(--hole) + 16px);width:8px;height:calc(14px + var(--h) * 20vh);background:var(--wc);transform-origin:50% calc(100% + var(--hole) + 16px);transform:rotate(calc(var(--i) * 360deg)) scaleY(calc(.35 + var(--kick) * var(--h) * 1.4 + var(--vel) * .8));border-radius:4px;opacity:clamp(.25,calc((var(--sp) - var(--i)) * 600 + 1),1)}
+.big.calm .gbar{transform:rotate(calc(var(--i) * 360deg)) scaleY(calc(.4 + var(--ks) * var(--h) * 1.2 + var(--vel) * .3));transition:none}
+.sc.calm{--kick:var(--ks)}
+.pq{background-image:url(/_blob/c02d481a935bfb5894ee1b849c30c2a1);background-size:300% 300%}
+.pq0{background-position:0 0}.pq1{background-position:50% 0}.pq2{background-position:100% 0}.pq3{background-position:0 50%}.pq4{background-position:50% 50%}.pq5{background-position:100% 50%}.pq6{background-position:0 100%}.pq7{background-position:50% 100%}.pq8{background-position:100% 100%}
+.mq{background-image:url(/_blob/2819c06dd006042876b03ee8f44d64fb);background-size:cover;background-position:center}
+.duo .img.sq{width:max(100%,100vh);height:max(100%,100vw)}
+.side{position:absolute;top:50%;transform:translateY(-50%);width:min(31vw,460px);display:flex;flex-direction:column;gap:16px}
+.side.l{left:5vw;text-align:left;align-items:flex-start}
+.side.r{right:5vw;text-align:right;align-items:flex-end}
+.side .body{font:400 15px/1.65 "JetBrains Mono",ui-monospace,monospace;color:#d8d5ea;margin:0;max-width:440px;text-shadow:0 1px 12px rgba(7,6,13,.9)}
+.credit{position:absolute;right:16px;bottom:22px;writing-mode:vertical-rl;transform:rotate(180deg);font:400 10px "JetBrains Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,242,255,.5);margin:0}
+.social{position:absolute;right:20px;top:18px;z-index:30;display:flex;gap:2px}
+.social a{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;font:400 11px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:#a9a4c4;text-decoration:none}
+.social a:hover{color:var(--wc)}
+.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen;z-index:20}
+.flash{position:absolute;inset:0;background:var(--wc);opacity:calc(var(--kbar,0) * var(--flash,.04));pointer-events:none;mix-blend-mode:screen;z-index:21}
+.brand{position:absolute;left:0;top:0;width:200px;height:141px;transform-origin:0 0;transform:translate(var(--lx),var(--ly)) scale(var(--ls));z-index:30;pointer-events:none}
+.brand .lay{position:absolute;inset:0;transform:scale(calc(1 + var(--kick) * .06)) skewX(calc(var(--vs) * -14deg))}
+.brand .c{color:#19e3ff;mix-blend-mode:screen;transform:translateX(calc(-3px - var(--vel) * 22px - var(--gl) * 18px))}
+.brand .m{color:#ff2bd6;mix-blend-mode:screen;transform:translateX(calc(3px + var(--vel) * 22px + var(--gl) * 18px));clip-path:inset(calc(var(--gl) * 38%) 0 calc(var(--gl) * 30%) 0)}
+.brand .w{color:#f4f2ff;clip-path:inset(0 0 0 0)}
+.brand .g{color:var(--wc);mix-blend-mode:screen;opacity:calc(var(--gl) + var(--kick) * .35);transform:translateX(calc(var(--gl) * -30px));clip-path:inset(calc(55% - var(--gl) * 20%) 0 calc(30% - var(--gl) * 10%) 0)}
+.where{position:absolute;left:30px;top:166px;z-index:30;display:flex;flex-direction:column;gap:8px;opacity:var(--ls-inv,0)}
+.depth{width:200px;height:2px;background:#2a2644;position:relative;overflow:hidden}
+.depth i{position:absolute;left:0;top:0;bottom:0;width:calc(var(--depth) * 100%);background:var(--wc)}
+.reactor{position:absolute;left:50%;bottom:18px;transform:translateX(-50%) translateY(calc((1 - var(--pill)) * 140px));opacity:var(--pill);z-index:30;display:flex;align-items:center;gap:16px;padding:10px 18px 10px 10px;background:rgba(16,14,26,.85);border:1px solid #2a2644;border-radius:999px;backdrop-filter:blur(10px)}
+.core{position:relative;width:72px;height:72px;flex:none}
+.core .rip{inset:10px}
+.meta{display:flex;flex-direction:column;gap:5px;width:210px;min-width:0}
+.ptitle{font:800 13px/1.2 Unbounded,system-ui,sans-serif;text-transform:uppercase;color:var(--wc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptime{font-size:11px;color:#f4f2ff;letter-spacing:.08em}
+.wave{position:relative;width:min(34vw,440px);height:48px;display:flex;align-items:center;gap:2px;cursor:pointer;outline:none}
+.wave.wide{width:100%;height:72px;margin-top:10px;gap:3px}
+.wave:focus-visible{box-shadow:0 0 0 2px #19e3ff;border-radius:4px}
+.wave i{flex:1;height:calc(var(--h) * 100%);border-radius:1px;background:color-mix(in srgb,var(--wc) calc(clamp(0, (var(--sp) - var(--i)) * 100000, 1) * 100%),rgba(169,164,196,.35));transform:scaleY(calc(1 + var(--kick) * var(--h) * .5 * max(0, 1 - max(var(--sp) - var(--i), var(--i) - var(--sp)) * 14)));transform-origin:50% 50%}
+.wave:hover i{background:color-mix(in srgb,var(--wc) calc(clamp(0, (var(--sp) - var(--i)) * 100000, 1) * 100%),color-mix(in srgb,#f4f2ff calc(clamp(0, (var(--hov) - var(--i)) * 100000, 1) * 60%),rgba(169,164,196,.35)))}
+.phead{position:absolute;top:2px;bottom:2px;left:calc(var(--sp) * 100%);width:2px;margin-left:-1px;background:#f4f2ff;box-shadow:0 0 10px var(--wc);pointer-events:none}
+.hov{position:absolute;bottom:calc(100% + 6px);left:calc(var(--hov) * 100%);transform:translateX(-50%);opacity:0;pointer-events:none;transition:opacity .15s}
+.wave:hover .hov{opacity:1}
+.hov b{display:block;padding:3px 7px;background:#f4f2ff;color:#07060d;font:700 10px "JetBrains Mono",monospace;letter-spacing:.06em;white-space:nowrap}
+.mbtn{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid #2a2644;background:transparent;color:#f4f2ff;cursor:pointer;display:grid;place-items:center}
+.mbtn:hover,.mbtn.on{border-color:var(--wc);color:var(--wc)}
+.smenu{position:absolute;right:0;bottom:calc(100% + 12px);width:min(380px,90vw);padding:10px;background:rgba(16,14,26,.96);border:1px solid #2a2644;border-radius:16px;backdrop-filter:blur(14px);display:flex;flex-direction:column;gap:4px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.mitem{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:12px;min-height:56px;padding:8px 10px;border:0;border-radius:10px;background:transparent;color:#f4f2ff;cursor:pointer}
+.mitem:hover{background:#1d1934}
+.mitem.on{background:#1d1934}
+.mnum{font:800 13px Unbounded,system-ui,sans-serif;color:#6f6a8f}
+.mitem.on .mnum{color:var(--wc)}
+.mtitle{font:800 12px/1.2 Unbounded,system-ui,sans-serif;text-transform:uppercase}
+.mstate{display:inline-flex;align-items:center;gap:8px;font:400 10px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--wc);white-space:nowrap}
+.cring{position:absolute;left:50%;top:50%;width:0;height:0;transform:rotate(var(--spin))}
+.cbar{position:absolute;left:-1.5px;bottom:30px;width:3px;height:calc(4px + var(--h) * 16px);background:var(--wc);transform-origin:50% calc(100% + 30px);transform:rotate(calc(var(--i) * 360deg)) scaleY(calc(.5 + var(--kick) * var(--h) * 1.5));border-radius:2px;opacity:clamp(.3,calc((var(--sp) - var(--i)) * 600 + 1),1)}
+.prog{position:absolute;inset:14px;border-radius:50%;background:conic-gradient(var(--wc) calc(var(--sp) * 360deg),rgba(244,242,255,.14) 0);-webkit-mask:radial-gradient(circle,transparent calc(50% - 3px),#000 calc(50% - 2px));mask:radial-gradient(circle,transparent calc(50% - 3px),#000 calc(50% - 2px))}
+.rip{position:absolute;inset:22px;border-radius:50%;border:2px solid var(--wc);transform:scale(calc(1 + var(--kick) * .55));opacity:calc(var(--kick) * .8);pointer-events:none}
+.rip.r2{border-color:#19e3ff;border-width:1px;transform:scale(calc(1.15 + var(--kbar,0) * .7));opacity:calc(var(--kbar,0) * .9)}
+.pbtn{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;border:0;background:var(--wc);color:#07060d;cursor:pointer;display:grid;place-items:center;transform:scale(calc(1 + var(--kick) * .12))}
+.pbig{position:absolute;left:50%;top:50%;width:104px;height:104px;margin:-52px 0 0 -52px;border-radius:50%;border:0;background:var(--wc);color:#07060d;cursor:pointer;display:grid;place-items:center;transform:scale(calc(1 + var(--kick) * .1));box-shadow:0 0 calc(20px + var(--ks) * 40px) var(--wc)}
+.ibtn{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid #2a2644;background:transparent;color:#f4f2ff;cursor:pointer;display:grid;place-items:center}
+.ibtn:hover{border-color:var(--wc);color:var(--wc)}
+.cta{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 28px;background:var(--wc);color:#07060d;font:800 18px Unbounded,system-ui,sans-serif;text-transform:uppercase;text-decoration:none}
+.cta:hover{background:#f4f2ff;color:#07060d}
+.artl{position:absolute;inset:0;transition:opacity .6s cubic-bezier(.16,1,.3,1)}
+.tl{position:absolute;left:5vw;top:50%;transform:translateY(-50%);width:26vw;min-width:300px;display:flex;flex-direction:column;gap:10px}
+.trk{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:14px;min-height:64px;padding:10px 16px;border:1px solid #2a2644;background:rgba(7,6,13,.7);color:#f4f2ff;text-align:left;cursor:pointer}
+.trk:hover{border-color:#a9a4c4}
+.trk.on{border-color:var(--wc);background:rgba(16,14,26,.95);box-shadow:0 0 30px rgba(0,0,0,.6)}
+.trk .n{font:800 15px Unbounded,system-ui,sans-serif;color:#a9a4c4}
+.trk.on .n{color:var(--wc)}
+.eq{display:flex;gap:3px;align-items:flex-end;height:18px;width:20px}
+.eq i{flex:1;background:var(--wc);height:calc(20% + var(--kick) * 80%)}
+.eq i:nth-child(2){height:calc(50% + var(--kick) * 50%)}
+.eq i:nth-child(3){height:calc(30% + var(--kick) * 60%)}
+.np{position:absolute;right:5vw;top:50%;transform:translateY(-50%);width:24vw;min-width:280px;display:flex;flex-direction:column;gap:14px}
+.ghost{position:absolute;right:-2vw;bottom:-6vh;font:900 34vh/0.8 Unbounded,system-ui,sans-serif;color:transparent;-webkit-text-stroke:2px rgba(255,138,0,.28);letter-spacing:-.06em;pointer-events:none}
+.orb{position:absolute;left:50%;top:50%;width:0;height:0}
+.dcard{--t:calc((var(--k) - var(--f)) * 24deg);position:absolute;left:0;top:0;width:250px;padding:0;border:0;background:none;color:#f4f2ff;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-align:left;transform:translate(-50%,-50%) translate(calc(sin(var(--t)) * 36vw),calc(cos(var(--t)) * -34vh)) scale(calc(.45 + .55 * cos(var(--t))));opacity:clamp(0,calc(cos(var(--t)) * 2.6 - .9),1);will-change:transform,opacity}
+.dcard .th{width:250px;height:141px;border-radius:4px;box-shadow:0 0 0 1px #2a2644;position:relative;overflow:hidden}
+.dcard.on .th{box-shadow:0 0 0 3px #ff8a00,0 0 50px rgba(255,138,0,.5)}
+.dcard .tx{display:grid;place-items:center;background:#100e1a;border:2px dashed #ff2bd6;box-sizing:border-box;font:800 14px/1.1 Unbounded,system-ui,sans-serif;text-transform:uppercase;color:#ff2bd6;padding:10px;text-align:center}
+.dcard .slot{display:grid;place-items:center;background:var(--wc);color:#07060d;font:900 20px/1 Unbounded,system-ui,sans-serif;text-transform:uppercase;text-align:center}
+.fill{position:absolute;inset:0}
+.dl{position:absolute;inset:0;opacity:clamp(0,calc(1 - max(var(--k) - var(--f),var(--f) - var(--k)) * 1.7),1)}
+.dinfo{position:absolute;left:50%;bottom:17vh;transform:translateX(-50%);width:min(600px,90vw);display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.dinfo .cta{min-height:44px;font-size:14px;padding:0 20px}
+.introtag{position:absolute;left:0;right:0;bottom:19vh;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:0 24px}
+.deco{position:absolute;left:74%;top:46%;width:0;height:0}
+.deco > *{position:absolute;border-radius:50%;box-sizing:border-box}
+.glow{left:calc(var(--hole) * -1.9);top:calc(var(--hole) * -1.9);width:calc(var(--hole) * 3.8);height:calc(var(--hole) * 3.8);background:radial-gradient(circle,var(--wc) 0,transparent 62%);opacity:calc(.16 + var(--kick) * .25);animation:kbreath 4.8s ease-in-out infinite;mix-blend-mode:screen}
+@keyframes kbreath{0%,100%{transform:scale(.92)}50%{transform:scale(1.08)}}
+.arc{--rr:calc(var(--hole) + var(--off));left:calc(var(--rr) * -1);top:calc(var(--rr) * -1);width:calc(var(--rr) * 2);height:calc(var(--rr) * 2);-webkit-mask:radial-gradient(circle,transparent calc(var(--rr) - var(--th) - 1px),#000 calc(var(--rr) - var(--th)),#000 calc(var(--rr) - 1px),transparent var(--rr));mask:radial-gradient(circle,transparent calc(var(--rr) - var(--th) - 1px),#000 calc(var(--rr) - var(--th)),#000 calc(var(--rr) - 1px),transparent var(--rr))}
+.a1{--off:62px;--th:3px;background:conic-gradient(var(--wc) 0 16%,transparent 16% 34%,var(--wc) 34% 40%,transparent 40% 66%,var(--wc) 66% 71%,transparent 71%);transform:rotate(calc(var(--spin) * 1.4));filter:drop-shadow(0 0 8px var(--wc))}
+.a2{--off:90px;--th:1px;background:repeating-conic-gradient(#19e3ff 0 2deg,transparent 2deg 7deg);transform:rotate(calc(var(--spin) * -.9));opacity:.75}
+.a3{--off:122px;--th:10px;background:repeating-conic-gradient(#ff2bd6 0 .7deg,transparent .7deg 5deg);transform:rotate(calc(var(--spin) * .35));opacity:.55}
+.a4{--off:140px;--th:2px;background:conic-gradient(from 200deg,transparent 0 70%,#f4f2ff 82%,transparent 84%);transform:rotate(calc(var(--spin) * -2.2));opacity:.7}
+.ibars{left:0;top:0;width:0;height:0;border-radius:0;transform:rotate(calc(var(--spin) * .5)) scale(calc(1 + var(--kick) * .07))}
+.ibars i{position:absolute;left:-1.5px;bottom:calc(var(--hole) + 14px);width:3px;height:30px;border-radius:2px;background:var(--wc);transform-origin:50% calc(100% + var(--hole) + 14px);animation:kwave 2.6s ease-in-out infinite;animation-delay:calc(var(--i) * -5.2s)}
+@keyframes kwave{0%,100%{transform:rotate(calc(var(--i) * 360deg)) scaleY(.25);opacity:.35}50%{transform:rotate(calc(var(--i) * 360deg)) scaleY(1);opacity:1}}
+.orb1,.orb2{left:0;top:0;width:0;height:0;border-radius:0}
+.orb1{transform:rotate(calc(var(--spin) * 3))}.orb2{transform:rotate(calc(var(--spin) * -1.8 + 140deg))}
+.orb1 b,.orb2 b{position:absolute;border-radius:50%}
+.orb1 b{left:-5px;top:calc((var(--hole) + 90px) * -1 - 5px);width:10px;height:10px;background:#c6ff1a;box-shadow:0 0 16px #c6ff1a,0 0 40px #c6ff1a}
+.orb2 b{left:-4px;top:calc((var(--hole) + 122px) * -1 - 4px);width:8px;height:8px;background:#ff2bd6;box-shadow:0 0 14px #ff2bd6,0 0 34px #ff2bd6}
+.hint{position:absolute;left:74%;top:calc(46% + var(--hole) + 160px);width:2px;height:34px;transform:translateX(-50%);background:#2a2644;overflow:hidden}
+.hint span{position:absolute;left:0;right:0;height:12px;background:var(--wc);animation:khint 1.4s cubic-bezier(.7,0,.84,0) infinite}
+@keyframes khint{0%{top:-12px}100%{top:34px}}
+.dtitle{position:absolute;left:5vw;bottom:19vh;display:flex;flex-direction:column;gap:10px;max-width:22vw}
+.badge{display:inline-block;padding:4px 10px;background:#ff8a00;color:#07060d;font:700 11px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}
+@media (max-width:760px){.reactor .meta{display:none}.wave{width:38vw}.side,.side.l,.side.r{left:6vw;right:6vw;width:auto;top:auto;bottom:18vh;transform:none;text-align:center;align-items:center}.side .body{font-size:13px}.social{top:auto;bottom:150px;right:50%;transform:translateX(50%)}.credit{bottom:150px}.introtag{bottom:16vh}.deco{left:50%;top:64%}.a3,.a4,.orb2{display:none}.hint{display:none}.dtitle{display:none}.dinfo{bottom:20vh}.reactor .meta{display:none}.top{padding:0 24px;top:20vh}.tl{left:4vw;right:4vw;width:auto;top:auto;bottom:16vh;transform:none}.np{display:none}.dcard{width:150px}.dcard .th{width:150px;height:84px}.where{display:none}}
+@media (prefers-reduced-motion:reduce){.fx,.flash{display:none}}
+</style>
+</helmet>
+<div class="k" ref="{{refRoot}}" tabIndex="0" onKeyDown="{{onKey}}" aria-label="Klaak — hyperespace. Molette, trackpad, glisser ou flèches pour plonger.">
+
+  <!-- 00 INTRO -->
+  <section class="sc" style="z-index: 2; transform-origin: var(--gx0, 50%) var(--gy0, 50%); transform: translate(var(--tx0, 0px), var(--ty0, 0px)) scale(var(--z0)); opacity: var(--o0); visibility: var(--v0); clip-path: var(--c0)" aria-label="Intro">
+    <div class="introtag" style="opacity: var(--t0)"><p class="mono" style="color: var(--wc); font-size: 16px">Hitech · Groovy · Happy · Survitaminée</p><p class="mono" style="color:#a9a4c4">Collectif Outrance · Lyon</p></div>
+    <div class="deco" aria-hidden="true" style="opacity: var(--t0)">
+      <div class="glow"></div>
+      <div class="arc a4"></div><div class="arc a3"></div><div class="arc a2"></div><div class="arc a1"></div>
+      <div class="orb1"><b></b></div><div class="orb2"><b></b></div>
+    </div>
+    <div class="hint" aria-hidden="true" style="opacity: var(--t0)"><span></span></div>
+  </section>
+  <!-- 01 FESTIVALIER -->
+  <section class="sc" style="z-index: 3; transform-origin: var(--gx1, 50%) var(--gy1, 50%); transform: translate(var(--tx1, 0px), var(--ty1, 0px)) scale(var(--z1)); opacity: var(--o1); visibility: var(--v1); clip-path: var(--c1)" aria-label="Le festivalier">
+    <div class="duo"><div class="img pq pq0" style="transform: translate(-50%,-50%) var(--im1, scale(1))"></div><div class="tint" style="background:#19e3ff"></div><div class="vig"></div></div>
+    <div class="side r" style="opacity: var(--t1)">
+      <p class="mono" style="color:#19e3ff">01 — Le festivalier</p>
+      <p class="h2" style="font-size: clamp(26px, 3vw, 50px)">Plus de 10 ans dans l’univers psytrance</p>
+      <p class="body">Des années à écumer les festivals à travers la France et l’Europe, à s’imprégner de l’essence des plus grandes scènes psytrance pour nourrir son univers musical.</p>
+    </div>
+    <p class="credit" style="opacity: var(--t1)">Photo · NVP Photographie</p>
+  </section>
+  <!-- 02 COLLECTIF -->
+  <section class="sc" style="z-index: 4; transform-origin: var(--gx2, 50%) var(--gy2, 50%); transform: translate(var(--tx2, 0px), var(--ty2, 0px)) scale(var(--z2)); opacity: var(--o2); visibility: var(--v2); clip-path: var(--c2)" aria-label="Collectif">
+    <div class="duo"><div class="img pq pq2" style="transform: translate(-50%,-50%) var(--im2, scale(1))"></div><div class="tint" style="background:#ff2bd6"></div><div class="vig"></div></div>
+    <div class="side l" style="opacity: var(--t2)">
+      <p class="mono" style="color:#ff2bd6">02 — Collectif</p>
+      <p class="h2" style="font-size: clamp(26px, 3vw, 50px)">Outrance</p>
+      <p class="body">Co-fondateur du collectif Outrance, acteur incontournable de la psytrance à Lyon, il y a œuvré pendant des années à faire vibrer les dancefloors.</p>
+      <p class="body" style="color:#f4f2ff">Aujourd’hui, il est aussi l’un des artistes qui représentent l’association.</p>
+    </div>
+    <p class="credit" style="opacity: var(--t2)">Photo · NVP Photographie</p>
+  </section>
+  <!-- 03 RÉVÉLATION -->
+  <section class="sc" style="z-index: 5; transform-origin: var(--gx3, 50%) var(--gy3, 50%); transform: translate(var(--tx3, 0px), var(--ty3, 0px)) scale(var(--z3)); opacity: var(--o3); visibility: var(--v3); clip-path: var(--c3)" aria-label="La révélation">
+    <div class="duo"><div class="img mq sq" style="transform: translate(-50%,-50%) var(--im3, scale(1))"></div><div class="tint" style="background:#ff8a00; opacity:.35"></div><div class="vig"></div></div>
+    <div class="side l" style="opacity: var(--t3)">
+      <p class="mono" style="color:#c6ff1a">03 — La révélation</p>
+      <p class="mega" style="font-size: clamp(44px, 5.6vw, 96px)">La Hitech</p>
+      <p class="body">Le déclic qui lui a donné l’envie de passer de l’orga à la scène. Sa hitech à lui : explosive, groovy, happy et survitaminée.</p>
+      <div style="display:flex; align-items:baseline; gap:14px; margin-top:4px">
+        <span style="font: 900 clamp(30px, 3.4vw, 54px)/1 Unbounded, system-ui, sans-serif; color:#c6ff1a; letter-spacing:-.03em">175 → 200</span>
+        <span class="mono" style="color:#a9a4c4">BPM</span>
+      </div>
+      <p class="mono" style="color:#a9a4c4; text-transform:none; letter-spacing:.04em">Une énergie positive qui monte sans jamais redescendre.</p>
+    </div>
+    <p class="credit" style="opacity: var(--t3)">Photo · [crédit à compléter]</p>
+  </section>
+  <!-- 04 DROP -->
+  <section class="sc" style="z-index: 6; transform-origin: var(--gx4, 50%) var(--gy4, 50%); transform: translate(var(--tx4, 0px), var(--ty4, 0px)) scale(var(--z4)); opacity: var(--o4); visibility: var(--v4); clip-path: var(--c4)" aria-label="Drop">
+    <div class="duo"><div class="img pq pq1" style="transform: translate(-50%,-50%) var(--im4, scale(1))"></div><div class="tint" style="background:#c6ff1a"></div><div class="vig"></div></div>
+    <div class="side l" style="opacity: var(--t4)">
+      <p class="mono" style="color: var(--wc)">04 — De l’orga à la scène</p>
+      <p class="mega" style="font-size: clamp(56px, 7.4vw, 128px); color: var(--wc)">Drop</p>
+      <p class="body">Aujourd’hui, c’est derrière les platines qu’il insuffle son énergie.</p>
+      <p class="mono" style="color:#a9a4c4">Lance un set : tout le voyage se cale sur le kick</p>
+    </div>
+    <p class="credit" style="opacity: var(--t4)">Photo · NVP Photographie</p>
+  </section>
+  <!-- 05 SETS -->
+  <section class="sc calm" style="z-index: 7; transform-origin: var(--gx5, 50%) var(--gy5, 50%); transform: translate(var(--tx5, 0px), var(--ty5, 0px)) scale(var(--z5)); opacity: var(--o5); visibility: var(--v5); clip-path: var(--c5)" aria-label="Les sets">
+    <div class="lens">
+      <div class="lin">
+        <sc-for list="{{setArt}}" as="a" hint-placeholder-count="3">
+          <div class="artl" style="opacity: {{a.op}}"><div class="{{a.cls}}" style="{{a.sty}}"></div></div>
+        </sc-for>
+      </div>
+    </div>
+    <div class="portal"></div><div class="portal2"></div>
+    <button class="pbig" onClick="{{onPlayBig}}" aria-label="{{playLabel}}">
+      <sc-if value="{{playing}}" hint-placeholder-val="{{false}}"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="5" height="16" fill="currentColor"></rect><rect x="14" y="4" width="5" height="16" fill="currentColor"></rect></svg></sc-if>
+      <sc-if value="{{paused}}" hint-placeholder-val="{{true}}"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z" fill="currentColor"></path></svg></sc-if>
+    </button>
+    <div class="tl" style="opacity: var(--t5)">
+      <p class="mono" style="color: var(--wc)">05 — Les sets</p>
+      <p class="mega" style="font-size: clamp(34px, 4vw, 68px); margin-bottom: 10px">Tracklist</p>
+      <sc-for list="{{sets}}" as="s" hint-placeholder-count="3">
+        <button class="{{s.cls}}" onClick="{{s.pick}}" aria-label="{{s.aria}}">
+          <span class="n">{{s.num}}</span>
+          <span style="display:flex; flex-direction:column; gap:4px; min-width:0">
+            <span style="font: 800 13px/1.2 Unbounded, system-ui, sans-serif; text-transform: uppercase">{{s.title}}</span>
+            <span class="mono" style="font-size: 11px; color:#a9a4c4; letter-spacing:.06em; text-transform:none">{{s.sub}}</span>
+          </span>
+          <sc-if value="{{s.live}}" hint-placeholder-val="{{false}}"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></sc-if>
+          <sc-if value="{{s.idle}}" hint-placeholder-val="{{true}}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z" fill="currentColor"></path></svg></sc-if>
+        </button>
+      </sc-for>
+    </div>
+    <div class="np" style="opacity: var(--t5)">
+      <p class="mono" style="color: var(--wc)">{{npState}}</p>
+      <p class="h2" style="font-size: clamp(20px, 2.2vw, 34px)">{{setTitle}}</p>
+      <p class="mono" style="color:#a9a4c4; text-transform:none; letter-spacing:.04em">{{setSub}}</p>
+      <div class="wave wide" role="slider" tabIndex="0" aria-label="Position dans le set" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{spPct}}" aria-valuetext="{{tc}} sur {{tcTotal}}" onClick="{{onSeek}}" onMouseMove="{{onWaveMove}}" onMouseLeave="{{onWaveLeave}}" onKeyDown="{{onWaveKey}}">
+        <sc-for list="{{wbars}}" as="b" hint-placeholder-count="110"><i style="--i: {{b.i}}; --h: {{b.h}}"></i></sc-for>
+        <span class="phead" aria-hidden="true"></span>
+        <span class="hov" aria-hidden="true"><b>{{hoverTc}}</b></span>
+      </div>
+      <div style="display:flex; justify-content:space-between; width:100%">
+        <span class="mono" style="font-size:12px; letter-spacing:.08em">{{tc}}</span>
+        <span class="mono" style="font-size:12px; letter-spacing:.08em; color:#6f6a8f">{{tcTotal}}</span>
+      </div>
+      <a href="{{setUrl}}" class="mono" style="margin-top: 8px">Écouter sur SoundCloud ↗</a>
+    </div>
+  </section>
+  <!-- 06 DATES -->
+    <div class="duo"><div class="img pq pq4" style="transform: translate(-50%,-50%) var(--im6, scale(1))"></div><div class="tint" style="background:#19e3ff"></div><div class="vig"></div><div style="position:absolute; inset:0; background: radial-gradient(ellipse at 50% 40%, rgba(7,6,13,.55) 0, rgba(7,6,13,.25) 60%, rgba(7,6,13,.6) 100%)"></div></div>
+  <section class="sc" style="z-index: 8; transform-origin: var(--gx6, 50%) var(--gy6, 50%); transform: translate(var(--tx6, 0px), var(--ty6, 0px)) scale(var(--z6)); opacity: var(--o6); visibility: var(--v6); clip-path: var(--c6)" aria-label="Les dates">
+    <div class="ghost" aria-hidden="true" style="opacity: var(--t6)">{{focusYear}}</div>
+    <div class="dtitle" style="opacity: var(--t6)">
+      <p class="mono" style="color:#ff8a00">06 — Les dates</p>
+      <p class="mega" style="font-size: clamp(32px, 3.8vw, 64px)">En orbite</p>
+      <p class="mono" style="color:#a9a4c4; text-transform:none; letter-spacing:.04em; line-height:1.6">{{datesCount}} dates · {{datesRange}}<br>Molette pour faire tourner, clic pour viser.</p>
+    </div>
+    <div class="orb" style="opacity: var(--t6)">
+      <sc-for list="{{dates}}" as="d" hint-placeholder-count="10">
+        <button class="{{d.cls}}" style="--k: {{d.k}}" onClick="{{d.go}}" aria-label="{{d.aria}}">
+          <sc-if value="{{d.hasPoster}}" hint-placeholder-val="{{true}}"><span class="th"><span class="{{d.thumb}}"></span></span></sc-if>
+          <sc-if value="{{d.isText}}" hint-placeholder-val="{{false}}"><span class="th tx">{{d.event}}</span></sc-if>
+          <sc-if value="{{d.isSlot}}" hint-placeholder-val="{{false}}"><span class="th slot">Votre<br>date ?</span></sc-if>
+          <span class="mono" style="font-size:11px; letter-spacing:.06em"><span style="color:#ff8a00">{{d.when}}</span> · {{d.event}}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div class="lens">
+      <div class="lin">
+        <sc-for list="{{dates}}" as="d" hint-placeholder-count="10">
+          <div class="dl" style="--k: {{d.k}}"><div class="{{d.lensArt}}" style="{{d.lensSty}}"></div></div>
+        </sc-for>
+      </div>
+    </div>
+    <div class="portal" style="border-color: #ff8a00; border-top-color: transparent"></div>
+    <div class="portal2"></div>
+    <div class="dinfo" style="opacity: var(--t6)">
+      <p class="mono" style="color:#ff8a00; font-size: 14px">{{fWhen}}</p>
+      <p class="h2" style="font-size: clamp(20px, 2.2vw, 32px)">{{fEvent}}</p>
+      <p class="mono" style="color:#a9a4c4; text-transform:none; letter-spacing:.04em">{{fPlace}}</p>
+      <sc-if value="{{fHasBadge}}" hint-placeholder-val="{{false}}"><span class="badge">{{fBadge}}</span></sc-if>
+      <sc-if value="{{fIsSlot}}" hint-placeholder-val="{{false}}"><a class="cta" href="mailto:kevin@outrance.org?subject=Booking%20Klaak">Proposer une date</a></sc-if>
+    </div>
+    <p class="credit" style="opacity: var(--t6)">Photo · NVP Photographie</p>
+  </section>
+  <!-- 07 BOOKING -->
+  <section class="sc" style="z-index: 9; transform-origin: var(--gx7, 50%) var(--gy7, 50%); transform: translate(var(--tx7, 0px), var(--ty7, 0px)) scale(var(--z7)); opacity: var(--o7); visibility: var(--v7); clip-path: var(--c7)" aria-label="Booking">
+    <div class="duo"><div class="img pq pq5" style="transform: translate(-50%,-50%) var(--im7, scale(1))"></div><div class="tint" style="background:#c6ff1a"></div><div class="vig"></div></div>
+    <div style="position:absolute; inset:0; display:grid; place-items:center; text-align:center; padding: 0 24px; opacity: var(--t7)">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:24px">
+        <p class="mono" style="color: var(--wc)">07 — Booking</p>
+        <p class="mega" style="font-size: clamp(40px, 6.6vw, 112px)">La prochaine date,<br>c’est la vôtre</p>
+        <a class="cta" href="mailto:kevin@outrance.org?subject=Booking%20Klaak">Booker Klaak</a>
+        <p class="mono" style="color:#f4f2ff; text-transform:none">kevin@outrance.org · <a href="https://soundcloud.com/klaak">SoundCloud</a> · <a href="https://www.instagram.com/kevin.klaak/">Instagram</a> · <a href="https://www.facebook.com/klaak.hitech/">Facebook</a></p>
+      </div>
+    </div>
+    <p class="credit">Photo · NVP Photographie</p>
+  </section>
+
+  <div class="rays" aria-hidden="true"></div>
+  <div class="gring" aria-hidden="true"><i class="r4"></i><i class="r2"></i><i class="r3"></i><i class="r1"></i></div>
+  <div class="gring" aria-hidden="true" style="--pr: var(--prb, 0px); --cx: var(--cxb, 50%); --cy: var(--cyb, 50%); --po: var(--pob, 0); --pe: 0"><i class="r4"></i><i class="r2"></i><i class="r3"></i><i class="r1"></i></div>
+
+  <canvas class="fx" ref="{{refCanvas}}" aria-hidden="true"></canvas>
+  <div class="flash" aria-hidden="true"></div>
+
+  <div class="brand" role="img" aria-label="Klaak">
+    <div class="lay"><div class="logo c" style="position:absolute; inset:0"></div><div class="logo m" style="position:absolute; inset:0"></div><div class="logo w" style="position:absolute; inset:0"></div><div class="logo g" style="position:absolute; inset:0"></div></div>
+  </div>
+  <nav class="social" aria-label="Réseaux de Klaak">
+    <a href="https://soundcloud.com/klaak">SoundCloud</a><a href="https://www.instagram.com/kevin.klaak/">Instagram</a><a href="https://www.facebook.com/klaak.hitech/">Facebook</a>
+  </nav>
+  <div class="where" aria-live="polite">
+    <p class="mono" style="color: var(--wc)">{{chNum}} — {{chName}}</p>
+    <div class="depth" aria-hidden="true"><i></i></div>
+  </div>
+
+  <div class="reactor">
+    <div class="core">
+      <div class="rip" aria-hidden="true"></div>
+      <div class="rip r2" aria-hidden="true"></div>
+      <button class="pbtn" onClick="{{onPlay}}" aria-label="{{playLabel}}">
+        <sc-if value="{{playing}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="5" height="16" fill="currentColor"></rect><rect x="14" y="4" width="5" height="16" fill="currentColor"></rect></svg></sc-if>
+        <sc-if value="{{paused}}" hint-placeholder-val="{{true}}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z" fill="currentColor"></path></svg></sc-if>
+      </button>
+    </div>
+    <button class="ibtn" onClick="{{onPrev}}" aria-label="Set précédent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+    <div class="meta">
+      <span class="ptitle">{{setTitle}}</span>
+      <span class="mono ptime">{{tc}} <span style="color:#6f6a8f">/ {{tcTotal}}</span></span>
+    </div>
+    <div class="wave" role="slider" tabIndex="0" aria-label="Position dans le set" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{spPct}}" aria-valuetext="{{tc}} sur {{tcTotal}}" onClick="{{onSeek}}" onMouseMove="{{onWaveMove}}" onMouseLeave="{{onWaveLeave}}" onKeyDown="{{onWaveKey}}">
+      <sc-for list="{{wbars}}" as="b" hint-placeholder-count="110"><i style="--i: {{b.i}}; --h: {{b.h}}"></i></sc-for>
+      <span class="phead" aria-hidden="true"></span>
+      <span class="hov" aria-hidden="true"><b>{{hoverTc}}</b></span>
+    </div>
+    <button class="ibtn" onClick="{{onNext}}" aria-label="Set suivant"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+    <button class="{{menuBtnCls}}" onClick="{{toggleMenu}}" aria-label="Liste des sets" aria-expanded="{{menuOpen}}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>
+    </button>
+    <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+      <div class="smenu" role="dialog" aria-label="Sets de Klaak" onKeyDown="{{onMenuKey}}">
+        <p class="mono" style="color:#a9a4c4; font-size:11px; margin: 4px 6px 8px">Les sets · {{setCount}}</p>
+        <sc-for list="{{menuSets}}" as="m" hint-placeholder-count="3">
+          <button class="{{m.cls}}" onClick="{{m.pick}}">
+            <span class="mnum">{{m.num}}</span>
+            <span style="display:flex; flex-direction:column; gap:3px; min-width:0; text-align:left">
+              <span class="mtitle">{{m.title}}</span>
+              <span class="mono" style="font-size:10px; color:#a9a4c4; letter-spacing:.06em; text-transform:none">{{m.sub}}</span>
+            </span>
+            <sc-if value="{{m.live}}" hint-placeholder-val="{{false}}"><span class="mstate"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>En lecture</span></sc-if>
+            <sc-if value="{{m.paused}}" hint-placeholder-val="{{false}}"><span class="mstate" style="color:#a9a4c4">En pause</span></sc-if>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"bpm":{"editor":"int","default":190,"min":140,"max":220,"step":1,"section":"Son simulé"},"zoom":{"editor":"range","default":4,"min":2.5,"max":7,"step":0.5,"section":"Plongée"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { ch: 0, playing: false, set: 0, tc: '00:00', pitch: '+0.0%', bpmShow: 190, focus: 0, menu: false, hoverTc: '00:00' };
+    this.NAMES = ['Intro', 'Festivalier', 'Collectif', 'Révélation', 'Drop', 'Les sets', 'Les dates', 'Booking'];
+    this.NS = 8; this.IS = 5; this.ID = 6; this.IL = 7;
+    this.PH = [null, { hx: .38, hy: .18, tx: .2, ty: .34 }, { hx: .53, hy: .14, tx: .79, ty: .32 }, { hx: .57, hy: .55, fx: .57, fy: .58, tx: .8, ty: .62, sq: true, kf: 1.15, kp: 2.5 }, { hx: .75, hy: .17, tx: .79, ty: .34 }, null, { hx: .55, hy: .27, tx: .82, ty: .5, kf: 1.7 }, { hx: .5, hy: .45, tx: .5, ty: .45, kf: 1.15, kp: 1.4 }];
+    this.FLASH = [.02, .03, .03, .04, .1, 0, .03, .05];
+    this.SETS = [
+      { title: 'Klaak @ Nexen Festival 2025', sub: 'Nexen Festival · juin 2025', url: 'https://soundcloud.com/klaak/klaak-nexen-festival-2025', color: '#c6ff1a', rgb: [198, 255, 26], art: 'a169 po po0', dur: 3600 },
+      { title: 'Klaak - Psychedelic Christmas', sub: 'Outrance · La Rayonne · déc. 2025', url: 'https://soundcloud.com/klaak/klaak-psychedelic-christmas', color: '#ff2bd6', rgb: [255, 43, 214], art: 'pq pq6', head: [.47, .23], dur: 3600 },
+      { title: 'Esoteros 2026 [titre à compléter]', sub: 'Esoteros · sept. 2026', url: 'https://soundcloud.com/klaak/esoteros-2026', color: '#ff8a00', rgb: [255, 138, 0], art: 'a169 po po5', dur: 3600 }
+    ];
+    this.DATES = [
+      { when: '6-8 juin 2025', year: '2025', event: 'Nexen Festival 2025', place: 'Dystopsy Éléments · [lieu à compléter]', po: 'po0', badge: '' },
+      { when: '28-30 nov. 2025', year: '2025', event: 'Halloween Night 2025', place: '[lieu à compléter]', po: 'po1', badge: '' },
+      { when: '19 déc. 2025', year: '2025', event: 'Outrance — Psychedelic Christmas', place: 'La Rayonne, Villeurbanne', po: '', badge: 'Closing' },
+      { when: '30 janv. 2026', year: '2026', event: 'Outrance Lab — Tempus', place: 'Péniche Loupika, Lyon', po: 'po2', badge: 'Sold out' },
+      { when: '26 mars 2026', year: '2026', event: 'Outrance Lab — Nexen Teaser Party', place: 'Péniche Loupika, Lyon', po: 'po3', badge: '' },
+      { when: '5-7 juin 2026', year: '2026', event: 'Nexen Festival 2026', place: 'Dystopsy Éléments · [lieu à compléter]', po: 'po4', badge: '' },
+      { when: '12 sept. 2026', year: '2026', event: 'Esoteros 2026', place: '[lieu à compléter]', po: 'po5', badge: '' },
+      { when: '9 oct. 2026', year: '2026', event: 'Outrance Label Night', place: 'Péniche Loupika, Lyon', po: 'po6', badge: '' },
+      { when: '6-8 nov. 2026', year: '2026', event: 'Halloween Night 2026', place: '[lieu à compléter]', po: 'po7', badge: '' }
+    ];
+    const n = this.DATES.length;
+    this.STEP = .32;
+    this.LEN = [1, 1, 1, 1, 1, 1.5, 1 + this.STEP * n, 1];
+    this.START = []; let acc = 0;
+    for (let i = 0; i < this.LEN.length; i++) { this.START.push(acc); acc += this.LEN[i]; }
+    this.UMAX = this.START[this.IL];
+    this.STOPS = this.START.slice();
+    for (let k = 1; k <= n; k++) this.STOPS.push(this.START[this.ID] + k * this.STEP);
+    this.STOPS.push(this.START[this.IS] + .5);
+    this.STOPS.sort((a, b) => a - b);
+    this.T = 0; this.C = 0; this.prevC = 0; this.vel = 0; this.vs = 0; this.beat = 0; this.pitchV = 0; this.spin = 0;
+    this.elapsed = this.SETS.map(() => 0); this.last = 0; this.lastUi = 0; this.lastInput = 0; this.touchY = null; this.glAt = -9999; this.prevCh = 0;
+    this.stars = [];
+    for (let i = 0; i < 420; i++) this.stars.push({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: Math.random(), pz: 1 });
+    this.refRoot = (el) => { this.root = el; };
+    this.refCanvas = (el) => { this.cv = el; };
+    this.onWheel = (e) => {
+      e.preventDefault(); this.lastInput = performance.now();
+      let d = e.deltaY; if (e.deltaMode === 1) d *= 32; else if (e.deltaMode === 2) d *= 800;
+      d = Math.max(-120, Math.min(120, d)); if (d) this.lastDir = Math.sign(d);
+      this.T = Math.min(this.UMAX, Math.max(0, this.T + d * 0.0016));
+    };
+    this.onTouchStart = (e) => { this.touchY = e.touches[0].clientY; this.lastInput = performance.now(); };
+    this.onTouchMove = (e) => {
+      if (this.touchY == null) return; e.preventDefault(); this.lastInput = performance.now();
+      const y = e.touches[0].clientY; const d = this.touchY - y; this.touchY = y; if (d) this.lastDir = Math.sign(d);
+      this.T = Math.min(this.UMAX, Math.max(0, this.T + d * 0.0065));
+    };
+    this.onKey = (e) => {
+      const k = e.key; let tgt = null;
+      if (k === 'ArrowDown' || k === 'PageDown' || k === 'ArrowRight') tgt = this.STOPS.find((s) => s > this.T + .02);
+      else if (k === 'ArrowUp' || k === 'PageUp' || k === 'ArrowLeft') tgt = this.STOPS.slice().reverse().find((s) => s < this.T - .02);
+      else if (k === 'Home') tgt = 0; else if (k === 'End') tgt = this.UMAX; else return;
+      e.preventDefault(); if (tgt != null) { this.T = tgt; this.lastInput = performance.now() - 1000; }
+    };
+    this.gotoDate = (i) => { this.T = this.START[this.ID] + i * this.STEP; this.lastInput = performance.now() - 1000; };
+    this.onPlay = () => this.setState({ playing: !this.state.playing });
+    this.onPrev = () => this.setState({ set: (this.state.set + this.SETS.length - 1) % this.SETS.length });
+    this.onNext = () => this.setState({ set: (this.state.set + 1) % this.SETS.length });
+    this.fmt = (sec) => { sec = Math.max(0, Math.floor(sec)); const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), x = sec % 60; return (h ? h + ':' + String(m).padStart(2, '0') : String(m).padStart(2, '0')) + ':' + String(x).padStart(2, '0'); };
+    this.frac = (e) => { const r = e.currentTarget.getBoundingClientRect(); return Math.max(0, Math.min(1, (e.clientX - r.left) / Math.max(1, r.width))); };
+    this.seekTo = (f) => { const S1 = this.SETS[this.state.set]; this.elapsed[this.state.set] = f * S1.dur; this.setState({ tc: this.fmt(this.elapsed[this.state.set]) }); };
+    this.onSeek = (e) => { this.seekTo(this.frac(e)); if (!this.state.playing) this.setState({ playing: true }); };
+    this.onWaveMove = (e) => { const f = this.frac(e); if (this.root) this.root.style.setProperty('--hov', f.toFixed(4)); const t = this.fmt(f * this.SETS[this.state.set].dur); if (t !== this.state.hoverTc) this.setState({ hoverTc: t }); };
+    this.onWaveLeave = () => { if (this.root) this.root.style.setProperty('--hov', '-1'); };
+    this.onWaveKey = (e) => {
+      const S1 = this.SETS[this.state.set]; const cur = this.elapsed[this.state.set] / S1.dur; let f = null;
+      if (e.key === 'ArrowRight') f = cur + 30 / S1.dur; else if (e.key === 'ArrowLeft') f = cur - 30 / S1.dur; else if (e.key === 'Home') f = 0; else if (e.key === 'End') f = .999; else return;
+      e.preventDefault(); e.stopPropagation(); this.seekTo(Math.max(0, Math.min(1, f)));
+    };
+    this.onPlayBig = () => {
+      if (this.state.ch !== this.IS) { this.T = this.START[this.IS]; this.lastDir = 1; this.lastInput = performance.now() - 1000; this.setState({ playing: true }); }
+      else this.onPlay();
+    };
+    this.toggleMenu = () => this.setState({ menu: !this.state.menu });
+    this.onMenuKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); this.setState({ menu: false }); } else if (e.key.indexOf('Arrow') === 0) e.stopPropagation(); };
+    this.tick = (now) => this.frame(now);
+  }
+  componentDidMount() {
+    this.reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const r = this.root; if (!r) return;
+    r.addEventListener('wheel', this.onWheel, { passive: false });
+    r.addEventListener('touchstart', this.onTouchStart, { passive: true });
+    r.addEventListener('touchmove', this.onTouchMove, { passive: false });
+    this.raf = requestAnimationFrame(this.tick);
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
+    const r = this.root; if (!r) return;
+    r.removeEventListener('wheel', this.onWheel);
+    r.removeEventListener('touchstart', this.onTouchStart);
+    r.removeEventListener('touchmove', this.onTouchMove);
+  }
+  bpm() { const b = Number(this.props.bpm); return b > 60 && b < 260 ? b : 190; }
+  zoom() { const z = Number(this.props.zoom); return z >= 2 && z <= 10 ? z : 4; }
+  frame(now) {
+    this.raf = requestAnimationFrame(this.tick);
+    const r = this.root; if (!r) return;
+    const dt = Math.min(.05, (now - (this.last || now)) / 1000); this.last = now;
+    if (now - this.lastInput > 380) {
+      let p = this.STOPS[0], n = this.STOPS[this.STOPS.length - 1];
+      for (const x of this.STOPS) { if (x <= this.T + 1e-6) p = x; }
+      for (let q = this.STOPS.length - 1; q >= 0; q--) { if (this.STOPS[q] >= this.T - 1e-6) n = this.STOPS[q]; }
+      let tgt;
+      if (Math.abs(this.T - p) < 1e-6) tgt = p;
+      else if ((this.lastDir || 1) > 0) tgt = (this.T - p) > .1 ? n : p;
+      else tgt = (n - this.T) > .1 ? p : n;
+      this.T += (tgt - this.T) * Math.min(1, dt * 3.4);
+      if (Math.abs(tgt - this.T) < 1e-3) this.T = tgt;
+    }
+    const k = this.reduce ? 1 : 1 - Math.pow(1 - .08, dt * 60);
+    this.C += (this.T - this.C) * k;
+    if (Math.abs(this.T - this.C) < 2e-4) this.C = this.T;
+    const dc = this.C - this.prevC; this.prevC = this.C;
+    const v = dc / Math.max(dt, 1e-3);
+    this.vel += (Math.min(1, Math.abs(v) * .5) - this.vel) * .14;
+    this.vs += (Math.max(-1, Math.min(1, v * .5)) - this.vs) * .14;
+    if (this.reduce) { this.vel = 0; this.vs = 0; }
+    const u = this.C; const Z = this.zoom(); const st = r.style;
+    let ch = 0, bestO = -1;
+    const H0 = r.clientHeight, W0 = r.clientWidth;
+    const hole = H0 * .19;
+    const PREVIEW = [false, true, true, true, true, true, false, false];
+    const S0 = [1, .52, .52, .52, .52, 1, 1, .52];
+    const IL = this.IL, NS = this.NS;
+    const PC = [];
+    for (let i = 0; i <= NS; i++) PC.push(i === 1 ? (W0 < 760 ? [W0 * .5, H0 * .64] : [W0 * .74, H0 * .46]) : [W0 * .5, H0 * .5]);
+    const rmaxAt = (c) => Math.hypot(Math.max(c[0], W0 - c[0]), Math.max(c[1], H0 - c[1])) + 24;
+    const coverAt = (c, R) => Math.min(1, Math.max(Math.min(R, c[0]) / c[0], Math.min(R, W0 - c[0]) / (W0 - c[0]), Math.min(R, c[1]) / c[1], Math.min(R, H0 - c[1]) / (H0 - c[1])));
+    let ringR = 0, ringE = 0, ringOn = false, ringC = PC[0], ringMax = 1, ringB = false, hzB = null; const SC = [];
+    for (let i = 0; i < NS; i++) {
+      let pan = 1, lxp = W0 / 2, lyp = H0 / 2, rl = 1e5, ent = null;
+      const s = this.START[i], h = s + this.LEN[i] - 1;
+      const d0 = u < s ? u - s : (u > h ? u - h : 0);
+      const d = d0 < 0 && d0 > -.006 ? 0 : d0;
+      let o = 0, sc = 1, clip = 'none', t = 0, vis = false, org = PC[i + 1];
+      if (d >= 0 || !(i > 0 && u >= this.START[i - 1] - .45)) { st.setProperty('--tx' + i, '0px'); st.setProperty('--ty' + i, '0px'); }
+      if (d >= 0) {
+        vis = d < 1.02 || i === IL;
+        sc = i === IL ? 1 : 1 + (Z - 1) * Math.pow(Math.min(d, 1), 1.7);
+        o = i === IL ? 1 : 1 - Math.max(0, Math.min(1, (d - .82) / .18));
+        t = Math.max(0, 1 - d / .28);
+      } else if (i > 0 && u >= this.START[i - 1] - .45) {
+        const c = PC[i]; org = c;
+        const Rmax = rmaxAt(c);
+        const e = d < -1 ? 0 : d + 1;
+        const ba = Math.max(0, Math.min(1, (u - this.START[i - 1] + .45) / .45)); const bx = ba - 1;
+        const bloom = ba <= 0 ? 0 : 1 + 2.4 * bx * bx * bx + 1.4 * bx * bx;
+        const r0 = PREVIEW[i] ? hole * bloom : 0;
+        const R = r0 + (Rmax - r0) * Math.pow(e, 2.1);
+        vis = R > .5;
+        const ox = W0 / 2 - c[0], oy = H0 / 2 - c[1];
+        const pe2 = e * e * (3 - 2 * e);
+        const bx0 = Math.max(0, c[0] - R), bx1 = Math.min(W0, c[0] + R), by0 = Math.max(0, c[1] - R), by1 = Math.min(H0, c[1] + R);
+        sc = S0[i] + (1 - S0[i]) * Math.pow(e, 1.25);
+        sc = Math.max(sc, (c[0] - bx0) / (W0 / 2 - ox * pe2), (bx1 - c[0]) / (W0 / 2 + ox * pe2), (c[1] - by0) / (H0 / 2 - oy * pe2), (by1 - c[1]) / (H0 / 2 + oy * pe2)) * 1.004;
+        const tx = -sc * ox * (1 - pe2), ty = -sc * oy * (1 - pe2);
+        st.setProperty('--tx' + i, tx.toFixed(2) + 'px'); st.setProperty('--ty' + i, ty.toFixed(2) + 'px');
+        o = 1;
+        const lx = c[0] + ox * (1 - pe2), ly = c[1] + oy * (1 - pe2);
+        pan = pe2; lxp = lx; lyp = ly; rl = R / Math.max(sc, .01); ent = { sc: sc, g: c, tx: tx, ty: ty, s0: S0[i] };
+        clip = 'circle(' + (R / sc).toFixed(2) + 'px at ' + lx.toFixed(2) + 'px ' + ly.toFixed(2) + 'px)';
+        t = Math.max(0, Math.min(1, (e - .74) / .26));
+        if (vis && e > .0005 && !ringOn) { ringOn = true; ringR = R; ringE = e; ringC = c; ringMax = Rmax; }
+        else if (vis && e <= .0005 && !ringB) { ringB = true; st.setProperty('--prb', R.toFixed(2) + 'px'); st.setProperty('--cxb', c[0].toFixed(1) + 'px'); st.setProperty('--cyb', c[1].toFixed(1) + 'px'); st.setProperty('--pob', Math.min(1, bloom).toFixed(3)); hzB = { x: c[0], y: c[1], r: R, a: Math.min(1, bloom) }; if (!ringOn) ringC = c; }
+      }
+      if (this.reduce) sc = 1;
+      st.setProperty('--z' + i, sc.toFixed(4)); SC[i] = sc;
+      if (this.PH[i] && vis) this.frameImg(st, i, W0, H0, pan, lxp, lyp, rl, this.reduce ? null : ent);
+      st.setProperty('--gx' + i, org[0].toFixed(1) + 'px');
+      st.setProperty('--gy' + i, org[1].toFixed(1) + 'px');
+      st.setProperty('--o' + i, o.toFixed(3));
+      st.setProperty('--v' + i, vis && o > .001 ? 'visible' : 'hidden');
+      st.setProperty('--c' + i, clip);
+      st.setProperty('--t' + i, t.toFixed(3));
+      const w = d >= 0 ? (d < .5 ? 2 - d : o) : 0;
+      if (w > bestO) { bestO = w; ch = i; }
+    }
+    if (!ringB) st.setProperty('--pob', '0');
+    const AMP = [1, 1, 1, 1, 1.5, .5, .8, 1];
+    let hz = null;
+    if (ch === this.IS || ch === this.ID) { const sch = SC[ch] || 1; const s0 = this.START[ch], h0 = s0 + this.LEN[ch] - 1, dd = Math.max(0, u - h0); hz = { x: W0 / 2, y: H0 / 2, r: hole * sch, a: Math.max(0, 1 - dd / .35), amp: AMP[ch] }; }
+    else if (hzB) { hz = hzB; hz.amp = AMP[ch]; }
+    else if (ringOn) { hz = { x: ringC[0], y: ringC[1], r: ringR, a: Math.max(0, 1 - (ringR - hole) / (hole * 1.4)), amp: AMP[ch] }; }
+    this.hz = hz;
+    const Rmax = ringMax;
+    st.setProperty('--cx', ringC[0].toFixed(1) + 'px');
+    st.setProperty('--cy', ringC[1].toFixed(1) + 'px');
+    st.setProperty('--pr', ringR.toFixed(1) + 'px');
+    st.setProperty('--po', ringOn ? Math.max(0, Math.min(1, (Rmax * .97 - ringR) / (Rmax * .25))).toFixed(3) : '0');
+    st.setProperty('--pe', ringOn ? Math.sin(Math.PI * ringE).toFixed(3) : '0');
+    this.pe = ringOn ? Math.sin(Math.PI * ringE) : 0;
+    if (ch !== this.prevCh) { this.glAt = now; this.prevCh = ch; }
+    const gl = this.reduce ? 0 : Math.max(0, 1 - (now - this.glAt) / 380);
+    const n = this.DATES.length;
+    const f = Math.max(0, Math.min(n, (u - this.START[this.ID]) / this.STEP));
+    const s4 = this.START[this.IS], d4 = u < s4 ? u - s4 : (u > s4 + .5 ? u - s4 - .5 : 0);
+    const pill = Math.min(1, Math.max(Math.abs(d4) * 2.4 - .2, 0));
+    const playing = this.state.playing; const bpm = this.bpm();
+    this.pitchV += ((playing ? Math.max(-.08, Math.min(.08, v * .06)) : 0) - this.pitchV) * .1;
+    if (playing) { this.beat += dt * (bpm / 60) * (1 + this.pitchV); const S1 = this.SETS[this.state.set]; this.elapsed[this.state.set] = Math.min(S1.dur, this.elapsed[this.state.set] + dt * (1 + this.pitchV)); if (this.elapsed[this.state.set] >= S1.dur) this.setState({ playing: false }); }
+    const raw = playing && !this.reduce ? Math.pow(1 - (this.beat % 1), 3) : 0;
+    this.ks = (this.ks || 0) + (raw - (this.ks || 0)) * Math.min(1, dt * (raw > (this.ks || 0) ? 26 : 9));
+    const kick = this.ks * .8;
+    const kbar = Math.floor(this.beat) % 4 === 0 ? kick : 0;
+    this.spin += this.reduce ? 0 : dt * (playing ? 22 : 6) + dc * 30;
+    const W = r.clientWidth, H = r.clientHeight;
+    const L0 = Math.max(0, Math.min(1, u / .7)); const L = L0 * L0 * (3 - 2 * L0);
+    const mob = W < 760;
+    const heroW = mob ? W * .84 : Math.min(W * .43, 680, H * .9); const heroS = heroW / 200;
+    const hx = mob ? W * .08 : W * .06, hy = mob ? H * .08 : H * .45 - heroW * .705 / 2;
+    st.setProperty('--lx', (hx + (28 - hx) * L).toFixed(1) + 'px');
+    st.setProperty('--ly', (hy + (18 - hy) * L).toFixed(1) + 'px');
+    st.setProperty('--ls', (heroS + (1 - heroS) * L).toFixed(4));
+    st.setProperty('--ls-inv', L.toFixed(3));
+    const S = this.SETS[this.state.set];
+    st.setProperty('--vel', this.vel.toFixed(3));
+    st.setProperty('--vs', this.vs.toFixed(3));
+    st.setProperty('--kick', kick.toFixed(3));
+    st.setProperty('--kbar', kbar.toFixed(3));
+    st.setProperty('--ks', (kick * .35).toFixed(3));
+    st.setProperty('--gl', gl.toFixed(3));
+    st.setProperty('--wc', S.color);
+    st.setProperty('--flash', String(this.FLASH[ch]));
+    st.setProperty('--spin', (this.spin % 360).toFixed(2) + 'deg');
+    st.setProperty('--sp', Math.min(1, this.elapsed[this.state.set] / this.SETS[this.state.set].dur).toFixed(5));
+    st.setProperty('--f', f.toFixed(4));
+    st.setProperty('--pill', pill.toFixed(3));
+    st.setProperty('--depth', (u / this.UMAX).toFixed(4));
+    this.drawStars(dt, kick, S.rgb, ringC);
+    this.drawHorizon(now / 1000, dt, kick, S.rgb);
+    if (now - this.lastUi > 110) {
+      this.lastUi = now;
+      const s = Math.floor(this.elapsed[this.state.set]);
+      const tc = this.fmt(s);
+      const p = (this.pitchV >= 0 ? '+' : '') + (this.pitchV * 100).toFixed(1) + '%';
+      const bs = Math.round(bpm * (1 + this.pitchV));
+      const focus = Math.round(f);
+      const S2 = this.state;
+      if (ch !== S2.ch || tc !== S2.tc || p !== S2.pitch || bs !== S2.bpmShow || focus !== S2.focus) this.setState({ ch: ch, tc: tc, pitch: p, bpmShow: bs, focus: focus });
+    }
+  }
+  drawStars(dt, kick, rgb, pc) {
+    const cv = this.cv; if (!cv) return;
+    const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    if (this.reduce) return;
+    const speed = .1 + kick * .2 + this.vs * 2.2 + (this.pe || 0) * (this.vs < 0 ? -.6 : .9);
+    this.scx = this.scx == null ? w / 2 : this.scx; this.scy = this.scy == null ? h / 2 : this.scy;
+    this.scx += ((pc ? pc[0] : w / 2) - this.scx) * .08; this.scy += ((pc ? pc[1] : h / 2) - this.scy) * .08;
+    const cx = this.scx, cy = this.scy, f = Math.max(w, h) * .25;
+    ctx.lineCap = 'round';
+    const split = 1.5 + this.vel * 12;
+    for (const s of this.stars) {
+      s.pz = s.z; s.z -= speed * dt;
+      if (s.z <= .03) { s.x = Math.random() * 2 - 1; s.y = Math.random() * 2 - 1; s.z = 1; s.pz = 1; continue; }
+      if (s.z > 1) { s.x = Math.random() * 2 - 1; s.y = Math.random() * 2 - 1; s.z = .05 + Math.random() * .1; s.pz = s.z; continue; }
+      const x = cx + s.x / s.z * f, y = cy + s.y / s.z * f;
+      const px = cx + s.x / s.pz * f, py = cy + s.y / s.pz * f;
+      if (x < -60 || x > w + 60 || y < -60 || y > h + 60) { s.z = speed >= 0 ? 0 : 2; continue; }
+      const a = Math.min(1, (1 - s.z) * (.3 + this.vel * .9 + kick * .3));
+      ctx.lineWidth = (1 - s.z) * 2.2 + .4;
+      ctx.strokeStyle = 'rgba(25,227,255,' + (a * .75).toFixed(3) + ')';
+      ctx.beginPath(); ctx.moveTo(px - split, py); ctx.lineTo(x - split, y); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,43,214,' + (a * .75).toFixed(3) + ')';
+      ctx.beginPath(); ctx.moveTo(px + split, py); ctx.lineTo(x + split, y); ctx.stroke();
+      ctx.strokeStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a.toFixed(3) + ')';
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(x + .01, y); ctx.stroke();
+    }
+  }
+  frameImg(st, i, W, H, pan, lx, ly, rl, ent) {
+    const P = this.PH[i];
+    const bw = P.sq ? Math.max(W, H) : Math.max(W, H * 1.5), bh = P.sq ? Math.max(W, H) : Math.max(H, W / 1.5);
+    const kf = P.kf || 1.45, kp = P.kp || 1.12;
+    const pfx = P.fx != null ? P.fx : P.hx, pfy = P.fy != null ? P.fy : P.hy + .16;
+    const fx = pfx + (P.hx - pfx) * pan, fy = pfy + (P.hy - pfy) * pan;
+    // position finale réellement atteignable (cadrage plein écran sans bord visible)
+    const iwF = bw * kf, ihF = bh * kf;
+    const sxF = Math.max(W / 2 - iwF / 2, Math.min(iwF / 2 - W / 2, P.tx * W - (W / 2 + (P.hx - .5) * iwF)));
+    const syF = Math.max(H / 2 - ihF / 2, Math.min(ihF / 2 - H / 2, P.ty * H - (H / 2 + (P.hy - .5) * ihF)));
+    const TX = W / 2 + sxF + (P.hx - .5) * iwF, TY = H / 2 + syF + (P.hy - .5) * ihF;
+    let k, ltx, lty;
+    if (ent) {
+      // interpolation à l'écran : zoom apparent et position du visage progressent d'un seul mouvement
+      const zs = ent.s0 * kp, zeff = zs + (kf - zs) * pan;
+      k = zeff / ent.sc;
+      const Sx = ent.g[0] + (TX - ent.g[0]) * pan, Sy = ent.g[1] + (TY - ent.g[1]) * pan;
+      ltx = ent.g[0] + (Sx - ent.tx - ent.g[0]) / ent.sc; lty = ent.g[1] + (Sy - ent.ty - ent.g[1]) / ent.sc;
+    } else {
+      k = kf; ltx = TX; lty = TY;
+    }
+    const iw = bw * k, ih = bh * k;
+    let sx = ltx - (W / 2 + (fx - .5) * iw), sy = lty - (H / 2 + (fy - .5) * ih);
+    const bx0 = Math.max(0, lx - rl), bx1 = Math.min(W, lx + rl), by0 = Math.max(0, ly - rl), by1 = Math.min(H, ly + rl);
+    const minX = bx1 - iw / 2 - W / 2, maxX = bx0 + iw / 2 - W / 2, minY = by1 - ih / 2 - H / 2, maxY = by0 + ih / 2 - H / 2;
+    sx = minX > maxX ? (minX + maxX) / 2 : Math.max(minX, Math.min(maxX, sx));
+    sy = minY > maxY ? (minY + maxY) / 2 : Math.max(minY, Math.min(maxY, sy));
+    st.setProperty('--im' + i, 'translate(' + sx.toFixed(1) + 'px,' + sy.toFixed(1) + 'px) scale(' + k.toFixed(4) + ')');
+  }
+  drawHorizon(t, dt, kick, rgb) {
+    const cv = this.cv, hz = this.hz;
+    const playing = this.state.playing;
+    this.pm = (this.pm || 0) + ((playing ? 1 : 0) - (this.pm || 0)) * Math.min(1, dt * 1.4);
+    if (!cv || !hz || hz.a <= .01 || hz.r < 4) return;
+    const pm = this.reduce ? 0 : this.pm;
+    const ctx = cv.getContext('2d');
+    const amp = hz.amp || 1, R = hz.r + 10;
+    const idle = 5 * amp, hit = 16 * amp * kick * pm;
+    const ph = this.beat || 0;
+    const N = 160;
+    const radius = (th, layer, wob) => R + idle * (1 + wob) * (.55 * Math.sin(5 * th + t * 1.1 + layer) + .3 * Math.sin(9 * th - t * (1.7 + wob)) + .15 * Math.sin(2 * th + t * .5)) + hit * (.62 + .38 * Math.sin(7 * th + ph * 2.1 + layer * .6 + wob * 3));
+    const path = (layer, wob, dx, grow) => {
+      ctx.beginPath();
+      for (let k = 0; k <= N; k++) {
+        const th = k / N * Math.PI * 2;
+        const rr = radius(th, layer, wob) + grow;
+        const x = hz.x + Math.cos(th) * rr + dx, y = hz.y + Math.sin(th) * rr;
+        if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+    };
+    const col = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + Math.max(0, Math.min(1, a)).toFixed(3) + ')';
+    const CY = [25, 227, 255], MG = [255, 43, 214];
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    // nébuleuse : couches diffuses qui débordent dans l'espace quand le son tourne
+    if (pm > .01) {
+      const halo = [[rgb, 0, .8, 8], [MG, 1, 1.4, 18]];
+      for (const h of halo) {
+        path(h[1], h[2], h[1] * 3, h[3] * (.7 + kick * .4));
+        ctx.lineWidth = 4 + kick * 4;
+        ctx.strokeStyle = col(h[0], (.05 + kick * .04) * pm * hz.a);
+        ctx.shadowColor = col(h[0], .8);
+        ctx.shadowBlur = 18;
+        ctx.stroke();
+      }
+      path(0, .4, 0, 0);
+      const g = ctx.createRadialGradient(hz.x, hz.y, R * .92, hz.x, hz.y, R + 40 + kick * 16);
+      g.addColorStop(0, col(rgb, (.06 + kick * .05) * pm * hz.a));
+      g.addColorStop(.4, col(MG, .015 * pm * hz.a));
+      g.addColorStop(1, col(CY, 0));
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(hz.x, hz.y, R + 40 + kick * 16, 0, Math.PI * 2); ctx.arc(hz.x, hz.y, R * .92, 0, Math.PI * 2, true); ctx.fill();
+    }
+    // membrane nette (au repos) qui se dissout quand la musique joue
+    const split = 2 + this.vel * 10 + kick * 3 * pm;
+    const crisp = [[CY, -1], [MG, 1], [rgb, 0]];
+    for (const L of crisp) {
+      path(L[1], 0, L[1] * split, 0);
+      const main = L[1] === 0;
+      ctx.lineWidth = (main ? 2.4 : 1.4) + pm * (main ? .4 : .3);
+      ctx.strokeStyle = col(L[0], (main ? .95 - pm * .25 : .6 - pm * .2) * hz.a);
+      ctx.shadowColor = col(L[0], .9);
+      ctx.shadowBlur = (main ? 10 : 0) + pm * (6 + kick * 8);
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+    // progression du set
+    const sp = Math.min(1, this.elapsed[this.state.set] / this.SETS[this.state.set].dur);
+    const pr = R + 26 + idle + pm * 6;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = col([244, 242, 255], (.14 - pm * .06) * hz.a);
+    ctx.beginPath(); ctx.arc(hz.x, hz.y, pr, 0, Math.PI * 2); ctx.stroke();
+    if (sp > 0) {
+      const ea = -Math.PI / 2 + sp * Math.PI * 2;
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = col(rgb, hz.a * (1 - pm * .3));
+      ctx.beginPath(); ctx.arc(hz.x, hz.y, pr, -Math.PI / 2, ea); ctx.stroke();
+      ctx.fillStyle = col(rgb, hz.a);
+      ctx.shadowColor = col(rgb, 1); ctx.shadowBlur = 12;
+      ctx.beginPath(); ctx.arc(hz.x + Math.cos(ea) * pr, hz.y + Math.sin(ea) * pr, 3.5, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+    // particules : quelques grains nets au repos, un flux d'étoiles aspirées quand ça joue
+    if (!this.parts) { this.parts = []; for (let k = 0; k < 200; k++) this.parts.push({ a: Math.random() * Math.PI * 2, d: 1.05 + Math.random() * 3, s: .5 + Math.random(), c: k % 3 }); }
+    const reach = 1.2 + pm * .9;
+    const count = Math.round(60 + pm * 30);
+    const flow = this.reduce ? 0 : (.02 + pm * (.06 + kick * .12)) * amp;
+    const PC3 = [CY, MG, rgb];
+    for (let k = 0; k < count; k++) {
+      const q = this.parts[k];
+      q.a += dt * (.3 + pm * (.12 + kick * .4)) * q.s / q.d;
+      q.d -= dt * flow * q.s * (1 + q.d * .6);
+      if (q.d < 1.03 || q.d > 1 + reach + .2) { q.d = 1.15 + Math.random() * reach; q.a = Math.random() * Math.PI * 2; }
+      const rr = R * q.d;
+      const fadeOut = Math.max(0, Math.min(1, (1 + reach - q.d) / .5));
+      const fadeIn = Math.max(0, Math.min(1, (q.d - 1.03) / .2));
+      const al = fadeOut * fadeIn * hz.a * (.4 + pm * .1);
+      if (al <= .01) continue;
+      const c = pm > .5 ? PC3[q.c] : rgb;
+      const trail = (.04 + pm * (.05 + kick * .04)) * q.s / q.d;
+      ctx.strokeStyle = col(c, al);
+      ctx.lineWidth = 1.2;
+      ctx.shadowColor = col(c, .9); ctx.shadowBlur = pm * 4;
+      ctx.beginPath();
+      if (pm > .05) {
+        const a0 = q.a - trail, r0 = rr + R * trail * .9;
+        ctx.moveTo(hz.x + Math.cos(a0) * r0, hz.y + Math.sin(a0) * r0);
+        ctx.quadraticCurveTo(hz.x + Math.cos(q.a - trail * .4) * (rr + R * trail * .3), hz.y + Math.sin(q.a - trail * .4) * (rr + R * trail * .3), hz.x + Math.cos(q.a) * rr, hz.y + Math.sin(q.a) * rr);
+      } else {
+        ctx.arc(hz.x, hz.y, rr, q.a - trail, q.a);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  bars(seed, n) {
+    let x = seed * 9301 + 49297; const rnd = () => { x = (x * 9301 + 49297) % 233280; return x / 233280; };
+    const out = [];
+    for (let i = 0; i < n; i++) {
+      const t = i / n;
+      const env = .35 + .65 * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.15)), .6) * (t > .45 && t < .52 ? .35 : 1);
+      out.push({ i: (i / n).toFixed(4), h: Math.max(.08, Math.min(1, env * (.55 + .45 * rnd()))).toFixed(3) });
+    }
+    return out;
+  }
+  renderVals() {
+    const st = this.state; const n = this.DATES.length;
+    const fit = (h) => { const z = 2; return 'position:absolute; width:' + (150 * z) + '%; height:' + (100 * z) + '%; left:' + Math.max(100 - 150 * z, Math.min(0, 50 - h[0] * 150 * z)).toFixed(1) + '%; top:' + Math.max(100 - 100 * z, Math.min(0, 50 - h[1] * 100 * z)).toFixed(1) + '%'; };
+    const dates = this.DATES.map((d, i) => ({
+      k: i, when: d.when, event: d.event, hasPoster: !!d.po, isText: !d.po, isSlot: false,
+      thumb: 'fill po ' + (d.po || 'po0'), lensArt: d.po ? 'a169 po ' + d.po : 'pq pq6', lensSty: d.po ? '' : fit([.47, .23]),
+      cls: 'dcard' + (i === st.focus ? ' on' : ''), aria: d.when + ' — ' + d.event, go: () => this.gotoDate(i)
+    }));
+    dates.push({ k: n, when: 'Bientôt', event: 'Votre événement', hasPoster: false, isText: false, isSlot: true, thumb: '', lensArt: 'pq pq5', lensSty: fit([.5, .5]), cls: 'dcard' + (st.focus === n ? ' on' : ''), aria: 'Proposer une date', go: () => this.gotoDate(n) });
+    const fd = this.DATES[Math.min(st.focus, n - 1)]; const isSlot = st.focus >= n;
+    const sets = this.SETS.map((s, i) => ({ num: String(i + 1).padStart(2, '0'), title: s.title, sub: s.sub, aria: 'Écouter ' + s.title, cls: 'trk' + (i === st.set ? ' on' : ''), live: i === st.set && st.playing, idle: !(i === st.set && st.playing), pick: () => this.setState({ set: i, playing: i === st.set ? !st.playing : true }) }));
+    const setArt = this.SETS.map((s, i) => ({ cls: s.head ? s.art : s.art, sty: s.head ? fit(s.head) : '', op: i === st.set ? 1 : 0 }));
+    const S = this.SETS[st.set];
+    return {
+      refRoot: this.refRoot, refCanvas: this.refCanvas, onKey: this.onKey,
+      dates: dates, sets: sets, setArt: setArt,
+      datesCount: n, datesRange: this.DATES[0].year + ' → ' + this.DATES[n - 1].year,
+      focusYear: isSlot ? '?' : fd.year,
+      fWhen: isSlot ? 'Bientôt' : fd.when, fEvent: isSlot ? 'Votre date ?' : fd.event, fPlace: isSlot ? 'Festival, soirée, club : parlons-en.' : fd.place,
+      fHasBadge: !isSlot && !!fd.badge, fBadge: isSlot ? '' : fd.badge, fIsSlot: isSlot,
+      ibars: Array.from({ length: 72 }, (_, k) => ({ i: (k / 72).toFixed(4) })), bars: this.bars(st.set + 3, 96), cbars: this.bars(st.set + 3, 48),
+      onPlay: this.onPlay, onPrev: this.onPrev, onNext: this.onNext,
+      playing: st.playing, paused: !st.playing, playLabel: st.playing ? 'Pause' : 'Lecture',
+      npState: st.playing ? 'En lecture' : 'Prêt à décoller', setSub: S.sub, setUrl: S.url,
+      tcTotal: this.fmt(S.dur), spPct: Math.round(Math.min(1, this.elapsed[st.set] / S.dur) * 100), hoverTc: st.hoverTc,
+      onSeek: this.onSeek, onPlayBig: this.onPlayBig, onWaveMove: this.onWaveMove, onWaveLeave: this.onWaveLeave, onWaveKey: this.onWaveKey,
+      wbars: this.bars(st.set + 11, 110),
+      menuOpen: st.menu, toggleMenu: this.toggleMenu, onMenuKey: this.onMenuKey, menuBtnCls: 'mbtn' + (st.menu ? ' on' : ''),
+      menuSets: this.SETS.map((x, i) => ({ num: String(i + 1).padStart(2, '0'), title: x.title, sub: x.sub, cls: 'mitem' + (i === st.set ? ' on' : ''), live: i === st.set && st.playing, paused: i === st.set && !st.playing && this.elapsed[i] > 0, pick: () => this.setState({ set: i, playing: true, menu: false }) })),
+      setNum: st.set + 1, setCount: this.SETS.length, setTitle: S.title, tc: st.tc, pitch: st.pitch, bpmShow: st.bpmShow,
+      chNum: '0' + st.ch, chName: this.NAMES[st.ch]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+---
+// Scène du voyage « Hyperespace » : les scènes (slot) + les effets globaux (rayons, anneaux, étoiles).
+// Sans JavaScript, les scènes s'empilent en sections plein écran avec un défilement normal.
+// Avec JavaScript, `html.hx-on` fige la page et le moteur (src/hyper/engine.ts) pilote tout.
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<div class="hx-stage" data-hx-stage aria-label={label}>
+  <slot />
+  <div class="hx-fx" data-hx-fx aria-hidden="true">
+    <div class="hx-rays" data-hx-rays></div>
+    <div class="hx-ring" data-hx-ring="shock"><i class="hx-r4"></i><i class="hx-r2"></i><i class="hx-r3"></i><i class="hx-r1"></i></div>
+    <div class="hx-ring hx-ring--rest" data-hx-ring="rest"><i class="hx-r4"></i><i class="hx-r2"></i><i class="hx-r3"></i><i class="hx-r1"></i></div>
+    <canvas class="hx-canvas" data-hx-canvas></canvas>
+  </div>
+  <slot name="chrome" />
+</div>
+
+<style is:global>
+  /* ---------- Sans JavaScript : sections empilées ---------- */
+  .hx-scene {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    background: var(--color-void);
+  }
+  .hx-fx {
+    display: none;
+  }
+
+  /* ---------- Avec le moteur ---------- */
+  html.hx-on,
+  html.hx-on body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  html.hx-on .hx-stage {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    touch-action: none;
+    background: var(--color-void);
+    --wc: var(--color-acid);
+    --hole: 19vh;
+  }
+  html.hx-on .hx-scene {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+    visibility: hidden;
+    will-change: transform, opacity, clip-path;
+    pointer-events: none;
+  }
+  html.hx-on .hx-scene a,
+  html.hx-on .hx-scene button,
+  html.hx-on .hx-scene [data-hx-interactive] {
+    pointer-events: auto;
+  }
+  /* Textes d'une scène : opacité pilotée par le moteur (--t). */
+  html.hx-on [data-hx-text] {
+    opacity: var(--t, 1);
+  }
+  html.hx-on .hx-fx {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    --vel: 0;
+    --spin: 0deg;
+  }
+
+  /* Rayons lumineux pendant le passage (spec §3) */
+  .hx-rays {
+    position: absolute;
+    inset: 0;
+    display: none;
+    mix-blend-mode: screen;
+    background: repeating-conic-gradient(
+      from var(--spin) at var(--cx, 50%) var(--cy, 50%),
+      rgb(244 242 255 / 0) 0deg 4deg,
+      rgb(244 242 255 / 0.7) 4.3deg 4.6deg,
+      rgb(244 242 255 / 0) 5deg 9deg
+    );
+    -webkit-mask: radial-gradient(circle at var(--cx, 50%) var(--cy, 50%), transparent calc(var(--pr) - 2px), #000 calc(var(--pr) + 4px), transparent calc(var(--pr) + 42vh));
+    mask: radial-gradient(circle at var(--cx, 50%) var(--cy, 50%), transparent calc(var(--pr) - 2px), #000 calc(var(--pr) + 4px), transparent calc(var(--pr) + 42vh));
+  }
+
+  /* Anneaux : triple trait cyan / magenta / couleur du set, arc pointillé contra-rotatif */
+  .hx-ring {
+    position: absolute;
+    left: var(--cx, 50%);
+    top: var(--cy, 50%);
+    width: 0;
+    height: 0;
+    display: none;
+    opacity: var(--po, 0);
+    contain: layout style;
+    --pr: 0px;
+    --pe: 0;
+  }
+  .hx-ring--rest {
+    --pe: 0;
+  }
+  .hx-ring i {
+    position: absolute;
+    display: block;
+    left: calc(var(--pr) * -1);
+    top: calc(var(--pr) * -1);
+    width: calc(var(--pr) * 2);
+    height: calc(var(--pr) * 2);
+    border-radius: 50%;
+    box-sizing: border-box;
+  }
+  .hx-r1 {
+    border: 3px solid var(--wc);
+    border-top-color: transparent !important;
+    border-left-color: transparent !important;
+    transform: rotate(var(--spin));
+    box-shadow: 0 0 calc(18px + var(--pe) * 40px) var(--wc);
+  }
+  .hx-r2 {
+    border: 2px solid var(--color-cyan);
+    transform: translateX(calc(-2px - var(--vel) * 16px - var(--pe) * 10px));
+    mix-blend-mode: screen;
+  }
+  .hx-r3 {
+    border: 2px solid var(--color-magenta);
+    transform: translateX(calc(2px + var(--vel) * 16px + var(--pe) * 10px));
+    mix-blend-mode: screen;
+  }
+  .hx-ring .hx-r4 {
+    left: calc(var(--pr) * -1 - 18px);
+    top: calc(var(--pr) * -1 - 18px);
+    width: calc(var(--pr) * 2 + 36px);
+    height: calc(var(--pr) * 2 + 36px);
+    border: 1px dashed rgb(244 242 255 / 0.5);
+    transform: rotate(calc(var(--spin) * -1.6));
+  }
+
+  .hx-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: screen;
+  }
+
+  /* Interface fixe (logo, réseaux, player…) au-dessus de tout */
+  html.hx-on [data-hx-chrome] {
+    position: absolute;
+    z-index: 30;
+  }
+</style>

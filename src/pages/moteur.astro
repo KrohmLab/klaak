@@ -1,0 +1,162 @@
+---
+// Banc d'essai du moteur Hyperespace (étape 2 de la v2) : trois scènes de test, sans contenu, pour valider le
+// scroll virtuel, l'aimantation et la transition portail. Page interne, non indexée.
+// Trois scènes plutôt que deux : l'éclosion du portail suivant ne se voit qu'en arrivant sur une scène du milieu.
+//
+// Mire : chaque scène porte un cadre magenta tracé À L'EXTÉRIEUR de ses bords. L'image peut toucher le bord
+// de l'écran (cadre hors champ) ; si le cadre apparaît à l'écran, c'est qu'un bord d'image est visible.
+import Base from "../layouts/Base.astro";
+import HyperStage from "../components/hyper/HyperStage.astro";
+
+const scenes = [
+  { id: "a", letter: "A", name: "Départ · portail décalé", attrs: { "data-hx-s0": "1" }, cls: "mire mire--void" },
+  { id: "b", letter: "B", name: "Révélée par le portail décalé", attrs: { "data-hx-portal": "intro", "data-hx-preview": "" }, cls: "mire mire--cyan" },
+  { id: "c", letter: "C", name: "Révélée par le portail central", attrs: { "data-hx-preview": "" }, cls: "mire mire--acid" },
+];
+---
+
+<Base title="Moteur — Klaak" noindex bare>
+  <HyperStage label="Banc d'essai du moteur Hyperespace">
+    {
+      scenes.map((s) => (
+        <section id={s.id} class:list={["hx-scene", s.cls]} data-hx-scene aria-label={`Scène ${s.letter}`} {...s.attrs}>
+          <div class="mire__text" data-hx-text>
+            <p class="t-mega">{s.letter}</p>
+            <p class="t-label">{s.name}</p>
+          </div>
+        </section>
+      ))
+    }
+    <div slot="chrome" class="dbg" data-hx-chrome>
+      <p class="t-label text-acid">Banc d'essai moteur</p>
+      <pre data-dbg>…</pre>
+      <p class="dbg__links">
+        <a href="?">Normal</a>
+        <a href="?calme">Mode calme</a>
+        <label>Zoom <select data-zoom>{[2.5, 3, 3.5, 4, 5, 6, 7].map((z) => <option value={z} selected={z === 4}>{z}</option>)}</select></label>
+      </p>
+      <p class="dbg__help">Molette, trackpad, glisser ou flèches. Début / Fin. <code>?u=1.4</code> fige une position. Un cadre magenta visible = bord d'image à l'écran (défaut).</p>
+    </div>
+  </HyperStage>
+</Base>
+
+<style>
+  .mire {
+    background-color: var(--color-void);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, var(--glow), transparent 60%);
+    background-size:
+      64px 64px,
+      64px 64px,
+      100% 100%;
+    outline: 10px solid var(--color-magenta);
+  }
+  .mire--void {
+    --grid: rgb(244 242 255 / 0.05);
+    --glow: rgb(255 43 214 / 0.12);
+  }
+  .mire--cyan {
+    --grid: rgb(25 227 255 / 0.35);
+    --glow: rgb(25 227 255 / 0.35);
+  }
+  .mire--acid {
+    --grid: rgb(198 255 26 / 0.35);
+    --glow: rgb(198 255 26 / 0.3);
+  }
+  .mire__text {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+  .dbg {
+    left: 1rem;
+    top: 1rem;
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    background: rgb(16 14 26 / 0.85);
+    border: 1px solid var(--color-void-3);
+    backdrop-filter: blur(8px);
+    font-size: 0.75rem;
+    max-width: 22rem;
+  }
+  .dbg pre {
+    margin: 0;
+    font: inherit;
+    line-height: 1.6;
+    white-space: pre;
+  }
+  .dbg__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    align-items: center;
+  }
+  .dbg__links a {
+    color: var(--color-acid);
+    text-decoration: underline;
+  }
+  .dbg select {
+    margin-left: 0.4rem;
+    background: var(--color-void);
+    color: var(--color-bone);
+    border: 1px solid var(--color-void-3);
+  }
+  .dbg__help {
+    color: var(--color-mute);
+  }
+</style>
+
+<script>
+  import { initHyper } from "../scripts/hyper";
+
+  const params = new URLSearchParams(location.search);
+  const out = document.querySelector<HTMLElement>("[data-dbg]");
+  const zoomSel = document.querySelector<HTMLSelectElement>("[data-zoom]");
+  const zoom = Number(params.get("zoom")) || 4;
+  if (zoomSel) {
+    zoomSel.value = String(zoom);
+    zoomSel.addEventListener("change", () => {
+      params.set("zoom", zoomSel.value);
+      location.search = params.toString();
+    });
+  }
+
+  // Mesure de fluidité : images par seconde et pire image sur la dernière seconde.
+  let frames = 0;
+  let worst = 0;
+  let since = performance.now();
+  let fps = 0;
+  let worstShown = 0;
+  const names = ["A", "B", "C"];
+
+  initHyper({
+    zoom,
+    reduced: params.has("calme") || undefined,
+    pin: params.has("u") ? Number(params.get("u")) : undefined,
+    onFrame: (f, s) => {
+      frames++;
+      worst = Math.max(worst, s.frameMs);
+      const now = performance.now();
+      if (now - since < 250) return;
+      fps = Math.round((frames * 1000) / (now - since));
+      worstShown = worst;
+      frames = 0;
+      worst = 0;
+      since = now;
+      if (out)
+        out.textContent = [
+          `u        ${s.u.toFixed(3)}   cible ${s.target.toFixed(3)}`,
+          `chapitre ${names[f.chapter]}   vitesse ${s.vel.toFixed(2)}`,
+          `i/s      ${fps}   pire image ${worstShown.toFixed(1)} ms`,
+          `mode     ${s.reduced ? "calme (fondu)" : "normal"}   zoom ${zoom}`,
+        ].join("\n");
+    },
+  });
+</script>

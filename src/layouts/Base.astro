@@ -7,14 +7,16 @@ import { bio, site } from "../lib/content";
 interface Props {
   title?: string;
   description?: string;
-  /** Page d'accueil : lance la narration au scroll. Les autres pages n'ont que les patterns de base. */
+  /** Page d'accueil v1 : lance la narration au scroll. Les autres pages n'ont que les patterns de base. */
   story?: boolean;
+  /** La page gère elle-même son animation (v2 Hyperespace) : ni GSAP ni patterns v1. */
+  bare?: boolean;
   jsonLd?: object;
   /** Pages internes (styleguide, 404) : jamais indexées. */
   noindex?: boolean;
 }
 const sentence = bio.fr.split(". ").slice(0, 1).join("") + ".";
-const { title = `${site.name} — ${site.tagline} · ${site.collective}, ${site.city}`, description = sentence, story = false, jsonLd, noindex = false } = Astro.props;
+const { title = `${site.name} — ${site.tagline} · ${site.collective}, ${site.city}`, description = sentence, story = false, bare = false, jsonLd, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const og = new URL("/og.png", site.url).href;
 ---
@@ -50,15 +52,14 @@ const og = new URL("/og.png", site.url).href;
       } catch (e) {}
     </script>
   </head>
-  <body data-story={story ? "" : undefined}>
+  <body data-motion={bare ? "none" : story ? "story" : "basic"}>
     <a class="skip-link" href="#contenu">Aller au contenu</a>
     <slot />
     <script>
-      // Page d'accueil : narration complète au scroll. Autres pages : patterns de base seulement.
-      import { initMotion } from "../scripts/motion";
-      import { initStory } from "../scripts/story";
-      if (document.body.dataset.story !== undefined) initStory();
-      else initMotion();
+      // Chargé à la demande : une page « bare » (v2) ne télécharge jamais GSAP.
+      const motion = document.body.dataset.motion;
+      if (motion === "story") import("../scripts/story").then((m) => m.initStory());
+      else if (motion === "basic") import("../scripts/motion").then((m) => m.initMotion());
     </script>
   </body>
 </html>

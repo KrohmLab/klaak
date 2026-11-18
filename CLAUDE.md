@@ -59,6 +59,34 @@ Le brief complet et toutes les sources sont dans `brief/` (ne pas chercher de co
 - Lighthouse mobile sur la preview (14/11/2026) : performance 100, LCP 1,5–1,8 s. Une première mesure à 69
   était un aléa de démarrage du navigateur (non reproduit sur 3 passes ni en local).
 
+## v2 « Hyperespace » (en cours)
+
+- Remplace toute la page d'accueil. Sources : `brief/v2/SPEC.md` et `brief/v2/prototype-hyperespace.dc.html`
+  (le prototype fait foi en cas de divergence). Le design system v1 reste valide ; la mise en scène v1
+  (chapitres GSAP de la branche `construction`) n'est pas reprise.
+- Planche photo du prototype (`pq0`…`pq8`) : 0 fond-ecran-rond, 1 breakdown-portrait, 2 montee-sourire,
+  3 drop-bras, 4 breakdown-profil-bleu, 5 fond-foret, 6 montee-casque, 7 fond-profil-festival, 8 drop-poing.
+  Affiches `po0`…`po7` = les 8 affiches de `src/assets/posters/` dans l'ordre chronologique.
+- `brief/photos/esoteros-2026-scene.jpg` est le même fichier que `src/assets/photos/drop-scene.jpg`.
+- Bug du prototype à ne pas reproduire : le fond photo de la scène 06 est hors de sa `<section>`.
+- Décisions validées (18/11/2026) : booking = formulaire v1 dans une fenêtre par-dessus la scène 07 (lien
+  e-mail en secours, « Proposer une date » idem) ; mode calme = fondu (ni zoom ni cercle) ; GSAP retiré de la
+  page v2 (reste chargé à la demande pour `/styleguide` et la v1) ; textes « plus de 10 ans » (spec) ; titre
+  « Klaak @ Esoteros 2026 » (confirmé par SoundCloud). Photos HD demandées à Kevin (1 920 px et moins).
+- Le projet est dans Documents, synchronisé par iCloud : iCloud crée des copies « … 2 » (26 supprimées le
+  18/11/2026). Si elles reviennent, les supprimer et ne jamais les committer.
+- Architecture (`src/hyper/`) : `timeline.ts` (scènes, arrêts), `snap.ts` (aimantation), `portal.ts` (layout
+  PUR de `u` : échelles, clips, anneaux), `engine.ts` (entrées, lissage, boucle, rendu DOM), `stars.ts`.
+  Démarrage : `src/scripts/hyper.ts` lit les scènes `[data-hx-scene]` (attributs `data-hx-len`, `-stops`,
+  `-preview`, `-s0`, `-portal`). Gabarit : `src/components/hyper/HyperStage.astro` (sans JS : sections
+  empilées ; avec JS : `html.hx-on`, scène fixe). Constantes du prototype rendues indépendantes de la
+  fréquence d'affichage (« par image à 60 i/s »).
+- Tests : `npm test` (Vitest) vérifie la couverture (jamais de bord d'image visible) sur 6 tailles d'écran,
+  la continuité, l'aimantation, le mode calme.
+- Banc d'essai : `/moteur` (non indexé). `?u=1.4` fige une position, `?calme` force le mode calme,
+  `?zoom=5` change la profondeur. Mire : cadre magenta à l'extérieur des scènes = bord d'image visible.
+- Étape 2 (moteur seul) : livrée sur la branche `v2`, en attente de validation de la fluidité.
+
 ## Avancement
 
 - [x] 1. Recherche, concept, stack (direction A validée)
